@@ -1,6 +1,4 @@
 #include <OpenEngine.h>
-
-int num1 = 2;
  
 class Sandbox : public OpenEngine::Application
 {
