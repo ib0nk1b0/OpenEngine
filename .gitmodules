@@ -1,3 +1,9 @@
 [submodule "OpenEngine/vendor/spdlog"]
 	path = OpenEngine/vendor/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "OpenEngine/vendor/GLFW"]
+	path = OpenEngine/vendor/GLFW
+	url = https://github.com/ib0nk1b0/glfw
+[submodule "GLFW"]
+	path = OpenEngine/vendor/GLFW
+	url = https://github.com/ib0nk1b0/glfw_latest
