@@ -1,16 +1,13 @@
 #pragma once
 
 #include "OpenEngine/Core.h"
-
-#include <string>
-#include <iostream>
-#include <functional>
+#include <sstream>
 
 namespace OpenEngine {
 	enum class EventType
 	{
 		None = 0,
-		WindowClass, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
+		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
 		AppTick, AppUpdate, AppRender,
 		KeyPressed, KeyReleased,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled

@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 namespace OpenEngine {
 	class OPENENGINE_API KeyEvent : public Event
 	{
@@ -20,6 +18,7 @@ namespace OpenEngine {
 
 	class OPENENGINE_API KeyPressedEvent : public KeyEvent
 	{
+	public:
 		KeyPressedEvent(int keycode, int repeatCount)
 			: KeyEvent(keycode), m_RepeatCount(repeatCount) {}
 
@@ -39,12 +38,13 @@ namespace OpenEngine {
 
 	class OPENENGINE_API KeyReleasedEvent : public KeyEvent
 	{
+	public:
 		KeyReleasedEvent(int keycode)
 		 : KeyEvent(keycode) {}
 
 		std::string ToString() const override
 		{
-			std::sstream ss;
+			std::stringstream ss;
 			ss << "KeyReleasedEvent" << m_KeyCode;
 			return ss.str();
 		}

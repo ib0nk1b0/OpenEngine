@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 namespace OpenEngine {
 	class OPENENGINE_API WindowResizeEvent : public Event
 	{
@@ -27,10 +25,10 @@ namespace OpenEngine {
 		unsigned int m_Width, m_Height;
 	};
 
-	class OPENENGINE_API WindowClosedEvent : public Event
+	class OPENENGINE_API WindowCloseEvent : public Event
 	{
 	public:
-		WindowClosedEvent() {}
+		WindowCloseEvent() {}
 
 		EVENT_CLASS_TYPE(WindowClose)
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)

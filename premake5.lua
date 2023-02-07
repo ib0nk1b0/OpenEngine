@@ -10,6 +10,11 @@ workspace "OpenEngine"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.sysyem}-{cfg.architecture}"
 
+IncludeDir = {}
+IncludeDir["GLFW"] = "OpenEngine/vendor/GLFW/include"
+
+include "OpenEngine/vendor/GLFW"
+
 project "OpenEngine"
 	location "OpenEngine"
 	kind "SharedLib"
@@ -17,6 +22,9 @@ project "OpenEngine"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	pchheader "oepch.h"
+	pchsource "OpenEngine/src/oepch.cpp"
 
 	files
 	{
@@ -27,7 +35,14 @@ project "OpenEngine"
 	includedirs
 	{
 		"%{prj.name}/src",
-		"%{prj.name}/vendor/spdlog/include"
+		"%{prj.name}/vendor/spdlog/include",
+		"%{IncludeDir.GLFW}"
+	}
+
+	links
+	{
+		"GLFW",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"

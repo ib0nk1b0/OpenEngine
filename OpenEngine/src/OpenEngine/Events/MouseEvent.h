@@ -2,11 +2,10 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 namespace OpenEngine {
 	class OPENENGINE_API MouseMovedEvent : public Event
 	{
+	public:
 		MouseMovedEvent(float x, float y)
 			: m_MouseX(x), m_MouseY(y) {}
 
@@ -51,7 +50,7 @@ namespace OpenEngine {
 	class OPENENGINE_API MouseButtonEvent : public Event
 	{
 	public:
-		inline GetMouseButton() const { return m_Button; }
+		inline int GetMouseButton() const { return m_Button; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	protected:
