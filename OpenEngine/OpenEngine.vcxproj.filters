@@ -46,6 +46,12 @@
     <ClInclude Include="src\OpenEngine\ImGui\ImGuiLayer.h">
       <Filter>OpenEngine\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenEngine\Input.h">
+      <Filter>OpenEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\KeyCodes.h">
+      <Filter>OpenEngine</Filter>
+    </ClInclude>
     <ClInclude Include="src\OpenEngine\Layer.h">
       <Filter>OpenEngine</Filter>
     </ClInclude>
@@ -61,10 +67,14 @@
     <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\oepch.h" />
+    <ClInclude Include="src\OpenEngine\MouseButtonCodes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenEngine\Application.cpp">
@@ -84,6 +94,9 @@
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp">
       <Filter>Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
+      <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
       <Filter>Platform\Windows</Filter>

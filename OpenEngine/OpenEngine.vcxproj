@@ -161,11 +161,15 @@
     <ClInclude Include="src\OpenEngine\Events\KeyEvent.h" />
     <ClInclude Include="src\OpenEngine\Events\MouseEvent.h" />
     <ClInclude Include="src\OpenEngine\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\OpenEngine\Input.h" />
+    <ClInclude Include="src\OpenEngine\KeyCodes.h" />
     <ClInclude Include="src\OpenEngine\Layer.h" />
     <ClInclude Include="src\OpenEngine\LayerStack.h" />
     <ClInclude Include="src\OpenEngine\Log.h" />
+    <ClInclude Include="src\OpenEngine\MouseButtonCodes.h" />
     <ClInclude Include="src\OpenEngine\Window.h" />
     <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\oepch.h" />
   </ItemGroup>
@@ -176,6 +180,7 @@
     <ClCompile Include="src\OpenEngine\LayerStack.cpp" />
     <ClCompile Include="src\OpenEngine\Log.cpp" />
     <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\oepch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
