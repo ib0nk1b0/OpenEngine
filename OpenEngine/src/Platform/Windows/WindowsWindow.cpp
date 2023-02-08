@@ -5,6 +5,8 @@
 #include "OpenEngine/Events/MouseEvent.h"
 #include "OpenEngine/Events/KeyEvent.h"
 
+#include <glad/glad.h>
+
 namespace OpenEngine {
 	static bool s_GLFWInitialized = false;
 
@@ -39,13 +41,7 @@ namespace OpenEngine {
 		if (!s_GLFWInitialized)
 		{
 			int success = glfwInit();
-			// TODO: Figure out what was wrong with the the assert macro
-			if (!success)
-			{
-				OE_CORE_ERROR("Could not initialize GLFW!");
-				__debugbreak();
-			}
-			//OE_CORE_ASSERT(success, "Could not initialize GLFW!");
+			OE_CORE_ASSERT(success, "Could not initialize GLFW!");
 
 			glfwSetErrorCallback(GLFWErrorCallback);
 
@@ -54,6 +50,8 @@ namespace OpenEngine {
 
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);
+		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		OE_CORE_ASSERT(status, "Failed to initialize glad!");
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 
@@ -100,6 +98,14 @@ namespace OpenEngine {
 					break;
 				}
 			}
+		});
+
+		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode)
+		{
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			KeyTypedEvent event(keycode);
+			data.EventCallback(event);
 		});
 
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)

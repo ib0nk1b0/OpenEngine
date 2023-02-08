@@ -55,22 +55,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\Debug--{cfg.architecture}\OpenEngine\</OutDir>
-    <IntDir>..\bin-int\Debug--{cfg.architecture}\OpenEngine\</IntDir>
+    <OutDir>..\bin\Debug-windows-{cfg.architecture}\OpenEngine\</OutDir>
+    <IntDir>..\bin-int\Debug-windows-{cfg.architecture}\OpenEngine\</IntDir>
     <TargetName>OpenEngine</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Release--{cfg.architecture}\OpenEngine\</OutDir>
-    <IntDir>..\bin-int\Release--{cfg.architecture}\OpenEngine\</IntDir>
+    <OutDir>..\bin\Release-windows-{cfg.architecture}\OpenEngine\</OutDir>
+    <IntDir>..\bin-int\Release-windows-{cfg.architecture}\OpenEngine\</IntDir>
     <TargetName>OpenEngine</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Dist--{cfg.architecture}\OpenEngine\</OutDir>
-    <IntDir>..\bin-int\Dist--{cfg.architecture}\OpenEngine\</IntDir>
+    <OutDir>..\bin\Dist-windows-{cfg.architecture}\OpenEngine\</OutDir>
+    <IntDir>..\bin-int\Dist-windows-{cfg.architecture}\OpenEngine\</IntDir>
     <TargetName>OpenEngine</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
@@ -79,11 +79,11 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>oepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>OE_PLATFORM_WINDOWS;OE_BUILD_DLL;OE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>OE_PLATFORM_WINDOWS;OE_BUILD_DLL;GLFW_INCLUDE_NONE;OE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -91,10 +91,10 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImportLibrary>..\bin\Debug--{cfg.architecture}\OpenEngine\OpenEngine.lib</ImportLibrary>
+      <ImportLibrary>..\bin\Debug-windows-{cfg.architecture}\OpenEngine\OpenEngine.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Debug--{cfg.architecture}\OpenEngine\OpenEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Debug--{cfg.architecture}\OpenEngine\OpenEngine.dll ..\bin\Debug--{cfg.architecture}\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug--{cfg.architecture}\OpenEngine\OpenEngine.dll ..\bin\Debug--{cfg.architecture}\Sandbox &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Debug-windows-{cfg.architecture}\OpenEngine\OpenEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-{cfg.architecture}\OpenEngine\OpenEngine.dll ..\bin\Debug-windows-{cfg.architecture}\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-{cfg.architecture}\OpenEngine\OpenEngine.dll ..\bin\Debug-windows-{cfg.architecture}\Sandbox &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -102,14 +102,14 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>oepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>OE_PLATFORM_WINDOWS;OE_BUILD_DLL;OE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>OE_PLATFORM_WINDOWS;OE_BUILD_DLL;GLFW_INCLUDE_NONE;OE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -118,10 +118,10 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImportLibrary>..\bin\Release--{cfg.architecture}\OpenEngine\OpenEngine.lib</ImportLibrary>
+      <ImportLibrary>..\bin\Release-windows-{cfg.architecture}\OpenEngine\OpenEngine.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Release--{cfg.architecture}\OpenEngine\OpenEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Release--{cfg.architecture}\OpenEngine\OpenEngine.dll ..\bin\Release--{cfg.architecture}\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release--{cfg.architecture}\OpenEngine\OpenEngine.dll ..\bin\Release--{cfg.architecture}\Sandbox &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Release-windows-{cfg.architecture}\OpenEngine\OpenEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-{cfg.architecture}\OpenEngine\OpenEngine.dll ..\bin\Release-windows-{cfg.architecture}\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-{cfg.architecture}\OpenEngine\OpenEngine.dll ..\bin\Release-windows-{cfg.architecture}\Sandbox &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -129,14 +129,14 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>oepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>OE_PLATFORM_WINDOWS;OE_BUILD_DLL;OE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>OE_PLATFORM_WINDOWS;OE_BUILD_DLL;GLFW_INCLUDE_NONE;OE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -145,10 +145,10 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImportLibrary>..\bin\Dist--{cfg.architecture}\OpenEngine\OpenEngine.lib</ImportLibrary>
+      <ImportLibrary>..\bin\Dist-windows-{cfg.architecture}\OpenEngine\OpenEngine.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Dist--{cfg.architecture}\OpenEngine\OpenEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Dist--{cfg.architecture}\OpenEngine\OpenEngine.dll ..\bin\Dist--{cfg.architecture}\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist--{cfg.architecture}\OpenEngine\OpenEngine.dll ..\bin\Dist--{cfg.architecture}\Sandbox &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Dist-windows-{cfg.architecture}\OpenEngine\OpenEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Dist-windows-{cfg.architecture}\OpenEngine\OpenEngine.dll ..\bin\Dist-windows-{cfg.architecture}\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist-windows-{cfg.architecture}\OpenEngine\OpenEngine.dll ..\bin\Dist-windows-{cfg.architecture}\Sandbox &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -160,14 +160,22 @@
     <ClInclude Include="src\OpenEngine\Events\Event.h" />
     <ClInclude Include="src\OpenEngine\Events\KeyEvent.h" />
     <ClInclude Include="src\OpenEngine\Events\MouseEvent.h" />
+    <ClInclude Include="src\OpenEngine\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\OpenEngine\Layer.h" />
+    <ClInclude Include="src\OpenEngine\LayerStack.h" />
     <ClInclude Include="src\OpenEngine\Log.h" />
     <ClInclude Include="src\OpenEngine\Window.h" />
+    <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\oepch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenEngine\Application.cpp" />
+    <ClCompile Include="src\OpenEngine\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="src\OpenEngine\Layer.cpp" />
+    <ClCompile Include="src\OpenEngine\LayerStack.cpp" />
     <ClCompile Include="src\OpenEngine\Log.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\oepch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
@@ -176,6 +184,12 @@
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="vendor\Glad\Glad.vcxproj">
+      <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="vendor\imgui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
