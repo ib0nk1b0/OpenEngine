@@ -1,5 +1,6 @@
 workspace "OpenEngine"
 	architecture "x64"
+	startproject "Sandbox"
 
 	configurations
 	{
@@ -16,9 +17,12 @@ IncludeDir["Glad"] = "OpenEngine/vendor/Glad/include"
 IncludeDir["Glad"] = "OpenEngine/vendor/Glad/include"
 IncludeDir["ImGui"] = "OpenEngine/vendor/imgui"
 
-include "OpenEngine/vendor/GLFW"
-include "OpenEngine/vendor/Glad"
-include "OpenEngine/vendor/imgui"
+group "Dependencies"
+  include "OpenEngine/vendor/GLFW"
+  include "OpenEngine/vendor/Glad"
+  include "OpenEngine/vendor/imgui"
+
+group ""
 
 project "OpenEngine"
 	location "OpenEngine"
@@ -68,7 +72,7 @@ project "OpenEngine"
 
 		postbuildcommands
 		{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
 		}
 
 	filter "configurations:Debug"
