@@ -9,11 +9,10 @@ workspace "OpenEngine"
 		"Dist"
 	}
 
-outputdir = "%{cfg.buildcfg}-%{cfg.system}-{cfg.architecture}"
+outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["GLFW"] = "OpenEngine/vendor/GLFW/include"
-IncludeDir["Glad"] = "OpenEngine/vendor/Glad/include"
 IncludeDir["Glad"] = "OpenEngine/vendor/Glad/include"
 IncludeDir["ImGui"] = "OpenEngine/vendor/imgui"
 
@@ -108,7 +107,10 @@ project "Sandbox"
 	includedirs
 	{
 		"OpenEngine/vendor/spdlog/include",
-		"OpenEngine/src"
+		"OpenEngine/src",
+		"OpenEngine/vendor",
+		"%{IncludeDir.glm}"
+
 	}
 
 	filter "system:windows"

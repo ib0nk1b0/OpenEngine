@@ -7,6 +7,8 @@
 #include "Events/Event.h"
 #include "OpenEngine/Events/ApplicationEvent.h"
 
+#include "OpenEngine/ImGui/ImGuiLayer.h"
+
 namespace OpenEngine {
 	class  OPENENGINE_API Application
 	{
@@ -28,6 +30,7 @@ namespace OpenEngine {
 		bool OnWindowClose(WindowCloseEvent& e);
 
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 	private:

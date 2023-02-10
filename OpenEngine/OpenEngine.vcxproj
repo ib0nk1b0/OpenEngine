@@ -55,22 +55,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\Debug-windows-{cfg.architecture}\OpenEngine\</OutDir>
-    <IntDir>..\bin-int\Debug-windows-{cfg.architecture}\OpenEngine\</IntDir>
+    <OutDir>..\bin\Debug-windows-x86_64\OpenEngine\</OutDir>
+    <IntDir>..\bin-int\Debug-windows-x86_64\OpenEngine\</IntDir>
     <TargetName>OpenEngine</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Release-windows-{cfg.architecture}\OpenEngine\</OutDir>
-    <IntDir>..\bin-int\Release-windows-{cfg.architecture}\OpenEngine\</IntDir>
+    <OutDir>..\bin\Release-windows-x86_64\OpenEngine\</OutDir>
+    <IntDir>..\bin-int\Release-windows-x86_64\OpenEngine\</IntDir>
     <TargetName>OpenEngine</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Dist-windows-{cfg.architecture}\OpenEngine\</OutDir>
-    <IntDir>..\bin-int\Dist-windows-{cfg.architecture}\OpenEngine\</IntDir>
+    <OutDir>..\bin\Dist-windows-x86_64\OpenEngine\</OutDir>
+    <IntDir>..\bin-int\Dist-windows-x86_64\OpenEngine\</IntDir>
     <TargetName>OpenEngine</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
@@ -91,10 +91,10 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImportLibrary>..\bin\Debug-windows-{cfg.architecture}\OpenEngine\OpenEngine.lib</ImportLibrary>
+      <ImportLibrary>..\bin\Debug-windows-x86_64\OpenEngine\OpenEngine.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Debug-windows-{cfg.architecture}\OpenEngine\OpenEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-{cfg.architecture}\OpenEngine\OpenEngine.dll "..\bin\Debug-windows-{cfg.architecture}\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-{cfg.architecture}\OpenEngine\OpenEngine.dll "..\bin\Debug-windows-{cfg.architecture}\Sandbox\" &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Debug-windows-x86_64\OpenEngine\OpenEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\OpenEngine\OpenEngine.dll "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\OpenEngine\OpenEngine.dll "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -118,10 +118,10 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImportLibrary>..\bin\Release-windows-{cfg.architecture}\OpenEngine\OpenEngine.lib</ImportLibrary>
+      <ImportLibrary>..\bin\Release-windows-x86_64\OpenEngine\OpenEngine.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Release-windows-{cfg.architecture}\OpenEngine\OpenEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-{cfg.architecture}\OpenEngine\OpenEngine.dll "..\bin\Release-windows-{cfg.architecture}\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-{cfg.architecture}\OpenEngine\OpenEngine.dll "..\bin\Release-windows-{cfg.architecture}\Sandbox\" &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Release-windows-x86_64\OpenEngine\OpenEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\OpenEngine\OpenEngine.dll "..\bin\Release-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\OpenEngine\OpenEngine.dll "..\bin\Release-windows-x86_64\Sandbox\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -145,10 +145,10 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImportLibrary>..\bin\Dist-windows-{cfg.architecture}\OpenEngine\OpenEngine.lib</ImportLibrary>
+      <ImportLibrary>..\bin\Dist-windows-x86_64\OpenEngine\OpenEngine.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Dist-windows-{cfg.architecture}\OpenEngine\OpenEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Dist-windows-{cfg.architecture}\OpenEngine\OpenEngine.dll "..\bin\Dist-windows-{cfg.architecture}\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist-windows-{cfg.architecture}\OpenEngine\OpenEngine.dll "..\bin\Dist-windows-{cfg.architecture}\Sandbox\" &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Dist-windows-x86_64\OpenEngine\OpenEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Dist-windows-x86_64\OpenEngine\OpenEngine.dll "..\bin\Dist-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist-windows-x86_64\OpenEngine\OpenEngine.dll "..\bin\Dist-windows-x86_64\Sandbox\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -168,18 +168,17 @@
     <ClInclude Include="src\OpenEngine\Log.h" />
     <ClInclude Include="src\OpenEngine\MouseButtonCodes.h" />
     <ClInclude Include="src\OpenEngine\Window.h" />
-    <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\oepch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenEngine\Application.cpp" />
+    <ClCompile Include="src\OpenEngine\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\OpenEngine\Layer.cpp" />
     <ClCompile Include="src\OpenEngine\LayerStack.cpp" />
     <ClCompile Include="src\OpenEngine\Log.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\oepch.cpp">
