@@ -25,6 +25,12 @@ public:
 				OE_TRACE("Tab key is being pressed (event)!");
 			OE_TRACE("{0}", (char)e.GetKeyCode());
 		}
+
+		if (event.GetEventType() == OpenEngine::EventType::MouseButtonPressed)
+		{
+			OpenEngine::MouseButtonPressedEvent& e = (OpenEngine::MouseButtonPressedEvent&)event;
+			OE_TRACE("{0}", e.GetMouseButton());
+		}
 	}
 };
 
