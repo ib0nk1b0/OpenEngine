@@ -1,5 +1,7 @@
 #include <OpenEngine.h>
 
+#include "imgui/imgui.h"
+
 class ExampleLayer : public OpenEngine::Layer
 {
 public:
@@ -14,6 +16,13 @@ public:
 		{
 			OE_TRACE("Tab key is being pressed (poll)!");
 		}
+	}
+
+	virtual void OnImGuiRender() override
+	{
+		ImGui::Begin("Test");
+		ImGui::Text("Hello World!");
+		ImGui::End();
 	}
 
 	void OnEvent(OpenEngine::Event& event) override

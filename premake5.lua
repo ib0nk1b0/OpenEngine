@@ -1,13 +1,13 @@
 workspace "OpenEngine"
-	architecture "x64"
-	startproject "Sandbox"
+  architecture "x64"
+  startproject "Sandbox"
 
-	configurations
-	{
-		"Debug",
-		"Release",
-		"Dist"
-	}
+  configurations
+  {
+    "Debug",
+    "Release",
+    "Dist"
+  }
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -15,6 +15,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "OpenEngine/vendor/GLFW/include"
 IncludeDir["Glad"] = "OpenEngine/vendor/Glad/include"
 IncludeDir["ImGui"] = "OpenEngine/vendor/imgui"
+IncludeDir["glm"] = "OpenEngine/vendor/glm"
 
 group "Dependencies"
   include "OpenEngine/vendor/GLFW"
@@ -24,120 +25,120 @@ group "Dependencies"
 group ""
 
 project "OpenEngine"
-	location "OpenEngine"
-	kind "SharedLib"
-	language "C++"
-	staticruntime "off"
+  location "OpenEngine"
+  kind "StaticLib"
+  language "C++"
+  cppdialect "C++17"
+  staticruntime "on"
 
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+  targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+  objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
-	pchheader "oepch.h"
-	pchsource "OpenEngine/src/oepch.cpp"
+  pchheader "oepch.h"
+  pchsource "OpenEngine/src/oepch.cpp"
 
-	files
-	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
-	}
+  files
+  {
+    "%{prj.name}/src/**.h",
+    "%{prj.name}/src/**.cpp"
+  }
 
-	includedirs
-	{
-		"%{prj.name}/src",
-		"%{prj.name}/vendor/spdlog/include",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.ImGui}"
-	}
+  defines
+  {
+    "_CRT_SECURE_NO_WARNINGS"
+  }
 
-	links
-	{
-		"GLFW",
-		"Glad",
-		"ImGui",
-		"opengl32.lib"
-	}
+  includedirs
+  {
+    "%{prj.name}/src",
+    "%{prj.name}/vendor/spdlog/include",
+    "%{IncludeDir.GLFW}",
+    "%{IncludeDir.Glad}",
+    "%{IncludeDir.ImGui}",
+    "%{IncludeDir.glm}"
+  }
 
-	filter "system:windows"
-		cppdialect "C++17"
-		systemversion "latest"
+  links
+  {
+    "GLFW",
+    "Glad",
+    "ImGui",
+    "opengl32.lib"
+  }
 
-		defines
-		{
-			"OE_PLATFORM_WINDOWS",
-			"OE_BUILD_DLL",
-			"GLFW_INCLUDE_NONE"
-		}
+  filter "system:windows"
+    systemversion "latest"
 
-		postbuildcommands
-		{
-			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
-		}
+    defines
+    {
+    	"OE_PLATFORM_WINDOWS",
+    	"OE_BUILD_DLL",
+    	"GLFW_INCLUDE_NONE"
+    }
 
-	filter "configurations:Debug"
-		defines "OE_DEBUG"
-		runtime "Debug"
-		symbols "On"
+  filter "configurations:Debug"
+    defines "OE_DEBUG"
+    runtime "Debug"
+    symbols "on"
 
-	filter "configurations:Release"
-		defines "OE_RELEASE"
-		runtime "Release"
-		optimize "On"
+  filter "configurations:Release"
+    defines "OE_RELEASE"
+    runtime "Release"
+    optimize "on"
 
-	filter "configurations:Dist"
-		defines "OE_DIST"
-		runtime "Release"
-		optimize "On"
-		
+  filter "configurations:Dist"
+    defines "OE_DIST"
+    runtime "Release"
+    optimize "on"
+
 project "Sandbox"
-	location "Sandbox"
-	kind "ConsoleApp"
-	language "C++"
-	staticruntime "off"
+  location "Sandbox"
+  kind "ConsoleApp"
+  language "C++"
+  cppdialect "C++17"
+  staticruntime "on"
 
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+  targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+  objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
-	files
-	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
-	}
+  files
+  {
+    "%{prj.name}/src/**.h",
+    "%{prj.name}/src/**.cpp"
+  }
 
-	includedirs
-	{
-		"OpenEngine/vendor/spdlog/include",
-		"OpenEngine/src",
-		"OpenEngine/vendor",
-		"%{IncludeDir.glm}"
+  includedirs
+  {
+    "OpenEngine/vendor/spdlog/include",
+    "OpenEngine/src",
+    "OpenEngine/vendor",
+    "%{IncludeDir.glm}"
+  }
 
-	}
+  filter "system:windows"
+    systemversion "latest"
 
-	filter "system:windows"
-		cppdialect "C++17"
-		systemversion "latest"
+    defines
+    {
+      "OE_PLATFORM_WINDOWS"
+    }
 
-		defines
-		{
-			"OE_PLATFORM_WINDOWS"
-		}
+    links
+    {
+      "OpenEngine"
+    }
 
-		links
-		{
-			"OpenEngine"
-		}
+  filter "configurations:Debug"
+    defines "OE_DEBUG"
+    runtime "Debug"
+    symbols "on"
 
-	filter "configurations:Debug"
-		defines "OE_DEBUG"
-		runtime "Debug"
-		symbols "On"
+  filter "configurations:Release"
+    defines "OE_RELEASE"
+    runtime "Release"
+    optimize "on"
 
-	filter "configurations:Release"
-		defines "OE_RELEASE"
-		runtime "Release"
-		optimize "On"
-
-	filter "configurations:Dist"
-		defines "OE_DIST"
-		runtime "Release"
-		optimize "On"
+  filter "configurations:Dist"
+    defines "OE_DIST"
+    runtime "Release"
+    optimize "on"

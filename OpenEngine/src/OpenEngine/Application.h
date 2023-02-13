@@ -8,6 +8,7 @@
 #include "OpenEngine/Events/ApplicationEvent.h"
 
 #include "OpenEngine/ImGui/ImGuiLayer.h"
+#include "OpenEngine/Renderer/Shader.h"
 
 namespace OpenEngine {
 	class  OPENENGINE_API Application
@@ -33,6 +34,9 @@ namespace OpenEngine {
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
+
+		unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
+		std::unique_ptr<Shader> m_Shader;
 	private:
 		static Application* s_Instance;
 	};

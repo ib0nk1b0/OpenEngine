@@ -1,8 +1,9 @@
 #pragma once
 
 #include "OpenEngine/Window.h"
+#include "OpenEngine/Renderer/GraphicsContext.h"
 
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 namespace OpenEngine {
 	class WindowsWindow : public Window
@@ -26,6 +27,7 @@ namespace OpenEngine {
 		virtual void Shutdown();
 	private:
 		GLFWwindow* m_Window;
+		GraphicsContext* m_Context;
 
 		struct WindowData
 		{
