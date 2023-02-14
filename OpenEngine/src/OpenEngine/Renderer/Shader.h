@@ -6,12 +6,11 @@ namespace OpenEngine {
 	class Shader
 	{
 	public:
-		Shader(const std::string& vertexSrc, const std::string& fragmentSrc);
-		~Shader();
+		virtual ~Shader() {}
 
-		void Bind() const;
-		void UnBind() const;
-	private:
-		uint32_t m_RendererID;
+		virtual void Bind() const = 0;
+		virtual void UnBind() const = 0;
+
+		static Shader* Create(const std::string& vertexSrc, const std::string& fragmentSrc);
 	};
 }
