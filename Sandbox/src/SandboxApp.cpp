@@ -1,8 +1,11 @@
 #include <OpenEngine.h>
-#include <glm/glm.hpp>
-
+#include "Platform/OpenGL/OpenGLShader.h"
 #include "imgui/imgui.h"
+
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 
 class ExampleLayer : public OpenEngine::Layer
 {
@@ -116,11 +119,11 @@ public:
 
 			in vec3 v_Position;
 
-			uniform vec4 u_Color;
+			uniform vec3 u_Color;
 
 			void main()
 			{
-				color = u_Color;
+				color = vec4(u_Color, 1.0);
 			}
 		)";
 
@@ -132,20 +135,43 @@ public:
 		m_FramesPerSecond = fps;
 
 		// Camera movement
-		if (OpenEngine::Input::IsKeyPressed(OE_KEY_W))
-			m_CameraPosition.y += m_CameraMoveSpeed * ts;
-		if (OpenEngine::Input::IsKeyPressed(OE_KEY_S))
-			m_CameraPosition.y -= m_CameraMoveSpeed * ts;
-
 		if (OpenEngine::Input::IsKeyPressed(OE_KEY_A))
+		{
 			m_CameraPosition.x -= m_CameraMoveSpeed * ts;
+			m_ImGuiCameraPosition[0] = m_CameraPosition.x;
+		}
 		if (OpenEngine::Input::IsKeyPressed(OE_KEY_D))
+		{
 			m_CameraPosition.x += m_CameraMoveSpeed * ts;
+			m_ImGuiCameraPosition[0] = m_CameraPosition.x;
+		}
+
+		if (OpenEngine::Input::IsKeyPressed(OE_KEY_W))
+		{
+			m_CameraPosition.y += m_CameraMoveSpeed * ts;
+			m_ImGuiCameraPosition[1] = m_CameraPosition.y;
+		}
+		if (OpenEngine::Input::IsKeyPressed(OE_KEY_S))
+		{
+			m_CameraPosition.y -= m_CameraMoveSpeed * ts;
+			m_ImGuiCameraPosition[1] = m_CameraPosition.y;
+		}
 
 		if (OpenEngine::Input::IsKeyPressed(OE_KEY_LEFT))
 			m_CameraRotation += m_CameraRotationSpeed * ts;
 		if (OpenEngine::Input::IsKeyPressed(OE_KEY_RIGHT))
 			m_CameraRotation -= m_CameraRotationSpeed * ts;
+
+		if (OpenEngine::Input::IsKeyPressed(OE_KEY_UP))
+		{
+			m_CameraPosition.z += m_CameraMoveSpeed * ts;
+			m_ImGuiCameraPosition[2] = m_CameraPosition.z;
+		}
+		if (OpenEngine::Input::IsKeyPressed(OE_KEY_DOWN))
+		{
+			m_CameraPosition.z -= m_CameraMoveSpeed * ts;
+			m_ImGuiCameraPosition[2] = m_CameraPosition.z;
+		}
 
 		// Triangle movement
 		if (OpenEngine::Input::IsKeyPressed(OE_KEY_I))
@@ -158,6 +184,15 @@ public:
 		if (OpenEngine::Input::IsKeyPressed(OE_KEY_L))
 			m_TrianglePosition.x += m_TriangleMoveSpeed * ts;
 
+		if (!OpenEngine::Input::IsKeyPressed(OE_KEY_A) && !OpenEngine::Input::IsKeyPressed(OE_KEY_D))
+			m_CameraPosition.x = m_ImGuiCameraPosition[0];
+
+		if (!OpenEngine::Input::IsKeyPressed(OE_KEY_W) && !OpenEngine::Input::IsKeyPressed(OE_KEY_S))
+			m_CameraPosition.y = m_ImGuiCameraPosition[1];
+
+		if (!OpenEngine::Input::IsKeyPressed(OE_KEY_UP) && !OpenEngine::Input::IsKeyPressed(OE_KEY_DOWN))
+			m_CameraPosition.z = m_ImGuiCameraPosition[2];
+
 		OpenEngine::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		OpenEngine::RenderCommand::Clear();
 
@@ -169,8 +204,8 @@ public:
 		glm::mat4 triangleTransform = glm::translate(glm::mat4(1.0f), m_TrianglePosition);
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 		
-		glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);
-		glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
+		std::dynamic_pointer_cast<OpenEngine::OpenGLShader>(m_FlatColorShader)->Bind();
+		std::dynamic_pointer_cast<OpenEngine::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
 
 		for (int y = 0; y < 20; y++)
 		{
@@ -178,14 +213,6 @@ public:
 			{
 				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-				if (y % 2 == 0 && x % 2 == 0)
-					m_FlatColorShader->UploadUniformFloat4("u_Color", redColor);
-				else if (y % 2 == 0 && x % 2 == 1)
-					m_FlatColorShader->UploadUniformFloat4("u_Color", blueColor);
-				else if (y % 2 == 1 && x % 2 == 0)
-					m_FlatColorShader->UploadUniformFloat4("u_Color", blueColor);
-				else if (y % 2 == 1 && x % 2 == 1)
-					m_FlatColorShader->UploadUniformFloat4("u_Color", redColor);
 				OpenEngine::Renderer::Submit(m_FlatColorShader, m_SquareVA, transform);
 			}
 		}
@@ -199,6 +226,12 @@ public:
 	{
 		ImGui::Begin("Dev Tools");
 		ImGui::Text("Fps: %i", m_FramesPerSecond);
+		ImGui::End();
+		////////////////////////////////////////////////////////////////////////////
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
+		ImGui::SliderFloat3("CameraPosition", m_ImGuiCameraPosition, -5.0f, 5.0f);
+		//ImGui::VSliderFloat("Camera Position", ImVec2(m_CameraPosition.x, m_CameraPosition.y), &test, -1000.0f, 1000.0f);
 		ImGui::End();
 	}
 
@@ -223,7 +256,10 @@ private:
 	glm::vec3 m_TrianglePosition;
 	float m_TriangleMoveSpeed = 1.0f;
 
+	glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.8f };
+
 	int m_FramesPerSecond = 0;
+	float m_ImGuiCameraPosition[3] = { 0.0f, 0.0f, 0.0f };
 };
 
 class Sandbox : public OpenEngine::Application
