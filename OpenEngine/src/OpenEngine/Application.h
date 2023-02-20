@@ -7,14 +7,12 @@
 #include "Events/Event.h"
 #include "OpenEngine/Events/ApplicationEvent.h"
 
+#include "OpenEngine/Core/Timestep.h"
+
 #include "OpenEngine/ImGui/ImGuiLayer.h"
 
-#include "OpenEngine/Renderer/VertexArray.h"
-#include "OpenEngine/Renderer/Shader.h"
-#include "OpenEngine/Renderer/Buffer.h"
-
 namespace OpenEngine {
-	class  OPENENGINE_API Application
+	class Application
 	{
 	public:
 		Application();
@@ -32,17 +30,15 @@ namespace OpenEngine {
 		inline static Application& Get() { return *s_Instance; }
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
-
+	private:
 		std::unique_ptr<Window> m_Window;
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 
-		std::shared_ptr<Shader> m_Shader;
-		std::shared_ptr<Shader> m_BlueShader;
-
-		std::shared_ptr<VertexArray> m_VertexArray;
-		std::shared_ptr<VertexArray> m_SquareVA;
+		float m_LastFrameTime = 0.0f;
+		int m_FramesPerSecond = 0;
+		float *m_PreviousFrames = new float[30];
 	private:
 		static Application* s_Instance;
 	};

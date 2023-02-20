@@ -2,6 +2,7 @@
 
 #include "OpenEngine/Core.h"
 #include "OpenEngine/Events/Event.h"
+#include "OpenEngine/Core/Timestep.h"
 
 namespace OpenEngine {
 	class OPENENGINE_API Layer
@@ -12,7 +13,7 @@ namespace OpenEngine {
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(Timestep ts, int& fps) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}
 
