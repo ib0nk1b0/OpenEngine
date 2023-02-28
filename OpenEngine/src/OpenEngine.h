@@ -2,17 +2,18 @@
 
 //FOR USE BY OPENENGINE APPS
 
-#include "OpenEngine/Application.h"
-#include "OpenEngine/Layer.h"
-#include "OpenEngine/Log.h"
+#include "OpenEngine/Core/Application.h"
+#include "OpenEngine/Core/Layer.h"
+#include "OpenEngine/Core/Log.h"
 
 #include "OpenEngine/Core/Timestep.h"
 
-#include "OpenEngine/Input.h"
-#include "OpenEngine/KeyCodes.h"
-#include "OpenEngine/MouseButtonCodes.h"
+#include "OpenEngine/Core/Input.h"
+#include "OpenEngine/Core/KeyCodes.h"
+#include "OpenEngine/Core/MouseButtonCodes.h"
 
 #include "OpenEngine/ImGui/ImGuiLayer.h"
+#include "OpenEngine/Renderer/OrthographicCameraController.h"
 
 // -- Renderer -- //
 
@@ -21,6 +22,7 @@
 
 #include "OpenEngine/Renderer/Buffer.h"
 #include "OpenEngine/Renderer/Shader.h"
+#include "OpenEngine/Renderer/Texture.h"
 #include "OpenEngine/Renderer/VertexArray.h"
 
 #include "OpenEngine/Renderer/OrthographicCamera.h"
@@ -29,6 +31,6 @@
 
 // -- Entry Point -- //
 
-#include "OpenEngine/EntryPoint.h"
+#include "OpenEngine/Core/EntryPoint.h"
 
 // ----------------- //

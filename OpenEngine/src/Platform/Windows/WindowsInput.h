@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OpenEngine/Input.h"
+#include "OpenEngine/Core/Input.h"
 
 namespace OpenEngine {
 	class WindowsInput : public Input

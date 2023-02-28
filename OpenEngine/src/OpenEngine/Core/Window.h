@@ -2,7 +2,7 @@
 
 #include "oepch.h"
 
-#include "OpenEngine/Core.h"
+#include "OpenEngine/Core/Core.h"
 #include "OpenEngine/Events/Event.h"
 
 namespace OpenEngine {

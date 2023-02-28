@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OpenEngine/Core.h"
+#include "OpenEngine/Core/Core.h"
 #include "OpenEngine/Events/Event.h"
 #include "OpenEngine/Core/Timestep.h"
 
@@ -13,7 +13,7 @@ namespace OpenEngine {
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate(Timestep ts, int& fps) {}
+		virtual void OnUpdate(Timestep ts) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}
 

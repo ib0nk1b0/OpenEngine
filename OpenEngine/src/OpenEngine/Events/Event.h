@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OpenEngine/Core.h"
+#include "OpenEngine/Core/Core.h"
 #include <sstream>
 
 namespace OpenEngine {

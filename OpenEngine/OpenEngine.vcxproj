@@ -77,7 +77,7 @@
       <PrecompiledHeaderFile>oepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OE_PLATFORM_WINDOWS;OE_BUILD_DLL;GLFW_INCLUDE_NONE;OE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -98,7 +98,7 @@
       <PrecompiledHeaderFile>oepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OE_PLATFORM_WINDOWS;OE_BUILD_DLL;GLFW_INCLUDE_NONE;OE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -123,7 +123,7 @@
       <PrecompiledHeaderFile>oepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OE_PLATFORM_WINDOWS;OE_BUILD_DLL;GLFW_INCLUDE_NONE;OE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -144,35 +144,38 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\OpenEngine.h" />
-    <ClInclude Include="src\OpenEngine\Application.h" />
-    <ClInclude Include="src\OpenEngine\Core.h" />
+    <ClInclude Include="src\OpenEngine\Core\Application.h" />
+    <ClInclude Include="src\OpenEngine\Core\Core.h" />
+    <ClInclude Include="src\OpenEngine\Core\EntryPoint.h" />
+    <ClInclude Include="src\OpenEngine\Core\Input.h" />
+    <ClInclude Include="src\OpenEngine\Core\KeyCodes.h" />
+    <ClInclude Include="src\OpenEngine\Core\Layer.h" />
+    <ClInclude Include="src\OpenEngine\Core\LayerStack.h" />
+    <ClInclude Include="src\OpenEngine\Core\Log.h" />
+    <ClInclude Include="src\OpenEngine\Core\MouseButtonCodes.h" />
     <ClInclude Include="src\OpenEngine\Core\Timestep.h" />
-    <ClInclude Include="src\OpenEngine\EntryPoint.h" />
+    <ClInclude Include="src\OpenEngine\Core\Window.h" />
     <ClInclude Include="src\OpenEngine\Events\ApplicationEvent.h" />
     <ClInclude Include="src\OpenEngine\Events\Event.h" />
     <ClInclude Include="src\OpenEngine\Events\KeyEvent.h" />
     <ClInclude Include="src\OpenEngine\Events\MouseEvent.h" />
     <ClInclude Include="src\OpenEngine\ImGui\ImGuiInfoLayer.h" />
     <ClInclude Include="src\OpenEngine\ImGui\ImGuiLayer.h" />
-    <ClInclude Include="src\OpenEngine\Input.h" />
-    <ClInclude Include="src\OpenEngine\KeyCodes.h" />
-    <ClInclude Include="src\OpenEngine\Layer.h" />
-    <ClInclude Include="src\OpenEngine\LayerStack.h" />
-    <ClInclude Include="src\OpenEngine\Log.h" />
-    <ClInclude Include="src\OpenEngine\MouseButtonCodes.h" />
     <ClInclude Include="src\OpenEngine\Renderer\Buffer.h" />
     <ClInclude Include="src\OpenEngine\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\OpenEngine\Renderer\OrthographicCamera.h" />
+    <ClInclude Include="src\OpenEngine\Renderer\OrthographicCameraController.h" />
     <ClInclude Include="src\OpenEngine\Renderer\RenderCommand.h" />
     <ClInclude Include="src\OpenEngine\Renderer\Renderer.h" />
     <ClInclude Include="src\OpenEngine\Renderer\RendererAPI.h" />
     <ClInclude Include="src\OpenEngine\Renderer\Shader.h" />
+    <ClInclude Include="src\OpenEngine\Renderer\Texture.h" />
     <ClInclude Include="src\OpenEngine\Renderer\VertexArray.h" />
-    <ClInclude Include="src\OpenEngine\Window.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
@@ -593,32 +596,37 @@
     <ClInclude Include="vendor\glm\glm\vec3.hpp" />
     <ClInclude Include="vendor\glm\glm\vec4.hpp" />
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
+    <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\OpenEngine\Application.cpp" />
+    <ClCompile Include="src\OpenEngine\Core\Application.cpp" />
+    <ClCompile Include="src\OpenEngine\Core\Layer.cpp" />
+    <ClCompile Include="src\OpenEngine\Core\LayerStack.cpp" />
+    <ClCompile Include="src\OpenEngine\Core\Log.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiInfoLayer.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiLayer.cpp" />
-    <ClCompile Include="src\OpenEngine\Layer.cpp" />
-    <ClCompile Include="src\OpenEngine\LayerStack.cpp" />
-    <ClCompile Include="src\OpenEngine\Log.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\Buffer.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\OrthographicCamera.cpp" />
+    <ClCompile Include="src\OpenEngine\Renderer\OrthographicCameraController.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\Renderer.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\Shader.cpp" />
+    <ClCompile Include="src\OpenEngine\Renderer\Texture.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\oepch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="vendor\stb_image\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">

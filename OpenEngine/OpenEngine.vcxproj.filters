@@ -7,6 +7,9 @@
     <Filter Include="src\OpenEngine">
       <UniqueIdentifier>{6490DC94-505E-D09A-39F2-40C1255FACFF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\OpenEngine\Core">
+      <UniqueIdentifier>{3C93F3D1-A8F4-D0DF-3162-17929DC2079F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\OpenEngine\Events">
       <UniqueIdentifier>{C8634722-34D0-021D-FDC3-9A7A69EF2485}</UniqueIdentifier>
     </Filter>
@@ -46,19 +49,46 @@
     <Filter Include="vendor\glm\glm\gtx">
       <UniqueIdentifier>{B3A6A76B-9F8A-68C1-08EB-6214F4ED5243}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor\stb_image">
+      <UniqueIdentifier>{0DA0BA59-F998-D9AB-22CB-BE300E23B9B7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\OpenEngine.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\Application.h">
-      <Filter>src\OpenEngine</Filter>
+    <ClInclude Include="src\OpenEngine\Core\Application.h">
+      <Filter>src\OpenEngine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\Core.h">
-      <Filter>src\OpenEngine</Filter>
+    <ClInclude Include="src\OpenEngine\Core\Core.h">
+      <Filter>src\OpenEngine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\EntryPoint.h">
-      <Filter>src\OpenEngine</Filter>
+    <ClInclude Include="src\OpenEngine\Core\EntryPoint.h">
+      <Filter>src\OpenEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Core\Input.h">
+      <Filter>src\OpenEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Core\KeyCodes.h">
+      <Filter>src\OpenEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Core\Layer.h">
+      <Filter>src\OpenEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Core\LayerStack.h">
+      <Filter>src\OpenEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Core\Log.h">
+      <Filter>src\OpenEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Core\MouseButtonCodes.h">
+      <Filter>src\OpenEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Core\Timestep.h">
+      <Filter>src\OpenEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Core\Window.h">
+      <Filter>src\OpenEngine\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Events\ApplicationEvent.h">
       <Filter>src\OpenEngine\Events</Filter>
@@ -72,31 +102,25 @@
     <ClInclude Include="src\OpenEngine\Events\MouseEvent.h">
       <Filter>src\OpenEngine\Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\ImGui\ImGuiLayer.h">
+    <ClInclude Include="src\OpenEngine\ImGui\ImGuiInfoLayer.h">
       <Filter>src\OpenEngine\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\Input.h">
-      <Filter>src\OpenEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\OpenEngine\KeyCodes.h">
-      <Filter>src\OpenEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\OpenEngine\Layer.h">
-      <Filter>src\OpenEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\OpenEngine\LayerStack.h">
-      <Filter>src\OpenEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\OpenEngine\Log.h">
-      <Filter>src\OpenEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\OpenEngine\MouseButtonCodes.h">
-      <Filter>src\OpenEngine</Filter>
+    <ClInclude Include="src\OpenEngine\ImGui\ImGuiLayer.h">
+      <Filter>src\OpenEngine\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\Buffer.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\GraphicsContext.h">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Renderer\OrthographicCamera.h">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Renderer\OrthographicCameraController.h">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Renderer\RenderCommand.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\Renderer.h">
@@ -108,11 +132,11 @@
     <ClInclude Include="src\OpenEngine\Renderer\Shader.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\Renderer\VertexArray.h">
+    <ClInclude Include="src\OpenEngine\Renderer\Texture.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\Window.h">
-      <Filter>src\OpenEngine</Filter>
+    <ClInclude Include="src\OpenEngine\Renderer\VertexArray.h">
+      <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
@@ -120,7 +144,13 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h">
@@ -1383,38 +1413,54 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\Renderer\RenderCommand.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
-    <ClInclude Include="src\OpenEngine\ImGui\ImGuiInfoLayer.h" />
-    <ClInclude Include="src\OpenEngine\Renderer\OrthographicCamera.h" />
-    <ClInclude Include="src\OpenEngine\Core\Timestep.h" />
+    <ClInclude Include="vendor\stb_image\stb_image.h">
+      <Filter>vendor\stb_image</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\OpenEngine\Application.cpp">
-      <Filter>src\OpenEngine</Filter>
+    <ClCompile Include="src\OpenEngine\Core\Application.cpp">
+      <Filter>src\OpenEngine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Core\Layer.cpp">
+      <Filter>src\OpenEngine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Core\LayerStack.cpp">
+      <Filter>src\OpenEngine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Core\Log.cpp">
+      <Filter>src\OpenEngine\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiBuild.cpp">
+      <Filter>src\OpenEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\ImGui\ImGuiInfoLayer.cpp">
       <Filter>src\OpenEngine\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiLayer.cpp">
       <Filter>src\OpenEngine\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="src\OpenEngine\Layer.cpp">
-      <Filter>src\OpenEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\OpenEngine\LayerStack.cpp">
-      <Filter>src\OpenEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\OpenEngine\Log.cpp">
-      <Filter>src\OpenEngine</Filter>
-    </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\Buffer.cpp">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Renderer\OrthographicCamera.cpp">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Renderer\OrthographicCameraController.cpp">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Renderer\RenderCommand.cpp">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\Renderer.cpp">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\OpenEngine\Renderer\RendererAPI.cpp">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\Shader.cpp">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Renderer\Texture.cpp">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\VertexArray.cpp">
@@ -1426,7 +1472,13 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">
@@ -1441,10 +1493,8 @@
     <ClCompile Include="src\oepch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\OpenEngine\Renderer\RendererAPI.cpp" />
-    <ClCompile Include="src\OpenEngine\Renderer\RenderCommand.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
-    <ClCompile Include="src\OpenEngine\ImGui\ImGuiInfoLayer.cpp" />
-    <ClCompile Include="src\OpenEngine\Renderer\OrthographicCamera.cpp" />
+    <ClCompile Include="vendor\stb_image\stb_image.cpp">
+      <Filter>vendor\stb_image</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

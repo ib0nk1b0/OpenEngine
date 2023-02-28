@@ -16,6 +16,7 @@ IncludeDir["GLFW"] = "OpenEngine/vendor/GLFW/include"
 IncludeDir["Glad"] = "OpenEngine/vendor/Glad/include"
 IncludeDir["ImGui"] = "OpenEngine/vendor/imgui"
 IncludeDir["glm"] = "OpenEngine/vendor/glm"
+IncludeDir["stb_image"] = "OpenEngine/vendor/stb_image"
 
 group "Dependencies"
   include "OpenEngine/vendor/GLFW"
@@ -41,6 +42,8 @@ project "OpenEngine"
   {
     "%{prj.name}/src/**.h",
     "%{prj.name}/src/**.cpp",
+    "%{prj.name}/vendor/stb_image/**.h",
+    "%{prj.name}/vendor/stb_image/**.cpp",
     "%{prj.name}/vendor/glm/glm/**.hpp",
     "%{prj.name}/vendor/glm/glm/**.inl"
   }
@@ -57,7 +60,8 @@ project "OpenEngine"
     "%{IncludeDir.GLFW}",
     "%{IncludeDir.Glad}",
     "%{IncludeDir.ImGui}",
-    "%{IncludeDir.glm}"
+    "%{IncludeDir.glm}",
+    "%{IncludeDir.stb_image}"
   }
 
   links

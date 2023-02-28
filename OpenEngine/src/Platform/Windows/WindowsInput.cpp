@@ -1,6 +1,6 @@
 #include "oepch.h"
 #include "WindowsInput.h"
-#include "OpenEngine/Application.h"
+#include "OpenEngine/Core/Application.h"
 
 #include <GLFW/glfw3.h>
 

@@ -15,14 +15,14 @@ namespace OpenEngine {
 
 	Application::Application()
 	{
-		PushLayer(new ImGuiInfoLayer());
-
 		OE_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		//m_Window->SetVSync(false);
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+
+		Renderer::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
@@ -48,6 +48,7 @@ namespace OpenEngine {
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
 
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); )
 		{
@@ -57,12 +58,6 @@ namespace OpenEngine {
 		}
 	}
 
-	bool Application::OnWindowClose(WindowCloseEvent& e)
-	{
-		m_Running = false;
-		return true;
-	}
-
 	void Application::Run()
 	{
 		while (m_Running)
@@ -70,25 +65,12 @@ namespace OpenEngine {
 			float time = (float)glfwGetTime(); // Platform::GetTime();
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
-			float thisFramePerSecondCount = 1 / timestep.GetSeconds();
-			float runningTotal = 0.0f;
-			int sizeOfArray = sizeof(m_PreviousFrames) / sizeof(*m_PreviousFrames);
-			
-			for (int i = 0; i < sizeOfArray; i++)
+
+			if (!m_Minimised)
 			{
-				runningTotal += m_PreviousFrames[i];
-				if (i != 0)
-					m_PreviousFrames[i - 1] = m_PreviousFrames[i];
+				for (Layer* layer : m_LayerStack)
+					layer->OnUpdate(timestep);
 			}
-
-			m_PreviousFrames[sizeOfArray - 1] = thisFramePerSecondCount;
-
-			m_FramesPerSecond = floor(runningTotal / sizeOfArray);
-
-			OE_CORE_INFO("Fps: {0}", m_FramesPerSecond);
-
-			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate(timestep, m_FramesPerSecond);
 
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
@@ -97,5 +79,26 @@ namespace OpenEngine {
 
 			m_Window->OnUpdate();
 		}
+	}
+
+	bool Application::OnWindowClose(WindowCloseEvent& e)
+	{
+		m_Running = false;
+		return true;
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& e)
+	{
+		if (e.GetWidth() == 0 || e.GetHeight() == 0)
+		{
+			m_Minimised = true;
+			return false;
+		}
+
+		m_Minimised = false;
+
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+
+		return false;
 	}
 }
