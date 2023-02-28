@@ -5,7 +5,7 @@
 #include "OpenEngine/Core/Timestep.h"
 
 namespace OpenEngine {
-	class OPENENGINE_API Layer
+	class Layer
 	{
 	public:
 		Layer(const std::string& name = "Layer");

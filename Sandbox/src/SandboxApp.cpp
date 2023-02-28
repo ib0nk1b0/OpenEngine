@@ -1,4 +1,5 @@
 #include <OpenEngine.h>
+#include <OpenEngine/Core/EntryPoint.h>
 #include "Platform/OpenGL/OpenGLShader.h"
 #include "imgui/imgui.h"
 
@@ -6,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Sandbox2D.h"
 
 class ExampleLayer : public OpenEngine::Layer
 {
@@ -13,7 +15,7 @@ public:
 	ExampleLayer()
 		: Layer("Example"), m_CameraController(1280.0f / 720.0f)
 	{
-		m_VertexArray.reset(OpenEngine::VertexArray::Create());
+		m_VertexArray = OpenEngine::VertexArray::Create();
 
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 0.9f, 0.3f, 0.8f, 1.0f,
@@ -22,7 +24,7 @@ public:
 		};
 
 		OpenEngine::Ref<OpenEngine::VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(OpenEngine::VertexBuffer::Create(vertices, sizeof(vertices)));
+		vertexBuffer = OpenEngine::VertexBuffer::Create(vertices, sizeof(vertices));
 		OpenEngine::BufferLayout layout = {
 			{ OpenEngine::ShaderDataType::Float3, "a_Position" },
 			{ OpenEngine::ShaderDataType::Float4, "a_Color" }
@@ -32,10 +34,10 @@ public:
 
 		uint32_t indices[3] = { 0, 1, 2 };
 		OpenEngine::Ref<OpenEngine::IndexBuffer> indexBuffer;
-		indexBuffer.reset(OpenEngine::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		indexBuffer = OpenEngine::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
-		m_SquareVA.reset(OpenEngine::VertexArray::Create());
+		m_SquareVA = OpenEngine::VertexArray::Create();
 
 		float squareVertices[5 * 4] = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -45,7 +47,7 @@ public:
 		};
 
 		OpenEngine::Ref<OpenEngine::VertexBuffer> squareVB;
-		squareVB.reset(OpenEngine::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
+		squareVB = OpenEngine::VertexBuffer::Create(squareVertices, sizeof(squareVertices));
 		squareVB->SetLayout({
 			{ OpenEngine::ShaderDataType::Float3, "a_Position" },
 			{ OpenEngine::ShaderDataType::Float2, "a_TexCoord" }
@@ -54,7 +56,7 @@ public:
 
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 		OpenEngine::Ref<OpenEngine::IndexBuffer> squareIB;
-		squareIB.reset(OpenEngine::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+		squareIB = OpenEngine::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
 		m_SquareVA->SetIndexBuffer(squareIB);
 
 		std::string vertexSrc = R"(
@@ -94,7 +96,7 @@ public:
 
 		m_Shader = OpenEngine::Shader::Create("VertexPosColor", vertexSrc, fragmentSrc);
 
-		m_ShaderLibrary.Load("assets/shaders/FlatColourShader.glsl");
+		m_ShaderLibrary.Load("assets/shaders/FlatColor.glsl");
 		auto textureShader = m_ShaderLibrary.Load("assets/shaders/Texture.glsl");
 
 		m_Texture = OpenEngine::Texture2D::Create("assets/textures/Chekerboard.png");
@@ -150,9 +152,7 @@ public:
 	virtual void OnImGuiRender() override
 	{
 		ImGui::Begin("Settings");
-		//ImGui::Text("Fps: %i", m_FramesPerSecond);
 		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
-		//ImGui::SliderFloat3("Camera Position", m_ImGuiCameraPosition, -5.0f, 5.0f);
 		ImGui::End();
 	}
 
@@ -192,7 +192,8 @@ class Sandbox : public OpenEngine::Application
 public:
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer());
+		//PushLayer(new ExampleLayer());
+		PushLayer(new Sandbox2D());
 	}
 	~Sandbox()
 	{

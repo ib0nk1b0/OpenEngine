@@ -18,6 +18,7 @@
 // -- Renderer -- //
 
 #include "OpenEngine/Renderer/Renderer.h"
+#include "OpenEngine/Renderer/Renderer2D.h"
 #include "OpenEngine/Renderer/RenderCommand.h"
 
 #include "OpenEngine/Renderer/Buffer.h"
@@ -30,7 +31,4 @@
 // -------------- //
 
 // -- Entry Point -- //
-
-#include "OpenEngine/Core/EntryPoint.h"
-
 // ----------------- //
