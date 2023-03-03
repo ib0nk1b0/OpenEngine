@@ -1417,6 +1417,7 @@
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\Renderer2D.h" />
+    <ClInclude Include="src\OpenEngine\Debug\Instrumentor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenEngine\Core\Application.cpp">
@@ -1498,5 +1499,6 @@
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\Renderer2D.cpp" />
+    <ClCompile Include="src\OpenEngine\Renderer\GraphicsContext.cpp" />
   </ItemGroup>
 </Project>

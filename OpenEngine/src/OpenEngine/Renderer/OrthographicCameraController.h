@@ -12,7 +12,7 @@ namespace OpenEngine
 	class OrthographicCameraController
 	{
 	public:
-		OrthographicCameraController(float aspectRatio, bool rotation = false);
+		OrthographicCameraController(float aspectRatio, bool rotation = false, bool controlsEnabled = true);
 
 		void OnUpdate(Timestep ts);
 		void OnEvent(Event& e);
@@ -32,6 +32,7 @@ namespace OpenEngine
 		OrthographicCamera m_Camera;
 
 		bool m_Rotation;
+		bool m_ControlsEnabled;
 
 		glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };
 		float m_CameraRotation = 0.0f;

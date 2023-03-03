@@ -14,6 +14,7 @@
 #include <unordered_set>
 
 #include "OpenEngine/Core/Log.h"
+#include "OpenEngine/Debug/Instrumentor.h"
 
 #ifdef OE_PLATFORM_WINDOWS
 #include <Windows.h>

@@ -155,6 +155,7 @@
     <ClInclude Include="src\OpenEngine\Core\MouseButtonCodes.h" />
     <ClInclude Include="src\OpenEngine\Core\Timestep.h" />
     <ClInclude Include="src\OpenEngine\Core\Window.h" />
+    <ClInclude Include="src\OpenEngine\Debug\Instrumentor.h" />
     <ClInclude Include="src\OpenEngine\Events\ApplicationEvent.h" />
     <ClInclude Include="src\OpenEngine\Events\Event.h" />
     <ClInclude Include="src\OpenEngine\Events\KeyEvent.h" />
@@ -608,6 +609,7 @@
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiInfoLayer.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\OpenEngine\Renderer\GraphicsContext.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\OrthographicCameraController.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\RenderCommand.cpp" />
