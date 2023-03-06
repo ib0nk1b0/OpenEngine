@@ -1,14 +1,21 @@
 #include "Paddle.h"
 
-Paddle::Paddle(const glm::vec2& position, const glm::vec2& size)
-	: m_Position(position), m_Size(size)
+Paddle::Paddle(const glm::vec3& position)
+	: m_Position(position)
 {
+	m_Quad.position = m_Position;
+	m_Quad.size = { 0.03f, 0.4f };
+	m_Score = 0;
 }
 
-PaddleController::PaddleController(const glm::vec2& position, const glm::vec2& size, Keybinds keybinds)
-	: m_Paddle(position, size), m_Keybinds(keybinds), m_PaddlePosition(position)
+void Paddle::Draw()
 {
+	OpenEngine::Renderer2D::DrawQuad(m_Quad);
+}
 
+PaddleController::PaddleController(const glm::vec3& position, Keybinds keybinds)
+	: m_Paddle(position), m_Keybinds(keybinds), m_PaddlePosition(position)
+{
 }
 
 void PaddleController::OnUpdate(OpenEngine::Timestep ts)
@@ -19,6 +26,7 @@ void PaddleController::OnUpdate(OpenEngine::Timestep ts)
 		m_PaddlePosition.y -= m_PaddleSpeed * ts;
 
 	m_Paddle.SetPosition(m_PaddlePosition);
+	m_Paddle.Draw();
 }
 
 void PaddleController::OnEvent(OpenEngine::Event& e)

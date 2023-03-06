@@ -7,17 +7,22 @@
 class Ball
 {
 public:
-	Ball(const glm::vec2& pos, const glm::vec2& vel, const glm::vec2& size);
+	Ball(const glm::vec2& vel);
 
-	glm::vec2& GetPosition() { return m_Position; }
-	glm::vec2& GetSize() { return m_Size; }
+	glm::vec3& GetPosition() { return m_Quad.position; }
+	void SetPosition(const glm::vec3& position) { m_Quad.position = position; }
+
+	glm::vec2& GetSize() { return m_Quad.size; }
 
 	glm::vec2& GetVelocity() { return m_Velocity; }
 	void SetVelocity(const glm::vec2& velocity) { m_Velocity = velocity; }
 
+	OpenEngine::Quad GetQuad() { return m_Quad; }
+
 	void OnUpdate(OpenEngine::Timestep ts);
+public:
+	bool GameReset = false;
 private:
-	glm::vec2 m_Position;
+	OpenEngine::Quad m_Quad;
 	glm::vec2 m_Velocity;
-	glm::vec2 m_Size;
 };

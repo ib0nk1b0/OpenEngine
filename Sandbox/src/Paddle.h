@@ -13,24 +13,29 @@ struct Keybinds
 class Paddle
 {
 public:
-	Paddle(const glm::vec2& position, const glm::vec2& size);
+	Paddle(const glm::vec3& position);
 
-	glm::vec2& GetSize() { return m_Size; }
-	glm::vec2& GetPosition() { return m_Position; }
-	void SetPosition(const glm::vec2& position) { m_Position = position; }
+	glm::vec2& GetSize() { return m_Quad.size; }
+
+	glm::vec3& GetPosition() { return m_Quad.position; }
+	void SetPosition(const glm::vec3& position) { m_Quad.position = position; }
+
+	OpenEngine::Quad GetQuad() { return m_Quad; }
 
 	int GetScore() { return m_Score; }
 	void AddScore() { m_Score++; }
+
+	void Draw();
 private:
-	glm::vec2 m_Position = { 0.0f, 0.0f };
-	glm::vec2 m_Size;
-	int m_Score;
+	OpenEngine::Quad m_Quad;
+	glm::vec3 m_Position;
+	int m_Score = 0;
 };
 
 class PaddleController
 {
 public:
-	PaddleController(const glm::vec2& position, const glm::vec2& size, Keybinds keybinds);
+	PaddleController(const glm::vec3& position, Keybinds keybinds);
 
 	void OnUpdate(OpenEngine::Timestep ts);
 	void OnEvent(OpenEngine::Event& e);
@@ -39,7 +44,7 @@ public:
 
 private:
 	Paddle m_Paddle;
-	glm::vec2 m_PaddlePosition;
-	float m_PaddleSpeed = 0.5f;
+	glm::vec3 m_PaddlePosition;
+	float m_PaddleSpeed = 1.0f;
 	Keybinds m_Keybinds;
 };

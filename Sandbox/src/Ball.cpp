@@ -1,23 +1,27 @@
 #include "Ball.h"
 
-Ball::Ball(const glm::vec2& pos, const glm::vec2& vel, const glm::vec2& size)
-	: m_Position(pos), m_Velocity(vel), m_Size(size)
+Ball::Ball(const glm::vec2& vel)
+	: m_Velocity(vel)
 {
+	m_Quad.position = { 0.0f, 0.0f, 0.0f };
+	m_Quad.size = { 0.04f, 0.04f };
 }
 
 void Ball::OnUpdate(OpenEngine::Timestep ts)
 {
-	m_Position.x += m_Velocity.x * ts;
-	m_Position.y += m_Velocity.y * ts;
+	m_Quad.position.x += m_Velocity.x * ts;
+	m_Quad.position.y += m_Velocity.y * ts;
 
-	float num = 1.0f / 9.0f * 16.0f;
+	float windowWidth = 1.0f / 9.0f * 16.0f;
 
-	if (m_Position.x <= -num || m_Position.x >= num)
+	if (m_Quad.position.x <= -windowWidth || m_Quad.position.x >= windowWidth)
 	{
-		m_Position = { 0.0f, 0.0f };
+		GameReset = true;
 		//Add a way to get the player from the game class
 	}
 
-	if (m_Position.y >= 1.0f || m_Position.y <= -1.0f)
+	if (m_Quad.position.y >= 1.0f - m_Quad.size.y || m_Quad.position.y <= -1.0f)
 		m_Velocity.y = -m_Velocity.y;
+
+	OpenEngine::Renderer2D::DrawQuad(m_Quad);
 }

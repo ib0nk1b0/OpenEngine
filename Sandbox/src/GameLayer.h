@@ -14,6 +14,8 @@ public:
 	virtual void OnAttach() override;
 	virtual void OnDetach() override;
 
+	bool CollisionRect(OpenEngine::Quad quad1, OpenEngine::Quad quad2);
+
 	void OnUpdate(OpenEngine::Timestep ts) override;
 	virtual void OnImGuiRender() override;
 	void OnEvent(OpenEngine::Event& e) override;

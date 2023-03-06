@@ -29,17 +29,39 @@ void Sandbox2D::OnUpdate(OpenEngine::Timestep ts)
 
 	//Update
 	m_CameraController.OnUpdate(ts);
+	{
+		static float rotation = 0.0f;
+		rotation += ts * 50.0f;
 
-	//Render
-	OpenEngine::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-	OpenEngine::RenderCommand::Clear();
+		OpenEngine::Quad quad1 = { { 0.5f, -0.25f, 0.0f }, { 0.8f, 0.8f }, m_SquareColor };
+		OpenEngine::Quad quad2 = { { -0.5f, 0.25f, 0.0f }, { 1.0f, 0.5f }, m_Square2Color, rotation, 1.0f };
+		OpenEngine::Quad quad3;
+		OpenEngine::Quad quad4;
 
-	OpenEngine::Renderer2D::BeginScene(m_CameraController.GetCamera());
-	OpenEngine::Renderer2D::DrawQuad({ -0.5f, 0.0f, 0.0f }, { 0.8f, 0.8f }, m_SquareColor);
-	OpenEngine::Renderer2D::DrawQuad({ 1.0f, 0.0f, 0.0f }, { 1.0f, 0.5f }, m_Square2Color);
-	//OpenEngine::Renderer2D::DrawRotatedQuad({ 0.5f, -0.5f }, { 1.0f, 0.75f }, glm::radians(45.0f), m_Square2Color);
-	//OpenEngine::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, 10.0f);
-	OpenEngine::Renderer2D::EndScene();
+		quad3.position = { 0.0f, 0.0f, -0.1f };
+		quad3.size = { 10.0f, 10.0f };
+		quad3.texture = m_CheckerboardTexture;
+		quad3.scale = 10.0f;
+
+		quad4.position = { 0.0f, 0.0f, 0.0f };
+		quad4.size = { 1.0f, 1.0f };
+		quad4.texture = m_CheckerboardTexture;
+		quad4.rotation = 45.0f;
+		quad4.scale = 20.0f;
+
+
+		//Render
+		OpenEngine::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+		OpenEngine::RenderCommand::Clear();
+
+		OpenEngine::Renderer2D::BeginScene(m_CameraController.GetCamera());
+		OpenEngine::Renderer2D::DrawQuad(quad1);
+		OpenEngine::Renderer2D::DrawQuad(quad2);
+		//OpenEngine::Renderer2D::DrawRotatedQuad({ 0.5f, -0.5f }, { 1.0f, 0.75f }, glm::radians(45.0f), m_Square2Color);
+		OpenEngine::Renderer2D::DrawQuad(quad3);
+		OpenEngine::Renderer2D::DrawQuad(quad4);
+		OpenEngine::Renderer2D::EndScene();
+	}
 }
 
 void Sandbox2D::OnImGuiRender()
