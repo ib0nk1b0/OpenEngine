@@ -24,6 +24,7 @@
 #include "OpenEngine/Renderer/Buffer.h"
 #include "OpenEngine/Renderer/Shader.h"
 #include "OpenEngine/Renderer/Texture.h"
+#include "OpenEngine/Renderer/SubTexture2D.h"
 #include "OpenEngine/Renderer/VertexArray.h"
 
 #include "OpenEngine/Renderer/OrthographicCamera.h"

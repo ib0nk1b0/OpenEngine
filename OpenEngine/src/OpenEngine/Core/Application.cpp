@@ -67,6 +67,11 @@ namespace OpenEngine {
 		}
 	}
 
+	void Application::Close()
+	{
+		m_Running = false;
+	}
+
 	void Application::Run()
 	{
 		OE_PROFILE_FUNCTION();

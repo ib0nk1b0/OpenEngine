@@ -1418,6 +1418,7 @@
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\Renderer2D.h" />
     <ClInclude Include="src\OpenEngine\Debug\Instrumentor.h" />
+    <ClInclude Include="src\OpenEngine\Renderer\SubTexture2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenEngine\Core\Application.cpp">
@@ -1500,5 +1501,6 @@
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\GraphicsContext.cpp" />
+    <ClCompile Include="src\OpenEngine\Renderer\SubTexture2D.cpp" />
   </ItemGroup>
 </Project>
