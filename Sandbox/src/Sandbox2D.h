@@ -16,9 +16,11 @@ public:
 	void OnEvent(OpenEngine::Event& e) override;
 private:
 	OpenEngine::OrthographicCameraController m_CameraController;
+	
 	OpenEngine::Ref<OpenEngine::VertexArray> m_SquareVA;
 	OpenEngine::Ref<OpenEngine::Shader> m_Shader;
-	OpenEngine::Ref<OpenEngine::Texture2D> m_CheckerboardTexture, m_OpenEngineTexture;
+
+	OpenEngine::Ref<OpenEngine::Texture2D> m_CheckerboardTexture;
 
 	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 	glm::vec4 m_Square2Color = { 0.8f, 0.2f, 0.3f, 1.0f };

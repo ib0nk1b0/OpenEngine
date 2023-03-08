@@ -13,14 +13,15 @@ namespace OpenEngine {
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application()
+	Application::Application(const std::string& name)
+		: m_Name(name)
 	{
 		OE_PROFILE_FUNCTION();
 
 		OE_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
-		m_Window = std::unique_ptr<Window>(Window::Create());
+		m_Window = Window::Create(WindowProps(name));
 		//m_Window->SetVSync(false);
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
@@ -65,6 +66,11 @@ namespace OpenEngine {
 			if (e.Handled)
 				break;
 		}
+	}
+
+	void Application::Close()
+	{
+		m_Running = false;
 	}
 
 	void Application::Run()

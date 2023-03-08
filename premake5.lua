@@ -1,6 +1,6 @@
 workspace "OpenEngine"
   architecture "x64"
-  startproject "Sandbox"
+  startproject "OpenEngine-Editor"
 
   configurations
   {
@@ -22,7 +22,6 @@ group "Dependencies"
   include "OpenEngine/vendor/GLFW"
   include "OpenEngine/vendor/Glad"
   include "OpenEngine/vendor/imgui"
-
 group ""
 
 project "OpenEngine"
@@ -123,6 +122,11 @@ project "Sandbox"
     "%{IncludeDir.glm}"
   }
 
+  links
+  {
+    "OpenEngine"
+  }
+
   filter "system:windows"
     systemversion "latest"
 
@@ -131,9 +135,56 @@ project "Sandbox"
       "OE_PLATFORM_WINDOWS"
     }
 
-    links
+  filter "configurations:Debug"
+    defines "OE_DEBUG"
+    runtime "Debug"
+    symbols "on"
+
+  filter "configurations:Release"
+    defines "OE_RELEASE"
+    runtime "Release"
+    optimize "on"
+
+  filter "configurations:Dist"
+    defines "OE_DIST"
+    runtime "Release"
+    optimize "on"
+
+project "OpenEngine-Editor"
+  location "OpenEngine-Editor"
+  kind "ConsoleApp"
+  language "C++"
+  cppdialect "C++17"
+  staticruntime "on"
+
+  targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+  objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+  files
+  {
+    "%{prj.name}/src/**.h",
+    "%{prj.name}/src/**.cpp",
+  }
+
+  includedirs
+  {
+    "OpenEngine/vendor/spdlog/include",
+    "OpenEngine/src",
+    "OpenEngine/vendor",
+    "%{IncludeDir.glm}"
+  }
+
+  links
+  {
+    "OpenEngine"
+  }
+
+  filter "system:windows"
+    systemversion "latest"
+
+    defines
     {
-      "OpenEngine"
+      "OE_PLATFORM_WINDOWS"
     }
 
   filter "configurations:Debug"
