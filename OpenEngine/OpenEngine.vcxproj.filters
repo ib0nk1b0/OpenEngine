@@ -10,6 +10,9 @@
     <Filter Include="src\OpenEngine\Core">
       <UniqueIdentifier>{3C93F3D1-A8F4-D0DF-3162-17929DC2079F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\OpenEngine\Debug">
+      <UniqueIdentifier>{DA557210-C6E4-FBD9-6F03-10D55B710C80}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\OpenEngine\Events">
       <UniqueIdentifier>{C8634722-34D0-021D-FDC3-9A7A69EF2485}</UniqueIdentifier>
     </Filter>
@@ -90,6 +93,9 @@
     <ClInclude Include="src\OpenEngine\Core\Window.h">
       <Filter>src\OpenEngine\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenEngine\Debug\Instrumentor.h">
+      <Filter>src\OpenEngine\Debug</Filter>
+    </ClInclude>
     <ClInclude Include="src\OpenEngine\Events\ApplicationEvent.h">
       <Filter>src\OpenEngine\Events</Filter>
     </ClInclude>
@@ -111,6 +117,9 @@
     <ClInclude Include="src\OpenEngine\Renderer\Buffer.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenEngine\Renderer\Framebuffer.h">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\GraphicsContext.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
@@ -126,10 +135,16 @@
     <ClInclude Include="src\OpenEngine\Renderer\Renderer.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenEngine\Renderer\Renderer2D.h">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\RendererAPI.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\Shader.h">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Renderer\SubTexture2D.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\Texture.h">
@@ -142,6 +157,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLFramebuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
@@ -1416,9 +1434,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\Renderer\Renderer2D.h" />
-    <ClInclude Include="src\OpenEngine\Debug\Instrumentor.h" />
-    <ClInclude Include="src\OpenEngine\Renderer\SubTexture2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenEngine\Core\Application.cpp">
@@ -1445,6 +1460,12 @@
     <ClCompile Include="src\OpenEngine\Renderer\Buffer.cpp">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\OpenEngine\Renderer\Framebuffer.cpp">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Renderer\GraphicsContext.cpp">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\OrthographicCamera.cpp">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClCompile>
@@ -1457,10 +1478,16 @@
     <ClCompile Include="src\OpenEngine\Renderer\Renderer.cpp">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\OpenEngine\Renderer\Renderer2D.cpp">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\RendererAPI.cpp">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\Shader.cpp">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Renderer\SubTexture2D.cpp">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\Texture.cpp">
@@ -1473,6 +1500,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp">
@@ -1499,8 +1529,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\OpenEngine\Renderer\Renderer2D.cpp" />
-    <ClCompile Include="src\OpenEngine\Renderer\GraphicsContext.cpp" />
-    <ClCompile Include="src\OpenEngine\Renderer\SubTexture2D.cpp" />
   </ItemGroup>
 </Project>

@@ -55,8 +55,9 @@ namespace OpenEngine
 		dispatcher.Dispatch<WindowResizeEvent>(OE_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
 	}
 
-	void OrthographicCameraController::CalculateView()
+	void OrthographicCameraController::OnResize(float width, float height)
 	{
+		m_AspectRatio = width / height;
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 	}
 
@@ -68,8 +69,8 @@ namespace OpenEngine
 		{
 			m_ZoomLevel -= e.GetOffsetY() * 0.25f;
 			m_ZoomLevel = std::max(m_ZoomLevel, 0.25f);
-			m_ZoomLevel = std::min(m_ZoomLevel, 20.0f);
-			CalculateView();
+			m_ZoomLevel = std::min(m_ZoomLevel, 50.0f);
+			m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 		}
 		return false;
 	}
@@ -78,8 +79,7 @@ namespace OpenEngine
 	{
 		OE_PROFILE_FUNCTION();
 
-		m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
-		CalculateView();
+		OnResize((float)e.GetWidth(), (float)e.GetHeight());
 		return false;
 	}
 

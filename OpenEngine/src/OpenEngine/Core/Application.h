@@ -15,7 +15,7 @@ namespace OpenEngine {
 	class Application
 	{
 	public:
-		Application();
+		Application(const std::string& name = "OpenEngine App");
 		virtual ~Application();
 
 		void Run();
@@ -34,6 +34,7 @@ namespace OpenEngine {
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
 	private:
+		std::string m_Name;
 		std::unique_ptr<Window> m_Window;
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
