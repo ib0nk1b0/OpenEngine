@@ -1,49 +1,26 @@
 #include <OpenEngine.h>
+#include <OpenEngine/Core/EntryPoint.h>
+//#include "Platform/OpenGL/OpenGLShader.h"
+//#include "imgui/imgui.h"
 
-class ExampleLayer : public OpenEngine::Layer
-{
-public:
-	ExampleLayer()
-		: Layer("Example")
-	{
-	}
+//#include <glm/glm.hpp>
+//#include <glm/gtc/matrix_transform.hpp>
+//#include <glm/gtc/type_ptr.hpp>
 
-	void OnUpdate() override
-	{
-		if (OpenEngine::Input::IsKeyPressed(OE_KEY_TAB))
-		{
-			OE_TRACE("Tab key is being pressed (poll)!");
-		}
-	}
-
-	void OnEvent(OpenEngine::Event& event) override
-	{
-		if (event.GetEventType() == OpenEngine::EventType::KeyPressed)
-		{
-			OpenEngine::KeyPressedEvent& e = (OpenEngine::KeyPressedEvent&)event;
-			if (e.GetKeyCode() == OE_KEY_TAB)
-				OE_TRACE("Tab key is being pressed (event)!");
-			OE_TRACE("{0}", (char)e.GetKeyCode());
-		}
-
-		if (event.GetEventType() == OpenEngine::EventType::MouseButtonPressed)
-		{
-			OpenEngine::MouseButtonPressedEvent& e = (OpenEngine::MouseButtonPressedEvent&)event;
-			OE_TRACE("{0}", e.GetMouseButton());
-		}
-	}
-};
+#include "Sandbox2D.h"
+#include "GameLayer.h"
 
 class Sandbox : public OpenEngine::Application
 {
 public:
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer());
+		PushLayer(new Sandbox2D());
+		//PushLayer(new GameLayer());
 	}
+
 	~Sandbox()
 	{
-
 	}
 };
 

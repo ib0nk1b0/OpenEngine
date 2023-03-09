@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OpenEngine/Core.h"
+#include "OpenEngine/Core/Core.h"
 #include <sstream>
 
 namespace OpenEngine {
@@ -33,6 +33,8 @@ namespace OpenEngine {
 	{
 		friend class EventDispatcher;
 	public:
+		virtual ~Event() = default;
+
 		bool Handled = false;
 		virtual EventType GetEventType() const = 0;
 		virtual const char* GetName() const = 0;

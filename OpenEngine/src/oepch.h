@@ -5,15 +5,17 @@
 #include <utility>
 #include <algorithm>
 #include <functional>
-#include <sstream>
 
 #include <string>
+#include <sstream>
+#include <array>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
 
-#include "OpenEngine/Log.h"
+#include "OpenEngine/Core/Log.h"
+#include "OpenEngine/Debug/Instrumentor.h"
 
 #ifdef OE_PLATFORM_WINDOWS
-	#include <Windows.h>
+#include <Windows.h>
 #endif
