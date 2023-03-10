@@ -15,16 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Ball.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameLayer.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Paddle.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Sandbox2D.h">
+    <ClInclude Include="src\EditorLayer.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="vendor\EnTT\include\entt.hpp">
@@ -32,19 +23,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Ball.cpp">
+    <ClCompile Include="src\EditorLayer.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameLayer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Paddle.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Sandbox2D.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SandboxApp.cpp">
+    <ClCompile Include="src\OpenEngineEditorApp.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

@@ -17,6 +17,7 @@ IncludeDir["Glad"] = "OpenEngine/vendor/Glad/include"
 IncludeDir["ImGui"] = "OpenEngine/vendor/imgui"
 IncludeDir["glm"] = "OpenEngine/vendor/glm"
 IncludeDir["stb_image"] = "OpenEngine/vendor/stb_image"
+IncludeDir["entt"] = "OpenEngine/vendor/EnTT/include"
 
 group "Dependencies"
   include "OpenEngine/vendor/GLFW"
@@ -60,7 +61,8 @@ project "OpenEngine"
     "%{IncludeDir.Glad}",
     "%{IncludeDir.ImGui}",
     "%{IncludeDir.glm}",
-    "%{IncludeDir.stb_image}"
+    "%{IncludeDir.stb_image}",
+    "%{IncludeDir.entt}"
   }
 
   links
@@ -119,7 +121,8 @@ project "Sandbox"
     "OpenEngine/vendor/spdlog/include",
     "OpenEngine/src",
     "OpenEngine/vendor",
-    "%{IncludeDir.glm}"
+    "%{IncludeDir.glm}",
+    "%{IncludeDir.entt}"
   }
 
   links
@@ -163,7 +166,7 @@ project "OpenEngine-Editor"
   files
   {
     "%{prj.name}/src/**.h",
-    "%{prj.name}/src/**.cpp",
+    "%{prj.name}/src/**.cpp"
   }
 
   includedirs
@@ -171,7 +174,8 @@ project "OpenEngine-Editor"
     "OpenEngine/vendor/spdlog/include",
     "OpenEngine/src",
     "OpenEngine/vendor",
-    "%{IncludeDir.glm}"
+    "%{IncludeDir.glm}",
+    "%{IncludeDir.entt}"
   }
 
   links

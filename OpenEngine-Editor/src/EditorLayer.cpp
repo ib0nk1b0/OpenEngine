@@ -1,10 +1,13 @@
 #include "EditorLayer.h"
 #include "OpenEngine/Renderer/Renderer2D.h"
+#include "OpenEngine/Scene/Components.h"
 
 #include "imgui/imgui.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include <EnTT/include/entt.hpp>
 
 namespace OpenEngine {
 
@@ -17,13 +20,26 @@ namespace OpenEngine {
     {
         OE_PROFILE_FUNCTION();
 
+
         m_CheckerboardTexture = Texture2D::Create("assets/textures/Checkerboard.png");
-        m_CameraController.SetZoomLevel(5.0f);
+        //m_CameraController.SetZoomLevel(5.0f);
 
         FramebufferSpecification fbSpec;
         fbSpec.Width = 1280;
         fbSpec.Height = 720;
         m_Framebuffer = Framebuffer::Create(fbSpec);
+
+        m_ActiveScene = CreateRef<Scene>();
+        entt::entity square = m_ActiveScene->CreateEntity();
+        m_ActiveScene->Reg().emplace<TransformComponent>(square);
+        m_ActiveScene->Reg().emplace<SpriteRendererComponent>(square, m_SquareColor);
+
+
+        entt::entity square2 = m_ActiveScene->CreateEntity();
+        m_ActiveScene->Reg().emplace<TransformComponent>(square2, glm::mat4{ 0.5f });
+        m_ActiveScene->Reg().emplace<SpriteRendererComponent>(square2, m_Square2Color);
+
+        m_SquareEntity = square;
     }
 
     void EditorLayer::OnDetach()
@@ -35,31 +51,8 @@ namespace OpenEngine {
     {
         OE_PROFILE_FUNCTION();
 
-        //Update
         if (m_ViewportFocused)
             m_CameraController.OnUpdate(ts);
-
-        static float rotation = 0.0f;
-        rotation += ts * 50.0f;
-
-        Quad quad1 = { { 1.0f, -0.5f, 0.0f }, { 0.8f, 0.8f }, m_SquareColor };
-        Quad quad2 = { { -0.75f, 0.25f, 0.0f }, { 1.0f, 0.5f }, m_Square2Color, rotation, 1.0f };
-        Quad quad3;
-        Quad quad4;
-
-        quad3.position = { 0.0f, 0.0f, -0.1f };
-        quad3.size = { 20.0f, 20.0f };
-        quad3.texture = m_CheckerboardTexture;
-        quad3.scale = 10.0f;
-
-        quad4.position = { 0.0f, 2.0f, 0.0f };
-        quad4.size = { 1.0f, 1.0f };
-        quad4.texture = m_CheckerboardTexture;
-        quad4.rotation = 45.0f;
-        quad4.scale = 20.0f;
-
-
-        //Render
 
         Renderer2D::ResetStats();
         m_Framebuffer->Bind();
@@ -67,20 +60,9 @@ namespace OpenEngine {
         RenderCommand::Clear();
 
         Renderer2D::BeginScene(m_CameraController.GetCamera());
-        Renderer2D::DrawQuad(quad3);
 
-        Renderer2D::DrawQuad(quad1);
-        Renderer2D::DrawQuad(quad2);
-        Renderer2D::DrawQuad(quad4);
-
-        for (float y = -5.0f; y < 5.0f; y += 0.5f)
-        {
-            for (float x = -5.0f; x < 5.0f; x += 0.5f)
-            {
-                glm::vec4 color = { (x + 5.0f) / 10.0f, 0.4f, (y + 5.0f) / 10.0f, 0.8f };
-                Renderer2D::DrawQuad({ x, y, 0.1f }, { 0.45f, 0.45f }, color);
-            }
-        }
+        m_ActiveScene->OnUpdate(ts);
+        
         Renderer2D::EndScene();
         m_Framebuffer->UnBind();
     }
@@ -149,8 +131,9 @@ namespace OpenEngine {
         ImGui::Text("Verticies: %d", stats.GetTotalVertexCount());
         ImGui::Text("Indicies: %d", stats.GetTotalIndexCount());
 
-        ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
-        ImGui::ColorEdit4("Square2 Color", glm::value_ptr(m_Square2Color));
+        auto& squareColor = m_ActiveScene->Reg().get<SpriteRendererComponent>(m_SquareEntity).Color;
+        ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
+        //ImGui::ColorEdit4("Square2 Color", glm::value_ptr(m_Square2Color));
         
         ImGui::End();
 

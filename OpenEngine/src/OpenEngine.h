@@ -15,6 +15,15 @@
 #include "OpenEngine/ImGui/ImGuiLayer.h"
 #include "OpenEngine/Renderer/OrthographicCameraController.h"
 
+#include "OpenEngine/Scene/Scene.h"
+#include "OpenEngine/Scene/Entity.h"
+
+// -- ECS -- //
+
+//#include "OpenEngine/ECS/Ecs.h"
+
+// --------- //
+
 // -- Renderer -- //
 
 #include "OpenEngine/Renderer/Renderer.h"
