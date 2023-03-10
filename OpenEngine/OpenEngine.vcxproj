@@ -77,7 +77,7 @@
       <PrecompiledHeaderFile>oepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OE_PLATFORM_WINDOWS;OE_BUILD_DLL;GLFW_INCLUDE_NONE;OE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\EnTT\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -98,7 +98,7 @@
       <PrecompiledHeaderFile>oepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OE_PLATFORM_WINDOWS;OE_BUILD_DLL;GLFW_INCLUDE_NONE;OE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\EnTT\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -123,7 +123,7 @@
       <PrecompiledHeaderFile>oepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OE_PLATFORM_WINDOWS;OE_BUILD_DLL;GLFW_INCLUDE_NONE;OE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\EnTT\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -156,6 +156,7 @@
     <ClInclude Include="src\OpenEngine\Core\Timestep.h" />
     <ClInclude Include="src\OpenEngine\Core\Window.h" />
     <ClInclude Include="src\OpenEngine\Debug\Instrumentor.h" />
+    <ClInclude Include="src\OpenEngine\ECS\Ecs.h" />
     <ClInclude Include="src\OpenEngine\Events\ApplicationEvent.h" />
     <ClInclude Include="src\OpenEngine\Events\Event.h" />
     <ClInclude Include="src\OpenEngine\Events\KeyEvent.h" />
@@ -175,6 +176,9 @@
     <ClInclude Include="src\OpenEngine\Renderer\SubTexture2D.h" />
     <ClInclude Include="src\OpenEngine\Renderer\Texture.h" />
     <ClInclude Include="src\OpenEngine\Renderer\VertexArray.h" />
+    <ClInclude Include="src\OpenEngine\Scene\Components.h" />
+    <ClInclude Include="src\OpenEngine\Scene\Entity.h" />
+    <ClInclude Include="src\OpenEngine\Scene\Scene.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLFramebuffer.h" />
@@ -623,6 +627,8 @@
     <ClCompile Include="src\OpenEngine\Renderer\SubTexture2D.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\Texture.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\OpenEngine\Scene\Entity.cpp" />
+    <ClCompile Include="src\OpenEngine\Scene\Scene.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp" />
