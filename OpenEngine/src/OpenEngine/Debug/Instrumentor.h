@@ -123,15 +123,15 @@ namespace OpenEngine {
 	};
 
 }
-#define OE_PROFILE 1
+#define OE_PROFILE 0
 #if OE_PROFILE
 	#define OE_PROFILE_BEGIN_SESSION(name, filepath) ::OpenEngine::Instrumentor::Get().BeginSession(name, filepath)
 	#define OE_PROFILE_END_SESSION() ::OpenEngine::Instrumentor::Get().EndSession()
 	#define OE_PROFILE_SCOPE(name) ::OpenEngine::InstrumentationTimer time##__LINE__(name);
 	#define OE_PROFILE_FUNCTION() OE_PROFILE_SCOPE(__FUNCSIG__)
 #else
-	#define OE_PROFILE_BEGIN_SESSION
-	#define OE_PROFILE_END_SESSION
-	#define OE_PROFILE_SCOPE
-	#define OE_PROFILE_FUNCTION
+	#define OE_PROFILE_BEGIN_SESSION()
+	#define OE_PROFILE_END_SESSION()
+	#define OE_PROFILE_SCOPE()
+	#define OE_PROFILE_FUNCTION()
 #endif

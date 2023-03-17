@@ -20,9 +20,8 @@ namespace OpenEngine {
     {
         OE_PROFILE_FUNCTION();
 
-
         m_CheckerboardTexture = Texture2D::Create("assets/textures/Checkerboard.png");
-        //m_CameraController.SetZoomLevel(5.0f);
+        m_OpenEngineTexture = Texture2D::Create("assets/textures/OpenEngineLogo.png");
 
         FramebufferSpecification fbSpec;
         fbSpec.Width = 1280;
@@ -30,16 +29,23 @@ namespace OpenEngine {
         m_Framebuffer = Framebuffer::Create(fbSpec);
 
         m_ActiveScene = CreateRef<Scene>();
-        entt::entity square = m_ActiveScene->CreateEntity();
-        m_ActiveScene->Reg().emplace<TransformComponent>(square);
-        m_ActiveScene->Reg().emplace<SpriteRendererComponent>(square, m_SquareColor);
 
+        Entity mainCamera = m_ActiveScene->CreateEntity("Main Camera");
+        mainCamera.AddComponent<CameraComponent>();
+        m_MainCamera = mainCamera;
 
-        entt::entity square2 = m_ActiveScene->CreateEntity();
-        m_ActiveScene->Reg().emplace<TransformComponent>(square2, glm::mat4{ 0.5f });
-        m_ActiveScene->Reg().emplace<SpriteRendererComponent>(square2, m_Square2Color);
+        Entity secondCamera = m_ActiveScene->CreateEntity("Second Camera");
+        secondCamera.AddComponent<CameraComponent>().Primary = false;
+        m_SecondCamera = secondCamera;
 
+        Entity square = m_ActiveScene->CreateEntity("OpenEngine Logo");
+        square.AddComponent<SpriteRendererComponent>(m_OpenEngineTexture);
         m_SquareEntity = square;
+
+        Entity square2 = m_ActiveScene->CreateEntity("White Square");
+        //square2.AddComponent<SpriteRendererComponent>();
+        auto& transformComponent = square2.GetComponent<TransformComponent>().Transform;
+        transformComponent = glm::mat4(0.5f);
     }
 
     void EditorLayer::OnDetach()
@@ -55,15 +61,14 @@ namespace OpenEngine {
             m_CameraController.OnUpdate(ts);
 
         Renderer2D::ResetStats();
+
         m_Framebuffer->Bind();
+
         RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
         RenderCommand::Clear();
-
-        Renderer2D::BeginScene(m_CameraController.GetCamera());
-
+  
         m_ActiveScene->OnUpdate(ts);
-        
-        Renderer2D::EndScene();
+
         m_Framebuffer->UnBind();
     }
 
@@ -131,10 +136,28 @@ namespace OpenEngine {
         ImGui::Text("Verticies: %d", stats.GetTotalVertexCount());
         ImGui::Text("Indicies: %d", stats.GetTotalIndexCount());
 
-        auto& squareColor = m_ActiveScene->Reg().get<SpriteRendererComponent>(m_SquareEntity).Color;
-        ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
-        //ImGui::ColorEdit4("Square2 Color", glm::value_ptr(m_Square2Color));
-        
+        if (m_SquareEntity)
+        {
+            ImGui::Separator();
+            auto& tag = m_SquareEntity.GetComponent<TagComponent>().Tag;
+            ImGui::Text("%s", tag.c_str());
+
+            auto& squareColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
+            ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
+            ImGui::Separator();
+        }
+
+        if (ImGui::Checkbox("Main Camera", &m_MainCameraPrimary))
+        {
+            m_MainCamera.GetComponent<CameraComponent>().Primary = m_MainCameraPrimary;
+            m_SecondCamera.GetComponent<CameraComponent>().Primary = !m_MainCameraPrimary;
+        }
+        {
+            auto& camera = m_SecondCamera.GetComponent<CameraComponent>().Camera;
+            float orthoSize = camera.GetOrthographicSize();
+            if (ImGui::DragFloat("Second Camera", &orthoSize))
+                camera.SetOrthographicSize(orthoSize);
+        }
         ImGui::End();
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
@@ -152,6 +175,8 @@ namespace OpenEngine {
             m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
             m_CameraController.OnResize(viewportPanelSize.x, viewportPanelSize.y);
+
+            m_ActiveScene->OnViewportResize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
         }
 
         uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();

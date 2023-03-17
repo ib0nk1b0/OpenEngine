@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Camera.h"
 #include "OrthographicCamera.h"
 #include "Texture.h"
 #include "SubTexture2D.h"
@@ -23,6 +24,7 @@ namespace OpenEngine
 		static void Init();
 		static void Shutdown();
 
+		static void BeginScene(const Camera& camera, const glm::mat4& transform);
 		static void BeginScene(const OrthographicCamera& camera);
 		static void EndScene();
 
@@ -34,6 +36,7 @@ namespace OpenEngine
 		// Transforms
 		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color);
 		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float scale = 1.0f);
+		static void DrawQuad(const glm::mat4& transform, const Ref<SubTexture2D>& subtexture, float scale = 1.0f);
 
 		//Quads
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
