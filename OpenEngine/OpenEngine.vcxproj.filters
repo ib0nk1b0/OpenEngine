@@ -13,9 +13,6 @@
     <Filter Include="src\OpenEngine\Debug">
       <UniqueIdentifier>{DA557210-C6E4-FBD9-6F03-10D55B710C80}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\OpenEngine\ECS">
-      <UniqueIdentifier>{AE16D1D7-9AFA-912D-035B-8C80EF5D7CAF}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\OpenEngine\Events">
       <UniqueIdentifier>{C8634722-34D0-021D-FDC3-9A7A69EF2485}</UniqueIdentifier>
     </Filter>
@@ -102,9 +99,6 @@
     <ClInclude Include="src\OpenEngine\Debug\Instrumentor.h">
       <Filter>src\OpenEngine\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\ECS\Ecs.h">
-      <Filter>src\OpenEngine\ECS</Filter>
-    </ClInclude>
     <ClInclude Include="src\OpenEngine\Events\ApplicationEvent.h">
       <Filter>src\OpenEngine\Events</Filter>
     </ClInclude>
@@ -124,6 +118,9 @@
       <Filter>src\OpenEngine\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\Buffer.h">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Renderer\Camera.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\Framebuffer.h">
@@ -162,10 +159,22 @@
     <ClInclude Include="src\OpenEngine\Renderer\VertexArray.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenEngine\Scene\Components.h">
+      <Filter>src\OpenEngine\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\OpenEngine\Scene\Entity.h">
       <Filter>src\OpenEngine\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Scene\Scene.h">
+      <Filter>src\OpenEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Scene\SceneCamera.h">
+      <Filter>src\OpenEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Scene\ScirptableEntity.h">
+      <Filter>src\OpenEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Scene\ScriptableEntity.h">
       <Filter>src\OpenEngine\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
@@ -1446,9 +1455,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\Scene\Components.h" />
-    <ClInclude Include="src\OpenEngine\Renderer\Camera.h" />
-    <ClInclude Include="src\OpenEngine\Scene\SceneCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenEngine\Core\Application.cpp">
@@ -1517,6 +1523,9 @@
     <ClCompile Include="src\OpenEngine\Scene\Scene.cpp">
       <Filter>src\OpenEngine\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\OpenEngine\Scene\SceneCamera.cpp">
+      <Filter>src\OpenEngine\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
@@ -1550,6 +1559,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\OpenEngine\Scene\SceneCamera.cpp" />
   </ItemGroup>
 </Project>

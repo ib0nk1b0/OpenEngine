@@ -4,7 +4,6 @@
 
 #include "imgui/imgui.h"
 
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <EnTT/include/entt.hpp>
@@ -46,6 +45,24 @@ namespace OpenEngine {
         //square2.AddComponent<SpriteRendererComponent>();
         auto& transformComponent = square2.GetComponent<TransformComponent>().Transform;
         transformComponent = glm::mat4(0.5f);
+
+
+       /* class CameraController : public ScriptableEntity
+        {
+        public:
+            void OnCreate()
+            {
+            }
+
+            void OnDestroy()
+            {
+            }
+
+            void OnUpdate(Timestep ts)
+            {
+            }
+        };
+        secondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();*/
     }
 
     void EditorLayer::OnDetach()

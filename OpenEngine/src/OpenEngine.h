@@ -17,12 +17,8 @@
 
 #include "OpenEngine/Scene/Scene.h"
 #include "OpenEngine/Scene/Entity.h"
-
-// -- ECS -- //
-
-//#include "OpenEngine/ECS/Ecs.h"
-
-// --------- //
+#include "OpenEngine/Scene/ScriptableEntity.h"
+#include "OpenEngine/Scene/Components.h"
 
 // -- Renderer -- //
 
@@ -40,6 +36,3 @@
 #include "OpenEngine/Renderer/OrthographicCamera.h"
 
 // -------------- //
-
-// -- Entry Point -- //
-// ----------------- //
