@@ -15,10 +15,10 @@
 #include "OpenEngine/ImGui/ImGuiLayer.h"
 #include "OpenEngine/Renderer/OrthographicCameraController.h"
 
+#include "OpenEngine/Scene/SceneCamera.h"
 #include "OpenEngine/Scene/Scene.h"
 #include "OpenEngine/Scene/Entity.h"
 #include "OpenEngine/Scene/ScriptableEntity.h"
-#include "OpenEngine/Scene/Components.h"
 
 // -- Renderer -- //
 

@@ -2,7 +2,6 @@
 #include "Application.h"
 
 #include "OpenEngine/Renderer/Renderer.h"
-#include "OpenEngine/ImGui/ImGuiInfoLayer.h"
 
 #include "Input.h"
 

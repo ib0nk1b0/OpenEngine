@@ -18,9 +18,7 @@
     <ClInclude Include="src\EditorLayer.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="vendor\EnTT\include\entt.hpp">
-      <Filter>vendor\EnTT\include</Filter>
-    </ClInclude>
+    <ClInclude Include="src\Panels\SceneHierarchy.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorLayer.cpp">
@@ -29,5 +27,6 @@
     <ClCompile Include="src\OpenEngineEditorApp.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Panels\SceneHierarchy.cpp" />
   </ItemGroup>
 </Project>

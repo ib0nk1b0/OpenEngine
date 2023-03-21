@@ -160,7 +160,6 @@
     <ClInclude Include="src\OpenEngine\Events\Event.h" />
     <ClInclude Include="src\OpenEngine\Events\KeyEvent.h" />
     <ClInclude Include="src\OpenEngine\Events\MouseEvent.h" />
-    <ClInclude Include="src\OpenEngine\ImGui\ImGuiInfoLayer.h" />
     <ClInclude Include="src\OpenEngine\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\OpenEngine\Renderer\Buffer.h" />
     <ClInclude Include="src\OpenEngine\Renderer\Camera.h" />
@@ -180,7 +179,6 @@
     <ClInclude Include="src\OpenEngine\Scene\Entity.h" />
     <ClInclude Include="src\OpenEngine\Scene\Scene.h" />
     <ClInclude Include="src\OpenEngine\Scene\SceneCamera.h" />
-    <ClInclude Include="src\OpenEngine\Scene\ScirptableEntity.h" />
     <ClInclude Include="src\OpenEngine\Scene\ScriptableEntity.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
@@ -615,7 +613,6 @@
     <ClCompile Include="src\OpenEngine\Core\LayerStack.cpp" />
     <ClCompile Include="src\OpenEngine\Core\Log.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiBuild.cpp" />
-    <ClCompile Include="src\OpenEngine\ImGui\ImGuiInfoLayer.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\Buffer.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\Framebuffer.cpp" />
