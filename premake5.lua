@@ -18,6 +18,7 @@ IncludeDir["ImGui"] = "OpenEngine/vendor/imgui"
 IncludeDir["glm"] = "OpenEngine/vendor/glm"
 IncludeDir["stb_image"] = "OpenEngine/vendor/stb_image"
 IncludeDir["entt"] = "OpenEngine/vendor/EnTT/include"
+IncludeDir["json"] = "OpenEngine/vendor/Json/"
 
 group "Dependencies"
   include "OpenEngine/vendor/GLFW"
@@ -45,7 +46,8 @@ project "OpenEngine"
     "%{prj.name}/vendor/stb_image/**.h",
     "%{prj.name}/vendor/stb_image/**.cpp",
     "%{prj.name}/vendor/glm/glm/**.hpp",
-    "%{prj.name}/vendor/glm/glm/**.inl"
+    "%{prj.name}/vendor/glm/glm/**.inl",
+    "%{prj.name}/vendor/json/**.hpp"
   }
 
   defines
@@ -62,7 +64,8 @@ project "OpenEngine"
     "%{IncludeDir.ImGui}",
     "%{IncludeDir.glm}",
     "%{IncludeDir.stb_image}",
-    "%{IncludeDir.entt}"
+    "%{IncludeDir.entt}",
+    "%{IncludeDir.json}"
   }
 
   links
@@ -175,7 +178,8 @@ project "OpenEngine-Editor"
     "OpenEngine/src",
     "OpenEngine/vendor",
     "%{IncludeDir.glm}",
-    "%{IncludeDir.entt}"
+    "%{IncludeDir.entt}",
+    "%{IncludeDir.json}"
   }
 
   links

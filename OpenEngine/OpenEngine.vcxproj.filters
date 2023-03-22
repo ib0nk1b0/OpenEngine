@@ -25,6 +25,9 @@
     <Filter Include="src\OpenEngine\Scene">
       <UniqueIdentifier>{81B88011-6D47-0ADB-1666-1ED602D41A81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\OpenEngine\Serialization">
+      <UniqueIdentifier>{F1C7FD58-DD82-ED04-863A-664F72D43795}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
     </Filter>
@@ -54,6 +57,9 @@
     </Filter>
     <Filter Include="vendor\glm\glm\gtx">
       <UniqueIdentifier>{B3A6A76B-9F8A-68C1-08EB-6214F4ED5243}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\json">
+      <UniqueIdentifier>{5C537BC1-C808-F4B6-51FD-ED8DBDB1EABA}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor\stb_image">
       <UniqueIdentifier>{0DA0BA59-F998-D9AB-22CB-BE300E23B9B7}</UniqueIdentifier>
@@ -170,6 +176,9 @@
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Scene\ScriptableEntity.h">
       <Filter>src\OpenEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Serialization\Serializer.h">
+      <Filter>src\OpenEngine\Serialization</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
@@ -1445,6 +1454,9 @@
     </ClInclude>
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\json\json.hpp">
+      <Filter>vendor\json</Filter>
     </ClInclude>
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>

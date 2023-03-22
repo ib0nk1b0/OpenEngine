@@ -19,9 +19,6 @@ namespace OpenEngine {
     {
         OE_PROFILE_FUNCTION();
 
-        //m_CheckerboardTexture = Texture2D::Create("assets/textures/Checkerboard.png");
-        //m_OpenEngineTexture = Texture2D::Create("assets/textures/OpenEngineLogo.png");
-
         FramebufferSpecification fbSpec;
         fbSpec.Width = 1280;
         fbSpec.Height = 720;
@@ -29,6 +26,15 @@ namespace OpenEngine {
 
         m_ActiveScene = CreateRef<Scene>();
 
+        m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+
+        m_Serializer = CreateRef<Serializer>(m_ActiveScene);
+
+        //DrawEntities();
+    }
+
+    void EditorLayer::DrawEntities()
+    {
         Entity square = m_ActiveScene->CreateEntity("Blue Square");
         square.AddComponent<SpriteRendererComponent>(m_SquareColor);
 
@@ -96,8 +102,6 @@ namespace OpenEngine {
         m_MainCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
         m_SecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
         square2.AddComponent<NativeScriptComponent>().Bind<SquareController>();
-
-        m_SceneHierarchyPanel.SetContext(m_ActiveScene);
     }
 
     void EditorLayer::OnDetach()
@@ -116,7 +120,7 @@ namespace OpenEngine {
 
         m_Framebuffer->Bind();
 
-        RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+        RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
         RenderCommand::Clear();
   
         m_ActiveScene->OnUpdate(ts);
@@ -171,6 +175,13 @@ namespace OpenEngine {
         {
             if (ImGui::BeginMenu("File"))
             {
+                if (ImGui::MenuItem("Serialize"))
+                    m_Serializer->Serialize(m_Filepath);
+                if (ImGui::MenuItem("Deserialize"))
+                {
+                    m_ActiveScene->ClearRegistry();
+                    m_Serializer->Deserialize(m_Filepath);
+                }
                 if (ImGui::MenuItem("Exit")) 
                     Application::Get().Close();
                 ImGui::EndMenu();
@@ -206,9 +217,9 @@ namespace OpenEngine {
             m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
             m_CameraController.OnResize(viewportPanelSize.x, viewportPanelSize.y);
-
-            m_ActiveScene->OnViewportResize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
         }
+        //TODO: Rethink this approach to fix the camera not having correct aspectRatio until window is resized
+        m_ActiveScene->OnViewportResize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 
         uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
         ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });

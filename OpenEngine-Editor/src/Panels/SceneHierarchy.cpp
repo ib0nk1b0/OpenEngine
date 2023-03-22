@@ -33,8 +33,30 @@ namespace OpenEngine {
 
 		if (ImGui::BeginPopupContextWindow(0, 1 | ImGuiPopupFlags_NoOpenOverItems))
 		{
-			if (ImGui::MenuItem("Create Empty Entity"))
-				m_Context->CreateEntity("Empty Entity");
+			if (ImGui::BeginMenu("Create"))
+			{
+				if (ImGui::MenuItem("Empty Entity"))
+					m_Context->CreateEntity("Empty Entity");
+
+				if (ImGui::MenuItem("Quad"))
+				{
+					Entity quad = m_Context->CreateEntity("Quad");
+					quad.AddComponent<SpriteRendererComponent>();
+				}
+
+				if (ImGui::BeginMenu("Camera"))
+				{
+					if (ImGui::MenuItem("Perspective"))
+						m_Context->CreateEntity("Perspective Camera").AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Perspective);
+					
+					if (ImGui::MenuItem("Orthographic"))
+						m_Context->CreateEntity("Orthographic Camera").AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Orthographic);
+					
+					ImGui::EndMenu();
+				}
+
+				ImGui::EndMenu();
+			}
 
 			ImGui::EndPopup();
 		}
@@ -142,20 +164,31 @@ namespace OpenEngine {
 	template<typename T, typename UIFunction>
 	static void DrawComponent(const std::string& label, Entity entity, UIFunction uiFunction)
 	{
+		const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap;
 		if (!entity.HasComponent<T>()) return;
 
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
+		bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, label.c_str());
+		ImGui::SameLine(ImGui::GetWindowWidth() - 30.0f);
+		if (ImGui::Button("...", ImVec2{ 30, 20 }))
+		{
+			ImGui::OpenPopup("ComponentSettings");
+		}
+		ImGui::PopStyleVar();
+
 		bool componentDeleted = false;
-		if (ImGui::TreeNodeEx((void*)typeid(T).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, label.c_str()))
+		if (ImGui::BeginPopup("ComponentSettings"))
+		{
+			if (ImGui::MenuItem("Delete Component"))
+				componentDeleted = true;
+
+			ImGui::EndPopup();
+		}
+
+		if (open)
 		{
 			auto& component = entity.GetComponent<T>();
 
-			if (ImGui::BeginPopupContextItem())
-			{
-				if (ImGui::MenuItem("Delete Component"))
-					componentDeleted = true;
-
-				ImGui::EndPopup();
-			}
 			uiFunction(component);
 
 			ImGui::TreePop();
@@ -178,9 +211,7 @@ namespace OpenEngine {
 	}
 
 	void SceneHierarchyPanel::DrawComponents(Entity entity)
-	{
-		if (!entity) return;
-		
+	{		
 		if (entity.HasComponent<TagComponent>())
 		{
 			auto& selectedTag = entity.GetComponent<TagComponent>().Tag;

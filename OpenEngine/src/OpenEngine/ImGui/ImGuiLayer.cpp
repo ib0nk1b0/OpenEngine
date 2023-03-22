@@ -123,7 +123,7 @@ namespace OpenEngine {
 		colors[ImGuiCol_ButtonActive] = ImVec4{ 0.15f, 0.15f, 0.2f, 1.0f };
 
 		// Frames
-		colors[ImGuiCol_FrameBg] = ImVec4{ 0.2f, 0.2f, 0.25f, 1.0f };
+		colors[ImGuiCol_FrameBg] = ImVec4{ 0.1f, 0.1, 0.15f, 1.0f };
 		colors[ImGuiCol_FrameBgHovered] = ImVec4{ 0.3f, 0.3f, 0.35f, 1.0f };
 		colors[ImGuiCol_FrameBgActive] = ImVec4{ 0.1f, 0.1f, 0.15f, 1.0f };
 

@@ -2,6 +2,7 @@
 
 #include "OpenEngine.h"
 #include "Panels/SceneHierarchy.h"
+#include "OpenEngine/Serialization/Serializer.h"
 
 namespace OpenEngine {
 
@@ -18,6 +19,9 @@ namespace OpenEngine {
 		virtual void OnImGuiRender() override;
 		void OnEvent(Event& e) override;
 	private:
+		void DrawEntities();
+	private:
+		std::string m_Filepath = "assets/Scenes/DemoScene.json";
 		OrthographicCameraController m_CameraController;
 
 		Ref<Scene> m_ActiveScene;
@@ -28,6 +32,8 @@ namespace OpenEngine {
 
 		Ref<Texture2D> m_CheckerboardTexture;
 		Ref<Texture2D> m_OpenEngineTexture;
+
+		Ref<Serializer> m_Serializer;
 
 		Entity m_MainCamera;
 		Entity m_SecondCamera;

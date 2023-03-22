@@ -14,6 +14,7 @@ namespace OpenEngine {
 
 		Entity CreateEntity(const std::string& name = std::string());
 		void DestroyEntity(Entity entity);
+		void ClearRegistry() { m_Registry.clear(); }
 
 		void OnUpdate(Timestep ts);
 		void OnViewportResize(uint32_t width, uint32_t height);
@@ -22,6 +23,7 @@ namespace OpenEngine {
 		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 
 		friend class Entity;
+		friend class Serializer;
 		friend class SceneHierarchyPanel;
 	};
 
