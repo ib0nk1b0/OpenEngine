@@ -122,7 +122,7 @@ namespace OpenEngine {
 
         RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
         RenderCommand::Clear();
-  
+
         m_ActiveScene->OnUpdate(ts);
 
         m_Framebuffer->UnBind();

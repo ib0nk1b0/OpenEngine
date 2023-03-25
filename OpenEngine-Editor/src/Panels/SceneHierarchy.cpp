@@ -242,7 +242,9 @@ namespace OpenEngine {
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
 		{
 			DrawVec3Controls("Translation", component.Translation);
-			DrawVec3Controls("Rotation", component.Rotation);
+			glm::vec3 rotation = glm::degrees(component.Rotation);
+			DrawVec3Controls("Rotation", rotation);
+			component.Rotation = glm::radians(rotation);
 			DrawVec3Controls("Scale", component.Scale, 1.0f);
 		});
 

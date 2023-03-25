@@ -32,10 +32,60 @@ namespace OpenEngine {
 
 		static std::string GetJSONString(const std::string& label, const std::string& value, bool lastLine = false)
 		{
-			if (lastLine)
-				return "\t\"" + label + "\": \"" + value + "\"\n\t";
+			std::string result;
 
-			return "\t\"" + label + "\": \"" + value + "\",\n\t";
+			result += "\t\"" + label + "\": ";
+
+			if (value[0] == '[') result += value;
+			else result += "\"" + value + "\"";
+
+			if (lastLine) result += "\n\t";
+			else result += ",\n\t";
+
+			return result;
+		}
+
+		static std::string GetJSONString(const std::string& label, int value, bool lastLine = false)
+		{
+			std::string result;
+
+			result += "\t\"" + label + "\": ";
+
+			result += std::to_string(value);
+
+			if (lastLine) result += "\n\t";
+			else result += ",\n\t";
+
+			return result;
+		}
+
+		static std::string GetJSONString(const std::string& label, float value, bool lastLine = false)
+		{
+			std::string result;
+
+			result += "\t\"" + label + "\": ";
+
+			result += std::to_string(value);
+
+			if (lastLine) result += "\n\t";
+			else result += ",\n\t";
+
+			return result;
+		}
+
+		static std::string GetJSONString(const std::string& label, bool value, bool lastLine = false)
+		{
+			std::string result;
+
+			result += "\t\"" + label + "\": ";
+
+			if (value) result += "true";
+			else result += "false";
+
+			if (lastLine) result += "\n\t";
+			else result += ",\n\t";
+
+			return result;
 		}
 
 		static std::string ProjectionTypeToString(SceneCamera::ProjectionType type)
@@ -53,44 +103,116 @@ namespace OpenEngine {
 			if (type == "Perspective") return SceneCamera::ProjectionType::Perspective;
 		}
 
+		static std::string Encode(glm::vec3& values)
+		{
+			std::string result;
+
+			result += "[" + std::to_string(values[0]) + ", ";
+			result += std::to_string(values[1]) + ", ";
+			result += std::to_string(values[2]) + "]";
+
+			return result;
+		}
+
+		static void Decode(std::string values, glm::vec3& result)
+		{
+			std::string delimiter = ", ";
+			std::vector<std::string> convertedValues;
+
+			size_t pos = 0;
+			std::string token;
+			values.erase(0, 1);
+			values.erase(values.length() - 1, 1);
+			for (int i = 0; i < 3; i++)
+			{
+				pos = values.find(delimiter);
+				token = values.substr(0, pos);
+				convertedValues.push_back(token);
+				values.erase(0, pos + delimiter.length());
+			}
+
+			result.x = std::stof(convertedValues[0]);
+			result.y = std::stof(convertedValues[1]);
+			result.z = std::stof(convertedValues[2]);
+		}
+
+		static std::string Encode(glm::vec4& values)
+		{
+			std::string result;
+
+			result += "[" + std::to_string(values[0]) + ", ";
+			result += std::to_string(values[1]) + ", ";
+			result += std::to_string(values[2]) + ", ";
+			result += std::to_string(values[3]) + "]";
+
+			return result;
+		}
+
+		static void Decode(std::string values, glm::vec4& result)
+		{
+			std::string delimiter = ", ";
+			std::vector<std::string> convertedValues;
+
+			size_t pos = 0;
+			std::string token;
+			values.erase(0, 1);
+			values.erase(values.length() - 1, 1);
+			for (int i = 0; i < 4; i++)
+			{
+				pos = values.find(delimiter);
+				token = values.substr(0, pos);
+				convertedValues.push_back(token);
+				values.erase(0, pos + delimiter.length());
+			}
+
+			result.r = std::stof(convertedValues[0]);
+			result.g = std::stof(convertedValues[1]);
+			result.b = std::stof(convertedValues[2]);
+			result.a = std::stof(convertedValues[3]);
+		}
+
 		void Serialize(const std::string& filepath)
 		{
-			std::ofstream file;
-			file.open(filepath);
+			//using namespace nlohmann;
+			std::string text;
 			
 			size_t numberOfEntities = m_Scene->m_Registry.size();
 			int count = 0;
 
-			file << "{\n\t";
-			file << "\"Entities\": [\n";
+			text += "{\n\t";
+			text += "\"Entities\": [\n";
 			m_Scene->m_Registry.each([&](auto entityID)
 			{
 				Entity entity = { entityID, m_Scene.get() };
 			
-				file << "\t\t{\n\t\t";
+				text += "\t\t{\n\t\t";
 
 				if (entity.HasComponent<TagComponent>())
 				{
 					std::string tag = entity.GetComponent<TagComponent>().Tag.c_str();
-					file << GetJSONString("Tag", tag);
+					text += GetJSONString("ID", 85493002);
+					text += "\t\t\"TagComponent\": {\n\t\t\t";
+					text += GetJSONString("Tag", tag, true);
+					text += "\t\t},\n";
 				}
 
 				if (entity.HasComponent<TransformComponent>())
 				{
 					auto& tc = entity.GetComponent<TransformComponent>();
-					file << "\t\t\"TransformComponent\": {\n\t\t\t";
-					file << GetJSONString("Translation", glm::to_string(tc.Translation)) + "\t\t";
-					file << GetJSONString("Rotation", glm::to_string(tc.Rotation)) + "\t\t";
-					file << GetJSONString("Scale", glm::to_string(tc.Scale), true);
-					file << "\t\t},\n";
+
+					text += "\t\t\t\"TransformComponent\": {\n\t\t\t";
+					text += GetJSONString("Translation", Encode(tc.Translation)) + "\t\t";
+					text += GetJSONString("Rotation", Encode(tc.Rotation)) + "\t\t";
+					text += GetJSONString("Scale", Encode(tc.Scale), true);
+					text += "\t\t},\n";
 				}
 
 				if (entity.HasComponent<SpriteRendererComponent>())
 				{
 					auto& src = entity.GetComponent<SpriteRendererComponent>();
-					file << "\t\t\t\"SpriteRendererComponent\": {\n\t\t\t";
-					file << GetJSONString("Color", glm::to_string(src.Color), true);
-					file << "\t\t}\n";
+					text += "\t\t\t\"SpriteRendererComponent\": {\n\t\t\t";
+					text += GetJSONString("Color", Encode(src.Color), true);
+					text += "\t\t}\n";
 				}
 
 				if (entity.HasComponent<CameraComponent>())
@@ -98,51 +220,51 @@ namespace OpenEngine {
 					auto& cc = entity.GetComponent<CameraComponent>();
 					auto& camera = cc.Camera;
 					SceneCamera::ProjectionType projType = camera.GetProjectionType();
-					std::string primary = cc.Primary == true ? "true" : "false";
-					std::string fixedApectRatio = cc.FixedAspectRatio == true ? "true" : "false";
 
-					file << "\t\t\t\"CameraComponent\": {\n\t\t\t";
-					file << GetJSONString("ProjectionType", ProjectionTypeToString(projType)) + "\t\t";
+					text += "\t\t\t\"CameraComponent\": {\n\t\t\t";
+					text += GetJSONString("ProjectionType", ProjectionTypeToString(projType)) + "\t\t";
 					if (projType == SceneCamera::ProjectionType::Orthographic)
 					{
-						file << GetJSONString("Size", std::to_string(camera.GetOrthographicSize())) + "\t\t";
-						file << GetJSONString("Near", std::to_string(camera.GetOrthographicNearClip())) + "\t\t";
-						file << GetJSONString("Far", std::to_string(camera.GetOrthographicFarClip())) + "\t\t";
+						text += GetJSONString("Size", camera.GetOrthographicSize()) + "\t\t";
+						text += GetJSONString("Near", camera.GetOrthographicNearClip()) + "\t\t";
+						text += GetJSONString("Far", camera.GetOrthographicFarClip()) + "\t\t";
 					}
 					else
 					{
-						file << GetJSONString("VerticalFOV", std::to_string(camera.GetPerspectiveVertivalFOV())) + "\t\t";
-						file << GetJSONString("Near", std::to_string(camera.GetPerspectiveNearClip())) + "\t\t";
-						file << GetJSONString("Far", std::to_string(camera.GetPerspectiveFarClip())) + "\t\t";
+						text += GetJSONString("VerticalFOV", camera.GetPerspectiveVertivalFOV()) + "\t\t";
+						text += GetJSONString("Near", camera.GetPerspectiveNearClip()) + "\t\t";
+						text += GetJSONString("Far", camera.GetPerspectiveFarClip()) + "\t\t";
 					}
-					file << GetJSONString("Primary", primary) + "\t\t";
-					file << GetJSONString("FixedAspectRatio", fixedApectRatio, true);
-					file << "\t\t}\n";
+					
+					text += GetJSONString("Primary", cc.Primary) + "\t\t";
+					text += GetJSONString("FixedAspectRatio", cc.FixedAspectRatio, true);
+					text += "\t\t}\n";
 				}
 				if (count == numberOfEntities - 1)
-					file << "\t\t}\n";
+					text += "\t\t}\n";
 				else
-					file << "\t\t},\n";
+					text += "\t\t},\n";
 
-				//file << "\t\t}";
 				count++;
 			});
 
-			file << "\t]\n";
-			file << "}";
+			text += "\t]\n";
+			text += "}";
+
+			std::ofstream file;
+			file.open(filepath);
+			file << text;
 			file.close();
 		}
 
 		void Deserialize(const std::string& filepath)
 		{
-			std::string result = ReadFile(filepath);
-
-			OE_INFO("{0}", result.c_str());
+			ReadFile(filepath);
 
 			OE_CORE_INFO("Deserialization is in development!");
 		}
 
-		std::string ReadFile(const std::string& filepath)
+		void ReadFile(const std::string& filepath)
 		{
 			std::ifstream file(filepath);
 			nlohmann::json j;
@@ -152,35 +274,22 @@ namespace OpenEngine {
 				auto& entities = j["Entities"];
 				for (auto& [key, value] : entities.items())
 				{
-					auto& jsonTag = value["Tag"];
+					auto& jsonTag = value["TagComponent"]["Tag"];
 					std::string tag = jsonTag.get<std::string>();
 
 					Entity entity = m_Scene->CreateEntity(tag);
 					auto& jsonTransform = value["TransformComponent"];
 
-					std::string translationUnTrimmed = jsonTransform["Translation"].get<std::string>();
-					std::string rotationUnTrimmed = jsonTransform["Rotation"].get<std::string>();
-					std::string scaleUnTrimmed = jsonTransform["Scale"].get<std::string>();
-
-					size_t size = translationUnTrimmed.size();
-
-					std::string translation = translationUnTrimmed.substr(5, size - 6);
-					std::string rotaion = rotationUnTrimmed.substr(5, size - 6);
-					std::string scale = scaleUnTrimmed.substr(5, size - 6);
-
-					entity.GetComponent<TransformComponent>().Translation = ConvertFloat3(translation);
-					entity.GetComponent<TransformComponent>().Rotation = ConvertFloat3(rotaion);
-					entity.GetComponent<TransformComponent>().Scale = ConvertFloat3(scale);
+					Decode(ConvertFloat3(jsonTransform["Translation"]), entity.GetComponent<TransformComponent>().Translation);
+					Decode(ConvertFloat3(jsonTransform["Rotation"]), entity.GetComponent<TransformComponent>().Rotation);
+					Decode(ConvertFloat3(jsonTransform["Scale"]), entity.GetComponent<TransformComponent>().Scale);
 
 					if (value.contains("SpriteRendererComponent"))
 					{
 						auto& jsonSpriteRenderer = value["SpriteRendererComponent"];
-						std::string colorUnTrimmed = jsonSpriteRenderer["Color"].get<std::string>();
-						size_t s = colorUnTrimmed.size();
-
-						std::string color = colorUnTrimmed.substr(5, s - 6);
 						entity.AddComponent<SpriteRendererComponent>();
-						entity.GetComponent<SpriteRendererComponent>().Color = ConvertFloat4(color);
+						
+						Decode(ConvertFloat4(jsonSpriteRenderer["Color"]), entity.GetComponent<SpriteRendererComponent>().Color);
 					}
 
 					if (value.contains("CameraComponent"))
@@ -188,82 +297,62 @@ namespace OpenEngine {
 						auto& cameraComponent = entity.AddComponent<CameraComponent>();
 						auto& camera = cameraComponent.Camera;
 						auto& jsonCameraComponent = value["CameraComponent"];
+
 						std::string projType = jsonCameraComponent["ProjectionType"].get<std::string>();
 						camera.SetProjectionType(ProjectionTypeFromString(projType));
+
 						if (projType == "Orthographic")
 						{
-							camera.SetOrthographicSize(std::stof(jsonCameraComponent["Size"].get<std::string>()));
-							camera.SetOrthographicNearClip(std::stof(jsonCameraComponent["Near"].get<std::string>()));
-							camera.SetOrthographicFarClip(std::stof(jsonCameraComponent["Far"].get<std::string>()));
+							camera.SetOrthographicSize(jsonCameraComponent["Size"].get<float>());
+							camera.SetOrthographicNearClip(jsonCameraComponent["Near"].get<float>());
+							camera.SetOrthographicFarClip(jsonCameraComponent["Far"].get<float>());
 						}
 						else
 						{
-							camera.SetPerspectiveVertivalFOV(std::stof(jsonCameraComponent["VerticalFOV"].get<std::string>()));
-							camera.SetPerspectiveNearClip(std::stof(jsonCameraComponent["Near"].get<std::string>()));
-							camera.SetPerspectiveFarClip(std::stof(jsonCameraComponent["Far"].get<std::string>()));
+							camera.SetPerspectiveVertivalFOV(jsonCameraComponent["VertivalFOV"].get<float>());
+							camera.SetPerspectiveNearClip(jsonCameraComponent["Near"].get<float>());
+							camera.SetPerspectiveFarClip(jsonCameraComponent["Far"].get<float>());
 						}
 
-						std::string primary = jsonCameraComponent["Primary"].get<std::string>();
-						if (primary == "true")
-							cameraComponent.Primary = true;
-						else
-							cameraComponent.Primary = false;
-
-						std::string fixedAspectRatio = jsonCameraComponent["FixedAspectRatio"].get<std::string>();
-						if (fixedAspectRatio == "true")
-							cameraComponent.FixedAspectRatio = true;
-						else
-							cameraComponent.FixedAspectRatio = false;
-
+						cameraComponent.Primary = jsonCameraComponent["Primary"].get<bool>();
+						cameraComponent.FixedAspectRatio = jsonCameraComponent["FixedAspectRatio"].get<bool>();
 					}
 				}
 			}
-			//auto result = nlohmann::json::parse(file);
-			return "Hello";
 		}
 
-		glm::vec3& ConvertFloat3(std::string values)
+		std::string ConvertFloat3(nlohmann::json_abi_v3_11_2::json data)
 		{
-			std::string delimiter = ", ";
+			std::string result;
+			int count = 0;
 
-			std::vector<std::string> convertedValues;
-
-			size_t pos = 0;
-			std::string token;
-
-			for (int i = 0; i < 3; i++)
+			result += "[";
+			for (auto it = data.begin(); it != data.end(); ++it)
 			{
-				pos = values.find(delimiter);
-				token = values.substr(0, pos);
-				convertedValues.push_back(token);
-				values.erase(0, pos + delimiter.length());
+				result += std::to_string((float)it.value());
+				if (count < 2) result += ", ";
+				count++;
 			}
-			
-			glm::vec3 float3 = { std::stof(convertedValues[0]), std::stof(convertedValues[1]), std::stof(convertedValues[2]) };
+			result += "]";
 
-			return float3;
+			return result;
 		}
 
-		glm::vec4& ConvertFloat4(std::string values)
+		std::string ConvertFloat4(nlohmann::json_abi_v3_11_2::json data)
 		{
-			std::string delimiter = ", ";
+			std::string result;
+			int count = 0;
 
-			std::vector<std::string> convertedValues;
-
-			size_t pos = 0;
-			std::string token;
-
-			for (int i = 0; i < 4; i++)
+			result += "[";
+			for (auto it = data.begin(); it != data.end(); ++it)
 			{
-				pos = values.find(delimiter);
-				token = values.substr(0, pos);
-				convertedValues.push_back(token);
-				values.erase(0, pos + delimiter.length());
+				result += std::to_string((float)it.value());
+				if (count < 3) result += ", ";
+				count++;
 			}
+			result += "]";
 
-			glm::vec4 float4 = { std::stof(convertedValues[0]), std::stof(convertedValues[1]), std::stof(convertedValues[2]), std::stof(convertedValues[3]) };
-
-			return float4;
+			return result;
 		}
 
 	private:
