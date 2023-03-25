@@ -20,8 +20,11 @@ namespace OpenEngine {
 		void OnEvent(Event& e) override;
 	private:
 		void DrawEntities();
+		bool OnKeyPressed(KeyPressedEvent& e);
+		void NewScene();
+		void OpenScene();
+		void SaveSceneAs();
 	private:
-		std::string m_Filepath = "assets/Scenes/DemoScene.json";
 		OrthographicCameraController m_CameraController;
 
 		Ref<Scene> m_ActiveScene;
@@ -32,8 +35,6 @@ namespace OpenEngine {
 
 		Ref<Texture2D> m_CheckerboardTexture;
 		Ref<Texture2D> m_OpenEngineTexture;
-
-		Ref<Serializer> m_Serializer;
 
 		Entity m_MainCamera;
 		Entity m_SecondCamera;

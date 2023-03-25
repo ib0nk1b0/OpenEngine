@@ -1,6 +1,7 @@
 #include "EditorLayer.h"
 #include "OpenEngine/Renderer/Renderer2D.h"
 #include "OpenEngine/Scene/Components.h"
+#include "OpenEngine/Utils/PlatformUtils.h"
 
 #include "imgui/imgui.h"
 
@@ -27,8 +28,6 @@ namespace OpenEngine {
         m_ActiveScene = CreateRef<Scene>();
 
         m_SceneHierarchyPanel.SetContext(m_ActiveScene);
-
-        m_Serializer = CreateRef<Serializer>(m_ActiveScene);
 
         //DrawEntities();
     }
@@ -175,15 +174,20 @@ namespace OpenEngine {
         {
             if (ImGui::BeginMenu("File"))
             {
-                if (ImGui::MenuItem("Serialize"))
-                    m_Serializer->Serialize(m_Filepath);
-                if (ImGui::MenuItem("Deserialize"))
-                {
-                    m_ActiveScene->ClearRegistry();
-                    m_Serializer->Deserialize(m_Filepath);
-                }
+                if (ImGui::MenuItem("New", "Ctrl + N"))
+                    NewScene();
+
+                if (ImGui::MenuItem("Open Scene...", "Ctrl + O"))
+                    OpenScene();
+
+                if (ImGui::MenuItem("Save Scene As...", "Ctrl + Shift + S"))
+                    SaveSceneAs();
+
+                ImGui::Separator();
+
                 if (ImGui::MenuItem("Exit")) 
                     Application::Get().Close();
+
                 ImGui::EndMenu();
             }
             ImGui::EndMenuBar();
@@ -233,6 +237,73 @@ namespace OpenEngine {
     void EditorLayer::OnEvent(Event& e)
     {
         m_CameraController.OnEvent(e);
+
+        EventDispatcher dispatcher(e);
+        dispatcher.Dispatch<KeyPressedEvent>(OE_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
+    }
+
+    bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
+    {
+        if (e.GetRepeatCount() > 0)
+            return false;
+        
+        bool control = Input::IsKeyPressed(Key::LeftControl) || Input::IsKeyPressed(Key::RightControl);
+        bool shift = Input::IsKeyPressed(Key::LeftShift) || Input::IsKeyPressed(Key::RightShift);
+        bool alt = Input::IsKeyPressed(Key::LeftAlt) || Input::IsKeyPressed(Key::RightAlt);
+
+        switch (e.GetKeyCode())
+        {
+            case Key::N:
+            {
+                if (control)
+                    NewScene();
+
+                break;
+            }
+            case Key::O:
+            {
+                if (control)
+                    OpenScene();
+
+                break;
+            }
+            case Key::S:
+            {
+                if (control && shift)
+                    SaveSceneAs();
+
+                break;
+            }
+        }
+    }
+
+    void EditorLayer::NewScene()
+    {
+        m_ActiveScene = CreateRef<Scene>();
+        m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+        m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+    }
+
+    void EditorLayer::OpenScene()
+    {
+        std::string filepath = FileDialogs::OpenFile("OpenEngine Scene (*.openengine)\0*.openengine\0");
+        if (!filepath.empty())
+        {
+            NewScene();
+
+            Serializer serializer(m_ActiveScene);
+            serializer.Deserialize(filepath);
+        }
+    }
+
+    void EditorLayer::SaveSceneAs()
+    {
+        std::string filepath = FileDialogs::SaveFile("OpenEngine Scene (*.openengine)\0*.openengine\0");
+        if (!filepath.empty())
+        {
+            Serializer serializer(m_ActiveScene);
+            serializer.Serialize(filepath);
+        }
     }
 
 }

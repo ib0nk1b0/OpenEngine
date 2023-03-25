@@ -181,6 +181,7 @@
     <ClInclude Include="src\OpenEngine\Scene\SceneCamera.h" />
     <ClInclude Include="src\OpenEngine\Scene\ScriptableEntity.h" />
     <ClInclude Include="src\OpenEngine\Serialization\Serializer.h" />
+    <ClInclude Include="src\OpenEngine\Utils\PlatformUtils.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLFramebuffer.h" />
@@ -640,6 +641,7 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsPlatformUtils.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\oepch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

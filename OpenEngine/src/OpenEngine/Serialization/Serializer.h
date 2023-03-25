@@ -309,7 +309,7 @@ namespace OpenEngine {
 						}
 						else
 						{
-							camera.SetPerspectiveVertivalFOV(jsonCameraComponent["VertivalFOV"].get<float>());
+							camera.SetPerspectiveVertivalFOV(jsonCameraComponent["VerticalFOV"].get<float>());
 							camera.SetPerspectiveNearClip(jsonCameraComponent["Near"].get<float>());
 							camera.SetPerspectiveFarClip(jsonCameraComponent["Far"].get<float>());
 						}
