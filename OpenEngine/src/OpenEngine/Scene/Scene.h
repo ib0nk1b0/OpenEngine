@@ -2,6 +2,7 @@
 
 #include "entt.hpp"
 #include "OpenEngine/Core/Timestep.h"
+#include "OpenEngine/Renderer/EditorCamera.h"
 
 namespace OpenEngine {
 
@@ -16,7 +17,8 @@ namespace OpenEngine {
 		void DestroyEntity(Entity entity);
 		void ClearRegistry() { m_Registry.clear(); }
 
-		void OnUpdate(Timestep ts);
+		void OnUpdateEditor(Timestep ts, EditorCamera& camera);
+		void OnUpdateRuntime(Timestep ts);
 		void OnViewportResize(uint32_t width, uint32_t height);
 	private:
 		entt::registry m_Registry;

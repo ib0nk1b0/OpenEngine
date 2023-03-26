@@ -95,12 +95,16 @@ namespace OpenEngine {
 				case SceneCamera::ProjectionType::Orthographic: return "Orthographic";
 				case SceneCamera::ProjectionType::Perspective: return "Perspective";
 			}
+
+			return "";
 		}
 
 		static SceneCamera::ProjectionType ProjectionTypeFromString(const std::string& type)
 		{
 			if (type == "Orthographic") return SceneCamera::ProjectionType::Orthographic;
 			if (type == "Perspective") return SceneCamera::ProjectionType::Perspective;
+
+			return SceneCamera::ProjectionType::Orthographic;
 		}
 
 		static std::string Encode(glm::vec3& values)

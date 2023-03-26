@@ -130,8 +130,8 @@ namespace OpenEngine {
 	#define OE_PROFILE_SCOPE(name) ::OpenEngine::InstrumentationTimer time##__LINE__(name);
 	#define OE_PROFILE_FUNCTION() OE_PROFILE_SCOPE(__FUNCSIG__)
 #else
-	#define OE_PROFILE_BEGIN_SESSION()
+	#define OE_PROFILE_BEGIN_SESSION(...)
 	#define OE_PROFILE_END_SESSION()
-	#define OE_PROFILE_SCOPE()
+	#define OE_PROFILE_SCOPE(...)
 	#define OE_PROFILE_FUNCTION()
 #endif

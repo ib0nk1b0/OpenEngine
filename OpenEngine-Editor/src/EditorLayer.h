@@ -3,6 +3,7 @@
 #include "OpenEngine.h"
 #include "Panels/SceneHierarchy.h"
 #include "OpenEngine/Serialization/Serializer.h"
+#include "OpenEngine/Renderer/EditorCamera.h"
 
 namespace OpenEngine {
 
@@ -41,8 +42,10 @@ namespace OpenEngine {
 
 		bool m_MainCameraPrimary = true;
 
+		EditorCamera m_EditorCamera;
+
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
-		glm::vec2 m_ViewportSize;
+		glm::vec2 m_ViewportSize{ 1.0f };
 
 		glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 		glm::vec4 m_Square2Color = { 0.8f, 0.2f, 0.3f, 1.0f };

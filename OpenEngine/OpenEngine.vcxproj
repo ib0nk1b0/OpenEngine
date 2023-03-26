@@ -176,6 +176,7 @@
     <ClInclude Include="src\OpenEngine\Renderer\Texture.h" />
     <ClInclude Include="src\OpenEngine\Renderer\VertexArray.h" />
     <ClInclude Include="src\OpenEngine\Scene\Components.h" />
+    <ClInclude Include="src\OpenEngine\Renderer\EditorCamera.h" />
     <ClInclude Include="src\OpenEngine\Scene\Entity.h" />
     <ClInclude Include="src\OpenEngine\Scene\Scene.h" />
     <ClInclude Include="src\OpenEngine\Scene\SceneCamera.h" />
@@ -630,6 +631,7 @@
     <ClCompile Include="src\OpenEngine\Renderer\SubTexture2D.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\Texture.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\OpenEngine\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\OpenEngine\Scene\Entity.cpp" />
     <ClCompile Include="src\OpenEngine\Scene\Scene.cpp" />
     <ClCompile Include="src\OpenEngine\Scene\SceneCamera.cpp" />

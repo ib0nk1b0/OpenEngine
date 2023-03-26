@@ -29,6 +29,8 @@ namespace OpenEngine {
 
         m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
+        m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+
         //DrawEntities();
     }
 
@@ -113,7 +115,10 @@ namespace OpenEngine {
         OE_PROFILE_FUNCTION();
 
         if (m_ViewportFocused)
+        {
             m_CameraController.OnUpdate(ts);
+            m_EditorCamera.OnUpdate(ts);
+        }
 
         Renderer2D::ResetStats();
 
@@ -122,7 +127,7 @@ namespace OpenEngine {
         RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
         RenderCommand::Clear();
 
-        m_ActiveScene->OnUpdate(ts);
+        m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
 
         m_Framebuffer->UnBind();
     }
@@ -221,12 +226,13 @@ namespace OpenEngine {
             m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
             m_CameraController.OnResize(viewportPanelSize.x, viewportPanelSize.y);
+            m_EditorCamera.SetViewportSize(viewportPanelSize.x, viewportPanelSize.y);
         }
         //TODO: Rethink this approach to fix the camera not having correct aspectRatio until window is resized
         m_ActiveScene->OnViewportResize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 
         uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
-        ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+        ImGui::Image((void*)(uint64_t)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
         
         ImGui::End();
         ImGui::PopStyleVar();
@@ -237,6 +243,7 @@ namespace OpenEngine {
     void EditorLayer::OnEvent(Event& e)
     {
         m_CameraController.OnEvent(e);
+        m_EditorCamera.OnEvent(e);
 
         EventDispatcher dispatcher(e);
         dispatcher.Dispatch<KeyPressedEvent>(OE_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
@@ -275,6 +282,8 @@ namespace OpenEngine {
                 break;
             }
         }
+
+        return true;
     }
 
     void EditorLayer::NewScene()

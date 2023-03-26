@@ -147,7 +147,7 @@ namespace OpenEngine {
 // TODO: Temporary key codes that are still used in some places
 // Remove and replace where these are used with above format
 
-#define OE_KEY_APOSTROPHE  32
+#define OE_KEY_SPACE  32
 #define OE_KEY_APOSTROPHE  39  /* ' */
 #define OE_KEY_COMMA  44  /* , */
 #define OE_KEY_MINUS  45  /* - */
