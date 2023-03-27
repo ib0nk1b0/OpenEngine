@@ -34,9 +34,22 @@ namespace OpenEngine {
 
 		float GetPitch() const { return m_Pitch; }
 		float GetYaw() const { return m_Yaw; }
+
+		float GetFOV() const { return m_FOV; }
+		void SetFOV(float fov) { m_FOV = fov; UpdateView(); }
+
+		float GetNearClip() const { return m_NearClip; }
+		void SetNearClip(float nearClip) { m_NearClip = nearClip; UpdateView(); }
+
+		float GetFarClip() const { return m_FarClip; }
+		void SetFarClip(float farClip) { m_FarClip = farClip; UpdateView(); }
+	public:
+		bool m_Rotate = true;
 	private:
 		void UpdateProjection();
 		void UpdateView();
+
+		void ResetCamera();
 
 		bool OnMouseScroll(MouseScrolledEvent& e);
 

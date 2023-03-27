@@ -12,13 +12,15 @@
 namespace OpenEngine {
 
     EditorLayer::EditorLayer()
-        : Layer("EditorLayer"), m_CameraController(1280.0f / 720.0f)
+        : Layer("EditorLayer")
     {
     }
 
     void EditorLayer::OnAttach()
     {
         OE_PROFILE_FUNCTION();
+
+        m_OpenEngineTexture = Texture2D::Create("assets/textures/Tilesheet.png");
 
         FramebufferSpecification fbSpec;
         fbSpec.Width = 1280;
@@ -30,6 +32,9 @@ namespace OpenEngine {
         m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
         m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+
+        Entity square = m_ActiveScene->CreateEntity("Textured Square");
+        square.AddComponent<SpriteRendererComponent>().Texture = m_OpenEngineTexture;
 
         //DrawEntities();
     }
@@ -114,11 +119,7 @@ namespace OpenEngine {
     {
         OE_PROFILE_FUNCTION();
 
-        if (m_ViewportFocused)
-        {
-            m_CameraController.OnUpdate(ts);
-            m_EditorCamera.OnUpdate(ts);
-        }
+        m_EditorCamera.OnUpdate(ts);
 
         Renderer2D::ResetStats();
 
@@ -128,6 +129,7 @@ namespace OpenEngine {
         RenderCommand::Clear();
 
         m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+        //m_ActiveScene->OnUpdateRuntime(ts);
 
         m_Framebuffer->UnBind();
     }
@@ -211,6 +213,24 @@ namespace OpenEngine {
 
         ImGui::End();
 
+        ImGui::Begin("Editor Camera");
+        
+        float fov = m_EditorCamera.GetFOV();
+        if (ImGui::DragFloat("FOV", &fov, 0.5f, 0.0f, 120.0f))
+            m_EditorCamera.SetFOV(fov);
+
+        float nearClip = m_EditorCamera.GetNearClip();
+        if (ImGui::DragFloat("Near Clip", &nearClip))
+            m_EditorCamera.SetNearClip(nearClip);
+
+        float farClip = m_EditorCamera.GetFarClip();
+        if (ImGui::DragFloat("Far Clip", &farClip))
+            m_EditorCamera.SetFarClip(farClip);
+
+        ImGui::Checkbox("Rotation enabled", &m_EditorCamera.m_Rotate);
+
+        ImGui::End();
+
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
         ImGui::Begin("Viewport");
 
@@ -224,12 +244,10 @@ namespace OpenEngine {
         {
             m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
             m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
-
-            m_CameraController.OnResize(viewportPanelSize.x, viewportPanelSize.y);
-            m_EditorCamera.SetViewportSize(viewportPanelSize.x, viewportPanelSize.y);
         }
         //TODO: Rethink this approach to fix the camera not having correct aspectRatio until window is resized
         m_ActiveScene->OnViewportResize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
+        m_EditorCamera.SetViewportSize(viewportPanelSize.x, viewportPanelSize.y);
 
         uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
         ImGui::Image((void*)(uint64_t)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
@@ -242,7 +260,6 @@ namespace OpenEngine {
 
     void EditorLayer::OnEvent(Event& e)
     {
-        m_CameraController.OnEvent(e);
         m_EditorCamera.OnEvent(e);
 
         EventDispatcher dispatcher(e);

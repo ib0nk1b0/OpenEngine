@@ -25,7 +25,9 @@ namespace OpenEngine {
 
 	void EditorCamera::UpdateView()
 	{
-		// m_Yaw = m_Pitch = 0.0f;
+		if (!m_Rotate)
+			m_Yaw = m_Pitch = 0.0f;
+
 		m_Position = CalculatePosition();
 
 		glm::quat orientation = GetOrientation();
@@ -71,6 +73,8 @@ namespace OpenEngine {
 				MousePan(delta);
 			else if (Input::IsMouseButtonPressed(Mouse::ButtonMiddle))
 				MouseRotate(delta);
+			else if (Input::IsMouseButtonPressed(Mouse::ButtonRight))
+				ResetCamera();
 		}
 
 		UpdateView();
@@ -80,6 +84,15 @@ namespace OpenEngine {
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<MouseScrolledEvent>(OE_BIND_EVENT_FN(EditorCamera::OnMouseScroll));
+	}
+
+	void EditorCamera::ResetCamera()
+	{
+		m_Position = { 0.0f, 0.0f, 0.0f };
+		m_FocalPoint = { 0.0f, 0.0f, 0.0f };
+		m_Pitch = m_Yaw = 0.0f;
+		m_Distance = 10.0f;
+		UpdateView();
 	}
 
 	bool EditorCamera::OnMouseScroll(MouseScrolledEvent& e)

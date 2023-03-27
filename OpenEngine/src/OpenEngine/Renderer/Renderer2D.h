@@ -25,8 +25,8 @@ namespace OpenEngine
 		static void Init();
 		static void Shutdown();
 
-		static void BeginScene(const Camera& camera, const glm::mat4& transform);
 		static void BeginScene(const EditorCamera& camera);
+		static void BeginScene(const Camera& camera, const glm::mat4& transform);
 		static void BeginScene(const OrthographicCamera& camera);
 		static void StartBatch();
 		static void EndScene();
@@ -37,6 +37,7 @@ namespace OpenEngine
 		static void DrawQuad(Quad quad);
 
 		// Transforms
+		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, const glm::vec4& color, float scale = 1.0f);
 		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color);
 		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float scale = 1.0f);
 		static void DrawQuad(const glm::mat4& transform, const Ref<SubTexture2D>& subtexture, float scale = 1.0f);
@@ -62,7 +63,8 @@ namespace OpenEngine
 		static void ResetStats();
 		static Statistics GetStats();
 	private:
-		static void FlushAndReset();
+		static void NextBatch();
+		//void SetupSkybox();
 	};
 
 }

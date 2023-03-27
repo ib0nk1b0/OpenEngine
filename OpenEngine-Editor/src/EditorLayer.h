@@ -26,7 +26,6 @@ namespace OpenEngine {
 		void OpenScene();
 		void SaveSceneAs();
 	private:
-		OrthographicCameraController m_CameraController;
 
 		Ref<Scene> m_ActiveScene;
 
