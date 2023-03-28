@@ -3,34 +3,15 @@
 		{
 			"ID": 85493002,
 			"TagComponent": {
-				"Tag": "Orthographic Camera"
+				"Tag": "Quad"
 			},
 			"TransformComponent": {
 				"Translation": [0.000000, 0.000000, 0.000000],
 				"Rotation": [0.000000, 0.000000, 0.000000],
 				"Scale": [1.000000, 1.000000, 1.000000]
 			},
-			"CameraComponent": {
-				"ProjectionType": "Orthographic",
-				"Size": 10.000000,
-				"Near": -1.000000,
-				"Far": 1.000000,
-				"Primary": true,
-				"FixedAspectRatio": false
-			}
-		},
-		{
-			"ID": 85493002,
-			"TagComponent": {
-				"Tag": "Quad"
-			},
-			"TransformComponent": {
-				"Translation": [1.400000, 0.000000, 0.000000],
-				"Rotation": [0.000000, 0.000000, 0.000000],
-				"Scale": [1.000000, 1.000000, 1.000000]
-			},
 			"SpriteRendererComponent": {
-				"Color": [1.000000, 1.000000, 0.023529, 1.000000]
+				"Color": [1.000000, 1.000000, 1.000000, 1.000000]
 			}
 		}
 	]

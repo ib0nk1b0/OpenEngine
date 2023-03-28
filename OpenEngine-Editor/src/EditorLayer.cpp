@@ -20,9 +20,8 @@ namespace OpenEngine {
     {
         OE_PROFILE_FUNCTION();
 
-        m_OpenEngineTexture = Texture2D::Create("assets/textures/Tilesheet.png");
-
         FramebufferSpecification fbSpec;
+        fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::Depth };
         fbSpec.Width = 1280;
         fbSpec.Height = 720;
         m_Framebuffer = Framebuffer::Create(fbSpec);
@@ -32,82 +31,6 @@ namespace OpenEngine {
         m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
         m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
-
-        Entity square = m_ActiveScene->CreateEntity("Textured Square");
-        square.AddComponent<SpriteRendererComponent>().Texture = m_OpenEngineTexture;
-
-        //DrawEntities();
-    }
-
-    void EditorLayer::DrawEntities()
-    {
-        Entity square = m_ActiveScene->CreateEntity("Blue Square");
-        square.AddComponent<SpriteRendererComponent>(m_SquareColor);
-
-        Entity square2 = m_ActiveScene->CreateEntity("Red Square");
-        square2.AddComponent<SpriteRendererComponent>(m_Square2Color);
-        square2.GetComponent<TransformComponent>().Translation = glm::vec3{ 1.0f, 0.0f, 0.0f };
-
-        Entity mainCamera = m_ActiveScene->CreateEntity("Main Camera");
-        mainCamera.AddComponent<CameraComponent>();
-        m_MainCamera = mainCamera;
-
-        Entity secondCamera = m_ActiveScene->CreateEntity("Second Camera");
-        secondCamera.AddComponent<CameraComponent>().Primary = false;
-        m_SecondCamera = secondCamera;
-
-        class CameraController : public ScriptableEntity
-        {
-        public:
-            void OnCreate()
-            {
-            }
-
-            void OnDestroy()
-            {
-            }
-
-            void OnUpdate(Timestep ts)
-            {
-                auto& primary = GetComponent<CameraComponent>().Primary;
-                if (!primary) return;
-
-                auto& translation = GetComponent<TransformComponent>().Translation;
-                float speed = 5.0f;
-
-                if (Input::IsKeyPressed(Key::A))
-                    translation.x -= speed * ts;
-                if (Input::IsKeyPressed(Key::D))
-                    translation.x += speed * ts;
-                if (Input::IsKeyPressed(Key::W))
-                    translation.y += speed * ts;
-                if (Input::IsKeyPressed(Key::S))
-                    translation.y -= speed * ts;
-
-            }
-        };
-
-        class SquareController : public ScriptableEntity
-        {
-            void OnUpdate(Timestep ts)
-            {
-                auto& translation = GetComponent<TransformComponent>().Translation;
-                float speed = 5.0f;
-
-                if (Input::IsKeyPressed(Key::Left))
-                    translation.x -= speed * ts;
-                if (Input::IsKeyPressed(Key::Right))
-                    translation.x += speed * ts;
-                if (Input::IsKeyPressed(Key::Up))
-                    translation.y += speed * ts;
-                if (Input::IsKeyPressed(Key::Down))
-                    translation.y -= speed * ts;
-            }
-        };
-
-        m_MainCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-        m_SecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-        square2.AddComponent<NativeScriptComponent>().Bind<SquareController>();
     }
 
     void EditorLayer::OnDetach()
@@ -125,11 +48,18 @@ namespace OpenEngine {
 
         m_Framebuffer->Bind();
 
-        RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
+        RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
         RenderCommand::Clear();
 
-        m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
-        //m_ActiveScene->OnUpdateRuntime(ts);
+        switch (m_ActiveScene->GetSceneState())
+        {
+            case SceneState::Edit:
+                m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+                break;
+            case SceneState::Runtime:
+                m_ActiveScene->OnUpdateRuntime(ts);
+                break;
+        }
 
         m_Framebuffer->UnBind();
     }
@@ -184,10 +114,13 @@ namespace OpenEngine {
                 if (ImGui::MenuItem("New", "Ctrl + N"))
                     NewScene();
 
-                if (ImGui::MenuItem("Open Scene...", "Ctrl + O"))
+                if (ImGui::MenuItem("Open", "Ctrl + O"))
                     OpenScene();
 
-                if (ImGui::MenuItem("Save Scene As...", "Ctrl + Shift + S"))
+                if (ImGui::MenuItem("Save", "Ctrl + S"))
+                    SaveScene();
+
+                if (ImGui::MenuItem("Save As...", "Ctrl + Shift + S"))
                     SaveSceneAs();
 
                 ImGui::Separator();
@@ -293,7 +226,9 @@ namespace OpenEngine {
             }
             case Key::S:
             {
-                if (control && shift)
+                if (control)
+                    SaveScene();
+                else if (control && shift)
                     SaveSceneAs();
 
                 break;
@@ -303,9 +238,10 @@ namespace OpenEngine {
         return true;
     }
 
-    void EditorLayer::NewScene()
+    void EditorLayer::NewScene(const std::string& filepath)
     {
         m_ActiveScene = CreateRef<Scene>();
+        m_ActiveScene->SetFilepath(filepath);
         m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
         m_SceneHierarchyPanel.SetContext(m_ActiveScene);
     }
@@ -315,10 +251,22 @@ namespace OpenEngine {
         std::string filepath = FileDialogs::OpenFile("OpenEngine Scene (*.openengine)\0*.openengine\0");
         if (!filepath.empty())
         {
-            NewScene();
+            NewScene(filepath);
 
             Serializer serializer(m_ActiveScene);
             serializer.Deserialize(filepath);
+        }
+    }
+
+    void EditorLayer::SaveScene()
+    {
+        const std::string filepath = m_ActiveScene->GetFilepath();
+        if (filepath == "UntitledScene.openengine")
+            SaveSceneAs();
+        else
+        {
+            Serializer serializer(m_ActiveScene);
+            serializer.Serialize(filepath);
         }
     }
 
