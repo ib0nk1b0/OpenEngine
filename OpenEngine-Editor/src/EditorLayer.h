@@ -1,7 +1,9 @@
 #pragma once
 
 #include "OpenEngine.h"
+
 #include "Panels/SceneHierarchy.h"
+
 #include "OpenEngine/Serialization/Serializer.h"
 #include "OpenEngine/Renderer/EditorCamera.h"
 
@@ -21,11 +23,23 @@ namespace OpenEngine {
 		void OnEvent(Event& e) override;
 	private:
 		bool OnKeyPressed(KeyPressedEvent& e);
+
+		void NewProject();
 		void NewScene(const std::string& filepath = "UntitledScene.openengine");
 		void OpenScene();
 		void SaveScene();
 		void SaveSceneAs();
+
+		// UI panles
+		void UI_MenuBar();
+		void UI_Stats();
+		void UI_EditorCameraPanel();
+		void UI_Toolbar();
 	private:
+		bool m_DisplayStats = true;
+		bool m_DisplayEditorCameraUI = true;
+		bool m_DisplaySceneHierarchy = true;
+		bool m_DisplayProperties = true;
 
 		Ref<Scene> m_ActiveScene;
 		Ref<Framebuffer> m_Framebuffer;
@@ -36,6 +50,8 @@ namespace OpenEngine {
 
 		// Panels
 		SceneHierarchyPanel m_SceneHierarchyPanel;
+
+		Ref<Texture2D> m_PlayIcon, m_StopIcon;
 	};
 
 }

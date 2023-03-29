@@ -15,15 +15,6 @@ namespace OpenEngine {
 	class Serializer
 	{
 	public:
-		Serializer(const Ref<Scene>& scene)
-		{
-			SetContext(scene);
-		}
-
-		void SetContext(const Ref<Scene>& scene)
-		{
-			m_Scene = scene;
-		}
 
 		static std::string GetJSONString(const std::string& label)
 		{
@@ -92,8 +83,8 @@ namespace OpenEngine {
 		{
 			switch (type)
 			{
-				case SceneCamera::ProjectionType::Orthographic: return "Orthographic";
-				case SceneCamera::ProjectionType::Perspective: return "Perspective";
+			case SceneCamera::ProjectionType::Orthographic: return "Orthographic";
+			case SceneCamera::ProjectionType::Perspective: return "Perspective";
 			}
 
 			return "";
@@ -173,6 +164,16 @@ namespace OpenEngine {
 			result.g = std::stof(convertedValues[1]);
 			result.b = std::stof(convertedValues[2]);
 			result.a = std::stof(convertedValues[3]);
+		}
+
+		Serializer(const Ref<Scene>& scene)
+		{
+			SetContext(scene);
+		}
+
+		void SetContext(const Ref<Scene>& scene)
+		{
+			m_Scene = scene;
 		}
 
 		void Serialize(const std::string& filepath)

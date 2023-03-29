@@ -10,7 +10,7 @@ namespace OpenEngine {
 
 	enum class SceneState
 	{
-		Edit = 0, Runtime
+		Edit = 0, Play
 	};
 
 	class Scene {

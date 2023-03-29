@@ -33,16 +33,19 @@ namespace OpenEngine {
 		glm::quat GetOrientation() const;
 
 		float GetPitch() const { return m_Pitch; }
+		void SetPitch(float pitch) { m_Pitch = pitch; }
+
 		float GetYaw() const { return m_Yaw; }
+		void SetYaw(float yaw) { m_Yaw = yaw; }
 
 		float GetFOV() const { return m_FOV; }
-		void SetFOV(float fov) { m_FOV = fov; UpdateView(); }
+		void SetFOV(float fov) { m_FOV = fov; }
 
 		float GetNearClip() const { return m_NearClip; }
-		void SetNearClip(float nearClip) { m_NearClip = nearClip; UpdateView(); }
+		void SetNearClip(float nearClip) { m_NearClip = nearClip; }
 
 		float GetFarClip() const { return m_FarClip; }
-		void SetFarClip(float farClip) { m_FarClip = farClip; UpdateView(); }
+		void SetFarClip(float farClip) { m_FarClip = farClip; }
 	public:
 		bool m_Rotate = true;
 	private:

@@ -11,273 +11,366 @@
 
 namespace OpenEngine {
 
-    EditorLayer::EditorLayer()
-        : Layer("EditorLayer")
-    {
-    }
+	EditorLayer::EditorLayer()
+		: Layer("EditorLayer")
+	{
+	}
 
-    void EditorLayer::OnAttach()
-    {
-        OE_PROFILE_FUNCTION();
+	void EditorLayer::OnAttach()
+	{
+		OE_PROFILE_FUNCTION();
 
-        FramebufferSpecification fbSpec;
-        fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::Depth };
-        fbSpec.Width = 1280;
-        fbSpec.Height = 720;
-        m_Framebuffer = Framebuffer::Create(fbSpec);
+		m_PlayIcon = Texture2D::Create("assets/icons/Play.png");
+		m_StopIcon = Texture2D::Create("assets/icons/Stop.png");
 
-        m_ActiveScene = CreateRef<Scene>();
+		FramebufferSpecification fbSpec;
+		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::Depth };
+		fbSpec.Width = 1280;
+		fbSpec.Height = 720;
+		m_Framebuffer = Framebuffer::Create(fbSpec);
 
-        m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+		m_ActiveScene = CreateRef<Scene>();
 
-        m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
-    }
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
-    void EditorLayer::OnDetach()
-    {
-        OE_PROFILE_FUNCTION();
-    }
+		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+	}
 
-    void EditorLayer::OnUpdate(Timestep ts)
-    {
-        OE_PROFILE_FUNCTION();
+	void EditorLayer::OnDetach()
+	{
+		OE_PROFILE_FUNCTION();
+	}
 
-        m_EditorCamera.OnUpdate(ts);
+	void EditorLayer::OnUpdate(Timestep ts)
+	{
+		OE_PROFILE_FUNCTION();
 
-        Renderer2D::ResetStats();
+		m_EditorCamera.OnUpdate(ts);
 
-        m_Framebuffer->Bind();
+		Renderer2D::ResetStats();
 
-        RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-        RenderCommand::Clear();
+		m_Framebuffer->Bind();
 
-        switch (m_ActiveScene->GetSceneState())
-        {
-            case SceneState::Edit:
-                m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
-                break;
-            case SceneState::Runtime:
-                m_ActiveScene->OnUpdateRuntime(ts);
-                break;
-        }
+		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+		RenderCommand::Clear();
 
-        m_Framebuffer->UnBind();
-    }
+		switch (m_ActiveScene->GetSceneState())
+		{
+			case SceneState::Edit:
+				m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+				break;
+			case SceneState::Play:
+				m_ActiveScene->OnUpdateRuntime(ts);
+				break;
+		}
 
-    void EditorLayer::OnImGuiRender()
-    {
-        OE_PROFILE_FUNCTION();
+		m_Framebuffer->UnBind();
+	}
 
-        static bool dockspaceOpen = true;
-        static bool opt_fullscreen = true;
-        static bool opt_padding = false;
-        static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+	void EditorLayer::OnImGuiRender()
+	{
+		OE_PROFILE_FUNCTION();
 
-        ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-        if (opt_fullscreen)
-        {
-            const ImGuiViewport* viewport = ImGui::GetMainViewport();
-            ImGui::SetNextWindowPos(viewport->WorkPos);
-            ImGui::SetNextWindowSize(viewport->WorkSize);
-            ImGui::SetNextWindowViewport(viewport->ID);
-            ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-            ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-            window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-            window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-        }
-        else
-        {
-            dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
-        }
+		static bool dockspaceOpen = true;
+		static bool opt_fullscreen = true;
+		static bool opt_padding = false;
+		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
-        if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-            window_flags |= ImGuiWindowFlags_NoBackground;
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+		if (opt_fullscreen)
+		{
+			const ImGuiViewport* viewport = ImGui::GetMainViewport();
+			ImGui::SetNextWindowPos(viewport->WorkPos);
+			ImGui::SetNextWindowSize(viewport->WorkSize);
+			ImGui::SetNextWindowViewport(viewport->ID);
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+			window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+			window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+		}
+		else
+		{
+			dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
+		}
 
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-        ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags);
-        ImGui::PopStyleVar();
+		if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+			window_flags |= ImGuiWindowFlags_NoBackground;
 
-        if (opt_fullscreen)
-            ImGui::PopStyleVar(2);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+		ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags);
+		ImGui::PopStyleVar();
 
-        ImGuiIO& io = ImGui::GetIO();
-        if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-        {
-            ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-            ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-        }
+		if (opt_fullscreen)
+			ImGui::PopStyleVar(2);
 
-        if (ImGui::BeginMenuBar())
-        {
-            if (ImGui::BeginMenu("File"))
-            {
-                if (ImGui::MenuItem("New", "Ctrl + N"))
-                    NewScene();
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+		{
+			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+		}
 
-                if (ImGui::MenuItem("Open", "Ctrl + O"))
-                    OpenScene();
+		ImGuiStyle& style = ImGui::GetStyle();
+		style.WindowMinSize.x = 370.0f;
 
-                if (ImGui::MenuItem("Save", "Ctrl + S"))
-                    SaveScene();
+		UI_MenuBar();
 
-                if (ImGui::MenuItem("Save As...", "Ctrl + Shift + S"))
-                    SaveSceneAs();
+		if (m_DisplayStats)
+			UI_Stats();
 
-                ImGui::Separator();
+		if (m_DisplayEditorCameraUI)
+			UI_EditorCameraPanel();
 
-                if (ImGui::MenuItem("Exit")) 
-                    Application::Get().Close();
+		m_SceneHierarchyPanel.OnImGuiRender();
 
-                ImGui::EndMenu();
-            }
-            ImGui::EndMenuBar();
-        }
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
+		ImGui::Begin("Viewport");
 
-        m_SceneHierarchyPanel.OnImGuiRender();
+		m_ViewportFocused = ImGui::IsWindowFocused();
+		m_ViewportHovered = ImGui::IsWindowHovered();
+		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
 
-        ImGui::Begin("Stats");
+		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 
-        auto stats = Renderer2D::GetStats();
-        ImGui::Text("Renderer2D Stats:");
-        ImGui::Text("Draw Calls: %d", stats.DrawCalls);
-        ImGui::Text("Quad Count: %d", stats.QuadCount);
-        ImGui::Text("Verticies: %d", stats.GetTotalVertexCount());
-        ImGui::Text("Indicies: %d", stats.GetTotalIndexCount());
+		if (m_ViewportSize != *((glm::vec2*)&viewportPanelSize))
+		{
+			m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
+			m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+		}
 
-        ImGui::End();
+		//TODO: Rethink this approach to fix the camera not having correct aspectRatio until window is resized
+		m_ActiveScene->OnViewportResize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
+		m_EditorCamera.SetViewportSize(viewportPanelSize.x, viewportPanelSize.y);
 
-        ImGui::Begin("Editor Camera");
-        
-        float fov = m_EditorCamera.GetFOV();
-        if (ImGui::DragFloat("FOV", &fov, 0.5f, 0.0f, 120.0f))
-            m_EditorCamera.SetFOV(fov);
+		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+		ImGui::Image((void*)(uint64_t)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+		
+		ImGui::End();
+		ImGui::PopStyleVar();
 
-        float nearClip = m_EditorCamera.GetNearClip();
-        if (ImGui::DragFloat("Near Clip", &nearClip))
-            m_EditorCamera.SetNearClip(nearClip);
+		UI_Toolbar();
 
-        float farClip = m_EditorCamera.GetFarClip();
-        if (ImGui::DragFloat("Far Clip", &farClip))
-            m_EditorCamera.SetFarClip(farClip);
+		ImGui::End();
+	}
 
-        ImGui::Checkbox("Rotation enabled", &m_EditorCamera.m_Rotate);
+	void EditorLayer::OnEvent(Event& e)
+	{
+		m_EditorCamera.OnEvent(e);
 
-        ImGui::End();
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<KeyPressedEvent>(OE_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
+	}
 
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
-        ImGui::Begin("Viewport");
+	void EditorLayer::UI_MenuBar()
+	{
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
+			{
+				if (ImGui::BeginMenu("New"))
+				{
+					if (ImGui::MenuItem("Project", "Ctrl + Shift + N"))
+						NewProject();
 
-        m_ViewportFocused = ImGui::IsWindowFocused();
-        m_ViewportHovered = ImGui::IsWindowHovered();
-        Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
+					if (ImGui::MenuItem("Scene", "Ctrl + N"))
+						NewScene();
 
-        ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+					ImGui::EndMenu();
+				}
 
-        if (m_ViewportSize != *((glm::vec2*)&viewportPanelSize))
-        {
-            m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
-            m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
-        }
-        //TODO: Rethink this approach to fix the camera not having correct aspectRatio until window is resized
-        m_ActiveScene->OnViewportResize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
-        m_EditorCamera.SetViewportSize(viewportPanelSize.x, viewportPanelSize.y);
+				if (ImGui::MenuItem("Open", "Ctrl + O"))
+					OpenScene();
 
-        uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
-        ImGui::Image((void*)(uint64_t)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-        
-        ImGui::End();
-        ImGui::PopStyleVar();
+				ImGui::Separator();
 
-        ImGui::End();
-    }
+				if (ImGui::MenuItem("Save", "Ctrl + S"))
+					SaveScene();
 
-    void EditorLayer::OnEvent(Event& e)
-    {
-        m_EditorCamera.OnEvent(e);
+				if (ImGui::MenuItem("Save As...", "Ctrl + Shift + S"))
+					SaveSceneAs();
 
-        EventDispatcher dispatcher(e);
-        dispatcher.Dispatch<KeyPressedEvent>(OE_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
-    }
+				ImGui::Separator();
 
-    bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
-    {
-        if (e.GetRepeatCount() > 0)
-            return false;
-        
-        bool control = Input::IsKeyPressed(Key::LeftControl) || Input::IsKeyPressed(Key::RightControl);
-        bool shift = Input::IsKeyPressed(Key::LeftShift) || Input::IsKeyPressed(Key::RightShift);
-        bool alt = Input::IsKeyPressed(Key::LeftAlt) || Input::IsKeyPressed(Key::RightAlt);
+				if (ImGui::MenuItem("Exit"))
+					Application::Get().Close();
 
-        switch (e.GetKeyCode())
-        {
-            case Key::N:
-            {
-                if (control)
-                    NewScene();
+				ImGui::EndMenu();
+			}
 
-                break;
-            }
-            case Key::O:
-            {
-                if (control)
-                    OpenScene();
+			if (ImGui::BeginMenu("Menus"))
+			{
+				if (ImGui::MenuItem("Scene Hierarchy", NULL, &m_DisplaySceneHierarchy))
+					m_SceneHierarchyPanel.DisplaySceneHierarchy(m_DisplaySceneHierarchy);
 
-                break;
-            }
-            case Key::S:
-            {
-                if (control)
-                    SaveScene();
-                else if (control && shift)
-                    SaveSceneAs();
+				if (ImGui::MenuItem("Properties", NULL, &m_DisplayProperties))
+					m_SceneHierarchyPanel.DisplayProperties(m_DisplayProperties);
 
-                break;
-            }
-        }
+				ImGui::MenuItem("Renderer Stats", NULL, &m_DisplayStats);
+				ImGui::MenuItem("Editor Camera UI", NULL, &m_DisplayEditorCameraUI);
 
-        return true;
-    }
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenuBar();
+		}
+		//ImGui::ShowDemoWindow();
+	}
 
-    void EditorLayer::NewScene(const std::string& filepath)
-    {
-        m_ActiveScene = CreateRef<Scene>();
-        m_ActiveScene->SetFilepath(filepath);
-        m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-        m_SceneHierarchyPanel.SetContext(m_ActiveScene);
-    }
+	void EditorLayer::UI_Stats()
+	{
+		ImGui::Begin("Stats");
 
-    void EditorLayer::OpenScene()
-    {
-        std::string filepath = FileDialogs::OpenFile("OpenEngine Scene (*.openengine)\0*.openengine\0");
-        if (!filepath.empty())
-        {
-            NewScene(filepath);
+		auto stats = Renderer2D::GetStats();
+		ImGui::Text("Renderer2D Stats:");
+		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+		ImGui::Text("Quad Count: %d", stats.QuadCount);
+		ImGui::Text("Verticies: %d", stats.GetTotalVertexCount());
+		ImGui::Text("Indicies: %d", stats.GetTotalIndexCount());
 
-            Serializer serializer(m_ActiveScene);
-            serializer.Deserialize(filepath);
-        }
-    }
+		ImGui::End();
+	}
 
-    void EditorLayer::SaveScene()
-    {
-        const std::string filepath = m_ActiveScene->GetFilepath();
-        if (filepath == "UntitledScene.openengine")
-            SaveSceneAs();
-        else
-        {
-            Serializer serializer(m_ActiveScene);
-            serializer.Serialize(filepath);
-        }
-    }
+	void EditorLayer::UI_EditorCameraPanel()
+	{
+		ImGui::Begin("Editor Camera");
 
-    void EditorLayer::SaveSceneAs()
-    {
-        std::string filepath = FileDialogs::SaveFile("OpenEngine Scene (*.openengine)\0*.openengine\0");
-        if (!filepath.empty())
-        {
-            Serializer serializer(m_ActiveScene);
-            serializer.Serialize(filepath);
-        }
-    }
+		float pitch = m_EditorCamera.GetPitch();
+		if (ImGui::DragFloat("Pitch", &pitch, 0.1f))
+			m_EditorCamera.SetPitch(pitch);
+
+		float yaw = m_EditorCamera.GetYaw();
+		if (ImGui::DragFloat("Yaw", &yaw, 0.1f))
+			m_EditorCamera.SetYaw(yaw);
+
+		float fov = m_EditorCamera.GetFOV();
+		if (ImGui::DragFloat("FOV", &fov, 0.5f, 0.0f, 120.0f))
+			m_EditorCamera.SetFOV(fov);
+
+		float nearClip = m_EditorCamera.GetNearClip();
+		if (ImGui::DragFloat("Near Clip", &nearClip))
+			m_EditorCamera.SetNearClip(nearClip);
+
+		float farClip = m_EditorCamera.GetFarClip();
+		if (ImGui::DragFloat("Far Clip", &farClip))
+			m_EditorCamera.SetFarClip(farClip);
+
+		ImGui::Checkbox("Rotation enabled", &m_EditorCamera.m_Rotate);
+
+		ImGui::End();
+	}
+
+	void EditorLayer::UI_Toolbar()
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 2));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+		auto& colors = ImGui::GetStyle().Colors;
+		const auto& buttonHovered = colors[ImGuiCol_ButtonHovered];
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f));
+		const auto& buttonActive = colors[ImGuiCol_ButtonActive];
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(buttonActive.x, buttonActive.y, buttonActive.z, 0.5f));
+
+		ImGui::Begin("##Toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+		float size = ImGui::GetWindowHeight() - 4;
+		Ref<Texture2D> icon = m_ActiveScene->GetSceneState() == SceneState::Edit ? m_PlayIcon : m_StopIcon;
+		ImGui::SetCursorPosX(ImGui::GetWindowContentRegionMax().x * 0.5f - size * 0.5f);
+		if (ImGui::ImageButton((ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
+		{
+			if (m_ActiveScene->GetSceneState() == SceneState::Edit)
+				m_ActiveScene->SetSceneState(SceneState::Play);
+			else if (m_ActiveScene->GetSceneState() == SceneState::Play)
+				m_ActiveScene->SetSceneState(SceneState::Edit);
+		}
+		ImGui::PopStyleVar(2);
+		ImGui::PopStyleColor(3);
+		ImGui::End();
+	}
+
+	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
+	{
+		if (e.GetRepeatCount() > 0)
+			return false;
+
+		bool control = Input::IsKeyPressed(Key::LeftControl) || Input::IsKeyPressed(Key::RightControl);
+		bool shift = Input::IsKeyPressed(Key::LeftShift) || Input::IsKeyPressed(Key::RightShift);
+		bool alt = Input::IsKeyPressed(Key::LeftAlt) || Input::IsKeyPressed(Key::RightAlt);
+
+		switch (e.GetKeyCode())
+		{
+			case Key::N:
+			{
+				if (control && shift)
+					NewProject();
+				else if (control)
+					NewScene();
+
+				break;
+			}
+			case Key::O:
+			{
+				if (control)
+					OpenScene();
+
+				break;
+			}
+			case Key::S:
+			{
+				if (control && shift)
+					SaveSceneAs();
+				else if (control)
+					SaveScene();
+
+				break;
+			}
+		}
+
+		return true;
+	}
+
+	void EditorLayer::NewProject()
+	{
+		OE_WARN("Projects are not yet developed."); // TODO: <- do this
+	}
+
+	void EditorLayer::NewScene(const std::string& filepath)
+	{
+		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene->SetFilepath(filepath);
+		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+	}
+
+	void EditorLayer::OpenScene()
+	{
+		std::string filepath = FileDialogs::OpenFile("OpenEngine Scene (*.openengine)\0*.openengine\0");
+		if (!filepath.empty())
+		{
+			NewScene(filepath);
+
+			Serializer serializer(m_ActiveScene);
+			serializer.Deserialize(filepath);
+		}
+	}
+
+	void EditorLayer::SaveScene()
+	{
+		const std::string filepath = m_ActiveScene->GetFilepath();
+		if (filepath == "UntitledScene.openengine")
+			SaveSceneAs();
+		else
+		{
+			Serializer serializer(m_ActiveScene);
+			serializer.Serialize(filepath);
+		}
+	}
+
+	void EditorLayer::SaveSceneAs()
+	{
+		std::string filepath = FileDialogs::SaveFile("OpenEngine Scene (*.openengine)\0*.openengine\0");
+		if (!filepath.empty())
+		{
+			Serializer serializer(m_ActiveScene);
+			serializer.Serialize(filepath);
+		}
+	}
 
 }
