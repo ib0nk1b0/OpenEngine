@@ -19,6 +19,7 @@ IncludeDir["glm"] = "OpenEngine/vendor/glm"
 IncludeDir["stb_image"] = "OpenEngine/vendor/stb_image"
 IncludeDir["entt"] = "OpenEngine/vendor/EnTT/include"
 IncludeDir["json"] = "OpenEngine/vendor/Json/"
+IncludeDir["ImGuizmo"] = "OpenEngine/vendor/ImGuizmo/"
 
 group "Dependencies"
   include "OpenEngine/vendor/GLFW"
@@ -47,7 +48,8 @@ project "OpenEngine"
     "%{prj.name}/vendor/stb_image/**.cpp",
     "%{prj.name}/vendor/glm/glm/**.hpp",
     "%{prj.name}/vendor/glm/glm/**.inl",
-    "%{prj.name}/vendor/json/**.hpp"
+    "%{prj.name}/vendor/ImGuizmo/ImGuizmo.h",
+    "%{prj.name}/vendor/ImGuizmo/ImGuizmo.cpp"
   }
 
   defines
@@ -65,6 +67,7 @@ project "OpenEngine"
     "%{IncludeDir.glm}",
     "%{IncludeDir.stb_image}",
     "%{IncludeDir.entt}",
+    "%{IncludeDir.ImGuizmo}",
     "%{IncludeDir.json}"
   }
 
@@ -75,6 +78,9 @@ project "OpenEngine"
     "ImGui",
     "opengl32.lib"
   }
+
+  filter "files:OpenEngine/vendor/ImGuizmo/**.cpp"
+  flags { "NoPCH" }
 
   filter "system:windows"
     systemversion "latest"

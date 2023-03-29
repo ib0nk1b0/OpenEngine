@@ -1,11 +1,12 @@
 #include "oepch.h"
 #include "ImGuiLayer.h"
 
-#include "imgui.h"
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_opengl3.h"
-
 #include "OpenEngine/Core/Application.h"
+
+#include <imgui.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
+#include <ImGuizmo.h>
 
 //TEMP
 #include <GLFW/glfw3.h>
@@ -19,7 +20,6 @@ namespace OpenEngine {
 
 	ImGuiLayer::~ImGuiLayer()
 	{
-
 	}
 
 	void ImGuiLayer::OnAttach()
@@ -86,6 +86,7 @@ namespace OpenEngine {
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
 	}
 
 	void ImGuiLayer::End()

@@ -77,7 +77,7 @@
       <PrecompiledHeaderFile>oepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OE_PLATFORM_WINDOWS;OE_BUILD_DLL;GLFW_INCLUDE_NONE;OE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\EnTT\include;vendor\Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\EnTT\include;vendor\ImGuizmo;vendor\Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -98,7 +98,7 @@
       <PrecompiledHeaderFile>oepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OE_PLATFORM_WINDOWS;OE_BUILD_DLL;GLFW_INCLUDE_NONE;OE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\EnTT\include;vendor\Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\EnTT\include;vendor\ImGuizmo;vendor\Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -123,7 +123,7 @@
       <PrecompiledHeaderFile>oepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OE_PLATFORM_WINDOWS;OE_BUILD_DLL;GLFW_INCLUDE_NONE;OE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\EnTT\include;vendor\Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\EnTT\include;vendor\ImGuizmo;vendor\Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -161,8 +161,10 @@
     <ClInclude Include="src\OpenEngine\Events\KeyEvent.h" />
     <ClInclude Include="src\OpenEngine\Events\MouseEvent.h" />
     <ClInclude Include="src\OpenEngine\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\OpenEngine\Math\Math.h" />
     <ClInclude Include="src\OpenEngine\Renderer\Buffer.h" />
     <ClInclude Include="src\OpenEngine\Renderer\Camera.h" />
+    <ClInclude Include="src\OpenEngine\Renderer\EditorCamera.h" />
     <ClInclude Include="src\OpenEngine\Renderer\Framebuffer.h" />
     <ClInclude Include="src\OpenEngine\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\OpenEngine\Renderer\OrthographicCamera.h" />
@@ -176,7 +178,6 @@
     <ClInclude Include="src\OpenEngine\Renderer\Texture.h" />
     <ClInclude Include="src\OpenEngine\Renderer\VertexArray.h" />
     <ClInclude Include="src\OpenEngine\Scene\Components.h" />
-    <ClInclude Include="src\OpenEngine\Renderer\EditorCamera.h" />
     <ClInclude Include="src\OpenEngine\Scene\Entity.h" />
     <ClInclude Include="src\OpenEngine\Scene\Scene.h" />
     <ClInclude Include="src\OpenEngine\Scene\SceneCamera.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\oepch.h" />
+    <ClInclude Include="vendor\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="vendor\glm\glm\common.hpp" />
     <ClInclude Include="vendor\glm\glm\detail\_features.hpp" />
     <ClInclude Include="vendor\glm\glm\detail\_fixes.hpp" />
@@ -608,7 +610,6 @@
     <ClInclude Include="vendor\glm\glm\vec3.hpp" />
     <ClInclude Include="vendor\glm\glm\vec4.hpp" />
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
-    <ClInclude Include="vendor\json\json.hpp" />
     <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
@@ -618,7 +619,9 @@
     <ClCompile Include="src\OpenEngine\Core\Log.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="src\OpenEngine\Math\Math.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\OpenEngine\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\GraphicsContext.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\OrthographicCamera.cpp" />
@@ -631,7 +634,6 @@
     <ClCompile Include="src\OpenEngine\Renderer\SubTexture2D.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\Texture.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\VertexArray.cpp" />
-    <ClCompile Include="src\OpenEngine\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\OpenEngine\Scene\Entity.cpp" />
     <ClCompile Include="src\OpenEngine\Scene\Scene.cpp" />
     <ClCompile Include="src\OpenEngine\Scene\SceneCamera.cpp" />
@@ -647,6 +649,9 @@
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\oepch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="vendor\ImGuizmo\ImGuizmo.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="vendor\stb_image\stb_image.cpp" />
   </ItemGroup>

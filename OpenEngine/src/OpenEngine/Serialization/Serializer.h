@@ -218,6 +218,7 @@ namespace OpenEngine {
 					text += "\t\t\t\"SpriteRendererComponent\": {\n\t\t\t";
 					text += GetJSONString("Color", Encode(src.Color), true);
 					text += "\t\t}\n";
+					// TODO: Add texture serialization
 				}
 
 				if (entity.HasComponent<CameraComponent>())
@@ -245,6 +246,9 @@ namespace OpenEngine {
 					text += GetJSONString("FixedAspectRatio", cc.FixedAspectRatio, true);
 					text += "\t\t}\n";
 				}
+
+				// TODO: Add script component
+
 				if (count == numberOfEntities - 1)
 					text += "\t\t}\n";
 				else
@@ -264,13 +268,6 @@ namespace OpenEngine {
 
 		void Deserialize(const std::string& filepath)
 		{
-			ReadFile(filepath);
-
-			OE_CORE_INFO("Deserialization is in development!");
-		}
-
-		void ReadFile(const std::string& filepath)
-		{
 			std::ifstream file(filepath);
 			nlohmann::json j;
 			file >> j;
@@ -279,29 +276,31 @@ namespace OpenEngine {
 				auto& entities = j["Entities"];
 				for (auto& [key, value] : entities.items())
 				{
-					auto& jsonTag = value["TagComponent"]["Tag"];
-					std::string tag = jsonTag.get<std::string>();
+					uint64_t uuid = value["ID"].get<uint64_t>();
+					//std::string tag = value["TagComponent"]["Tag"].get<std::string>();
 
-					Entity entity = m_Scene->CreateEntity(tag);
+					Entity entity = m_Scene->CreateEntity(value["TagComponent"]["Tag"].get<std::string>());
 					auto& jsonTransform = value["TransformComponent"];
+					TransformComponent& transformComponent = entity.GetComponent<TransformComponent>();
 
-					Decode(ConvertFloat3(jsonTransform["Translation"]), entity.GetComponent<TransformComponent>().Translation);
-					Decode(ConvertFloat3(jsonTransform["Rotation"]), entity.GetComponent<TransformComponent>().Rotation);
-					Decode(ConvertFloat3(jsonTransform["Scale"]), entity.GetComponent<TransformComponent>().Scale);
+					Decode(ConvertFloat3(jsonTransform["Translation"]), transformComponent.Translation);
+					Decode(ConvertFloat3(jsonTransform["Rotation"]), transformComponent.Rotation);
+					Decode(ConvertFloat3(jsonTransform["Scale"]), transformComponent.Scale);
 
 					if (value.contains("SpriteRendererComponent"))
 					{
 						auto& jsonSpriteRenderer = value["SpriteRendererComponent"];
 						entity.AddComponent<SpriteRendererComponent>();
-						
+
 						Decode(ConvertFloat4(jsonSpriteRenderer["Color"]), entity.GetComponent<SpriteRendererComponent>().Color);
+						// TODO: Add texture deserialization
 					}
 
 					if (value.contains("CameraComponent"))
 					{
+						auto& jsonCameraComponent = value["CameraComponent"];
 						auto& cameraComponent = entity.AddComponent<CameraComponent>();
 						auto& camera = cameraComponent.Camera;
-						auto& jsonCameraComponent = value["CameraComponent"];
 
 						std::string projType = jsonCameraComponent["ProjectionType"].get<std::string>();
 						camera.SetProjectionType(ProjectionTypeFromString(projType));

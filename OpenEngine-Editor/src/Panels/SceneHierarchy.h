@@ -18,6 +18,8 @@ namespace OpenEngine {
 		void DisplayProperties(bool display) { m_DisplayProperties = display; }
 
 		void OnImGuiRender();
+
+		Entity GetSelectedEntity() const { return m_SelectionContext; }
 	private:
 		void DrawEntityNode(Entity entity);
 		void DrawComponents(Entity entity);
