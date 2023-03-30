@@ -26,7 +26,7 @@ namespace OpenEngine {
 			}
 		}
 
-		float thumbnailSize = 98.0f;
+		float thumbnailSize = 72.0f;
 		float padding = 12.0f;
 		float cellSize = thumbnailSize + padding;
 

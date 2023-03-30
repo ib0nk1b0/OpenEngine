@@ -268,7 +268,8 @@ namespace OpenEngine {
 
 		void Deserialize(const std::string& filepath)
 		{
-			if (filepath.substr((filepath.length() - 11), 11) != ".openengine")
+			std::string extension = ".openengine";
+			if (filepath.substr(filepath.length() - extension.length(), extension.length()) != extension)
 				return;
 
 			std::ifstream file(filepath);
