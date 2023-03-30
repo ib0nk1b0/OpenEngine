@@ -3,6 +3,7 @@
 #include "OpenEngine.h"
 
 #include "Panels/SceneHierarchy.h"
+#include "Panels/ContentBrowserPanel.h"
 
 #include "OpenEngine/Serialization/Serializer.h"
 #include "OpenEngine/Renderer/EditorCamera.h"
@@ -28,6 +29,7 @@ namespace OpenEngine {
 		void NewProject();
 		void NewScene(const std::string& filepath = "UntitledScene.openengine");
 		void OpenScene();
+		void OpenScene(const std::filesystem::path& filepath);
 		void SaveScene();
 		void SaveSceneAs();
 
@@ -56,6 +58,7 @@ namespace OpenEngine {
 
 		// Panels
 		SceneHierarchyPanel m_SceneHierarchyPanel;
+		ContentBrowserPanel m_ContentBrowserPanel;
 
 		Ref<Texture2D> m_PlayIcon, m_StopIcon;
 	};

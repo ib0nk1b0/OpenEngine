@@ -13,6 +13,8 @@
 
 namespace OpenEngine {
 
+	extern const std::filesystem::path g_AssetPath;
+
 	EditorLayer::EditorLayer()
 		: Layer("EditorLayer")
 	{
@@ -143,6 +145,7 @@ namespace OpenEngine {
 			UI_EditorCameraPanel();
 
 		m_SceneHierarchyPanel.OnImGuiRender();
+		m_ContentBrowserPanel.OnImGuiRender();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
@@ -171,6 +174,16 @@ namespace OpenEngine {
 		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)(uint64_t)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 		
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+			{
+				const wchar_t* path = (const wchar_t*)payload->Data;
+				OpenScene(std::filesystem::path(g_AssetPath) / path);
+			}
+			ImGui::EndDragDropTarget();
+		}
+
 		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
 		if (selectedEntity && m_GizmoType != -1)
 		{
@@ -213,8 +226,6 @@ namespace OpenEngine {
 
 		ImGui::End();
 		ImGui::PopStyleVar();
-
-		
 
 		UI_Toolbar();
 
@@ -281,7 +292,6 @@ namespace OpenEngine {
 			}
 			ImGui::EndMenuBar();
 		}
-		//ImGui::ShowDemoWindow();
 	}
 
 	void EditorLayer::UI_Stats()
@@ -434,12 +444,15 @@ namespace OpenEngine {
 	{
 		std::string filepath = FileDialogs::OpenFile("OpenEngine Scene (*.openengine)\0*.openengine\0");
 		if (!filepath.empty())
-		{
-			NewScene(filepath);
+			OpenScene(filepath);
+	}
 
-			Serializer serializer(m_ActiveScene);
-			serializer.Deserialize(filepath);
-		}
+	void EditorLayer::OpenScene(const std::filesystem::path& filepath)
+	{
+		NewScene(filepath.string());
+
+		Serializer serializer(m_ActiveScene);
+		serializer.Deserialize(filepath.string());
 	}
 
 	void EditorLayer::SaveScene()
