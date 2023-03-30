@@ -26,7 +26,7 @@ namespace OpenEngine {
 		m_StopIcon = Texture2D::Create("assets/icons/Stop.png");
 
 		FramebufferSpecification fbSpec;
-		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::Depth };
+		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
 		m_Framebuffer = Framebuffer::Create(fbSpec);
@@ -36,6 +36,9 @@ namespace OpenEngine {
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+
+		Serializer serializer(m_ActiveScene);
+		serializer.Deserialize("assets/Scenes/DemoCubeScene.openengine");
 	}
 
 	void EditorLayer::OnDetach()
@@ -56,6 +59,8 @@ namespace OpenEngine {
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
 
+		m_Framebuffer->ClearColorAttachment(1, -1);
+
 		switch (m_ActiveScene->GetSceneState())
 		{
 			case SceneState::Edit:
@@ -64,6 +69,20 @@ namespace OpenEngine {
 			case SceneState::Play:
 				m_ActiveScene->OnUpdateRuntime(ts);
 				break;
+		}
+
+		auto [mx, my] = ImGui::GetMousePos();
+		mx -= m_ViewportBounds[0].x;
+		my -= m_ViewportBounds[0].y;
+		glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
+		my = viewportSize.y - my;
+		int mouseX = (int)mx;
+		int mouseY = (int)my;
+
+		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
+		{
+			int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
+			m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.get());
 		}
 
 		m_Framebuffer->UnBind();
@@ -127,6 +146,11 @@ namespace OpenEngine {
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
+		auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
+		auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
+		auto viewportOffset = ImGui::GetWindowPos();
+		m_ViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
+		m_ViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
 
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
@@ -203,6 +227,7 @@ namespace OpenEngine {
 
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<KeyPressedEvent>(OE_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
+		dispatcher.Dispatch<MouseButtonPressedEvent>(OE_BIND_EVENT_FN(EditorLayer::OnMouseButtonPressed));
 	}
 
 	void EditorLayer::UI_MenuBar()
@@ -213,24 +238,24 @@ namespace OpenEngine {
 			{
 				if (ImGui::BeginMenu("New"))
 				{
-					if (ImGui::MenuItem("Project", "Ctrl + Shift + N"))
+					if (ImGui::MenuItem("Project", "Ctrl+Shift+N"))
 						NewProject();
 
-					if (ImGui::MenuItem("Scene", "Ctrl + N"))
+					if (ImGui::MenuItem("Scene", "Ctrl+N"))
 						NewScene();
 
 					ImGui::EndMenu();
 				}
 
-				if (ImGui::MenuItem("Open", "Ctrl + O"))
+				if (ImGui::MenuItem("Open", "Ctrl+O"))
 					OpenScene();
 
 				ImGui::Separator();
 
-				if (ImGui::MenuItem("Save", "Ctrl + S"))
+				if (ImGui::MenuItem("Save", "Ctrl+S"))
 					SaveScene();
 
-				if (ImGui::MenuItem("Save As...", "Ctrl + Shift + S"))
+				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
 					SaveSceneAs();
 
 				ImGui::Separator();
@@ -382,6 +407,14 @@ namespace OpenEngine {
 		}
 
 		return true;
+	}
+
+	bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& e)
+	{
+		if (e.GetMouseButton() == Mouse::ButtonLeft && m_ViewportHovered && !ImGuizmo::IsOver() && !Input::IsKeyPressed(Key::LeftAlt))
+			m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
+
+		return false;
 	}
 
 	void EditorLayer::NewProject()

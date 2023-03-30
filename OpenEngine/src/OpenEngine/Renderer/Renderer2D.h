@@ -5,6 +5,8 @@
 #include "OpenEngine/Renderer/Texture.h"
 #include "OpenEngine/Renderer/SubTexture2D.h"
 #include "OpenEngine/Renderer/EditorCamera.h"
+#include "OpenEngine/Scene/Components.h"
+struct SpriteRendererComponent;
 
 namespace OpenEngine
 {
@@ -34,11 +36,11 @@ namespace OpenEngine
 		static void Flush();
 
 		// Primitives
-		static void DrawQuad(Quad quad);
+		//static void DrawQuad(Quad quad);
 
 		// Transforms
-		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, const glm::vec4& color, float scale = 1.0f);
-		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color);
+		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, const glm::vec4& color, float scale = 1.0f, int entityID = -1);
+		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color, int entityID = -1);
 		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float scale = 1.0f);
 		static void DrawQuad(const glm::mat4& transform, const Ref<SubTexture2D>& subtexture, float scale = 1.0f);
 

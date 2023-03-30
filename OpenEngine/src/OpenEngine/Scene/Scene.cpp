@@ -37,11 +37,12 @@ namespace OpenEngine {
 		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 		for (auto entity : group)
 		{
-			auto [transform, sprite] = m_Registry.get<TransformComponent, SpriteRendererComponent>(entity);
+			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+			
 			if (sprite.Texture)
-				Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color, sprite.Scale);
+				Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color, sprite.Scale, (int)entity);
 			else
-				Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
+				Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color, (int)entity);
 		}
 
 		Renderer2D::EndScene();
@@ -91,6 +92,7 @@ namespace OpenEngine {
 			for (auto entity : group)
 			{
 				auto [transform, sprite] = m_Registry.get<TransformComponent, SpriteRendererComponent>(entity);
+				int entityID = (int)entity;
 				if (sprite.Texture)
 					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Scale);
 				else
