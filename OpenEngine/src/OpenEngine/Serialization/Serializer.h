@@ -268,10 +268,6 @@ namespace OpenEngine {
 
 		void Deserialize(const std::string& filepath)
 		{
-			std::string extension = ".openengine";
-			if (filepath.substr(filepath.length() - extension.length(), extension.length()) != extension)
-				return;
-
 			std::ifstream file(filepath);
 			nlohmann::json j;
 			file >> j;

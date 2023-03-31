@@ -1,13 +1,17 @@
+#include "oepch.h"
 #include "SceneHierarchy.h"
 
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
-
 #include "OpenEngine/Scene/Components.h"
+#include "ContentBrowserPanel.h"
+
+#include <imgui/imgui.h>
+#include <imgui/imgui_internal.h>
 
 #include <glm/gtc/type_ptr.hpp>
 
 namespace OpenEngine {
+
+	extern const std::filesystem::path g_AssetPath;
 
 	static float GetImGuiLineHeight()
 	{
@@ -260,7 +264,7 @@ namespace OpenEngine {
 		ImGui::SameLine();
 		ImGui::PushItemWidth(-1);
 
-		if (ImGui::Button("Add Component"))
+		if (ImGui::Button("Add"))
 			ImGui::OpenPopup("AddComponent");
 
 		if (ImGui::BeginPopup("AddComponent"))
@@ -284,6 +288,18 @@ namespace OpenEngine {
 		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto& component)
 		{
 			ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+
+			ImGui::Button("Texture");
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+				{
+					const wchar_t* path = (const wchar_t*)payload->Data;
+					std::filesystem::path fullPath = std::filesystem::path(g_AssetPath) / path;
+					component.Texture = Texture2D::Create(fullPath.string());
+				}
+				ImGui::EndDragDropTarget();
+			}
 		});
 
 		DrawComponent<CameraComponent>("Camera", entity, [](auto& component)

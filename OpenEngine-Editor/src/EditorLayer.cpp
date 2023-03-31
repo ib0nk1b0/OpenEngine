@@ -85,7 +85,6 @@ namespace OpenEngine {
 		{
 			int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
 			m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.get());
-			OE_CORE_WARN("{0}", pixelData);
 		}
 
 		m_Framebuffer->UnBind();
@@ -450,6 +449,10 @@ namespace OpenEngine {
 
 	void EditorLayer::OpenScene(const std::filesystem::path& filepath)
 	{
+		std::string extension = ".openengine";
+		if (filepath.string().substr(filepath.string().length() - extension.length(), extension.length()) != extension)
+			return;
+
 		NewScene(filepath.string());
 
 		Serializer serializer(m_ActiveScene);
