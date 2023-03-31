@@ -2,6 +2,8 @@
 #include "OpenEngine/Utils/PlatformUtils.h"
 #include "OpenEngine/Core/Application.h"
 
+#include <filesystem>
+
 #include <commdlg.h>
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
@@ -41,6 +43,14 @@ namespace OpenEngine {
 		if (GetSaveFileNameA(&ofn) == TRUE)
 			return ofn.lpstrFile;
 		return std::string();
+	}
+
+	bool FileDialogs::IsValidFile(const std::filesystem::path& filepath, const std::string& extension)
+	{
+		if (filepath.string().substr(filepath.string().length() - extension.length(), extension.length()) != extension)
+			return false;
+
+		return true;
 	}
 
 }

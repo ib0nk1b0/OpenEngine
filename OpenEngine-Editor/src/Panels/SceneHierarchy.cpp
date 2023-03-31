@@ -285,11 +285,23 @@ namespace OpenEngine {
 			DrawVec3Controls("Scale", component.Scale, 1.0f);
 		});
 
-		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto& component)
+		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [=](auto& component)
 		{
 			ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
 
-			ImGui::Button("Texture");
+			Ref<Texture2D> texturePreview;
+
+			if (!component.Texture)
+				texturePreview = Texture2D::Create("assets/icons/BlankTexture.png");
+			else
+			{
+				texturePreview = component.Texture;
+				ImGui::Text("%s", component.Texture->GetFilePath().c_str());
+				ImGui::SameLine();
+			}
+
+			ImGuiID id = 1;
+			ImGui::ImageButtonEx(id, (ImTextureID)texturePreview->GetRendererID(), { 32, 32 }, { 0, 1 }, { 1, 0 }, { 0, 0, 0, 0 }, { 1, 1, 1, 1 });
 			if (ImGui::BeginDragDropTarget())
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
@@ -300,6 +312,16 @@ namespace OpenEngine {
 				}
 				ImGui::EndDragDropTarget();
 			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Clear"))
+				component.Texture = nullptr;
+
+			float scale = component.Scale;
+			if (ImGui::DragFloat("Scale", &scale, 0.1f, 1.0f, 50.0f))
+				component.Scale = scale;
+
 		});
 
 		DrawComponent<CameraComponent>("Camera", entity, [](auto& component)

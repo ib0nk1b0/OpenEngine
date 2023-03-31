@@ -1,6 +1,8 @@
 #include "oepch.h"
 #include "ContentBrowserPanel.h"
 
+#include "OpenEngine/Utils/PlatformUtils.h";
+
 #include <imgui/imgui.h>
 
 namespace OpenEngine {

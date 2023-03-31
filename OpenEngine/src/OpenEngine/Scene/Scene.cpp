@@ -92,9 +92,8 @@ namespace OpenEngine {
 			for (auto entity : group)
 			{
 				auto [transform, sprite] = m_Registry.get<TransformComponent, SpriteRendererComponent>(entity);
-				int entityID = (int)entity;
 				if (sprite.Texture)
-					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Scale);
+					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color, sprite.Scale);
 				else
 					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
 			}

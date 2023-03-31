@@ -4,6 +4,7 @@
 #include "OpenEngine/Core/Log.h"
 #include "OpenEngine/Scene/Scene.h"
 #include "OpenEngine/Scene/Entity.h"
+#include "OpenEngine/Renderer/Renderer2D.h"
 
 namespace OpenEngine {
 
@@ -30,6 +31,8 @@ namespace OpenEngine {
 
 		Ref<Scene> m_Context;
 		Entity m_SelectionContext;
+
+		Ref<Texture2D> m_ClearTextureImage;
 	};
 
 }

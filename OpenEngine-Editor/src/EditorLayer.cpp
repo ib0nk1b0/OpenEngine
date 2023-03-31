@@ -38,9 +38,6 @@ namespace OpenEngine {
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
-
-		Serializer serializer(m_ActiveScene);
-		serializer.Deserialize("assets/Scenes/DemoCubeScene.openengine");
 	}
 
 	void EditorLayer::OnDetach()
@@ -449,14 +446,13 @@ namespace OpenEngine {
 
 	void EditorLayer::OpenScene(const std::filesystem::path& filepath)
 	{
-		std::string extension = ".openengine";
-		if (filepath.string().substr(filepath.string().length() - extension.length(), extension.length()) != extension)
-			return;
+		if (FileDialogs::IsValidFile(filepath, ".openengine"))
+		{
+			NewScene(filepath.string());
 
-		NewScene(filepath.string());
-
-		Serializer serializer(m_ActiveScene);
-		serializer.Deserialize(filepath.string());
+			Serializer serializer(m_ActiveScene);
+			serializer.Deserialize(filepath.string());
+		}
 	}
 
 	void EditorLayer::SaveScene()
