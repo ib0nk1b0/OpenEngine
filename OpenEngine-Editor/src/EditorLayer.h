@@ -39,6 +39,8 @@ namespace OpenEngine {
 		void UI_EditorCameraPanel();
 		void UI_Toolbar();
 	private:
+		Timestep m_FrameTime;
+
 		bool m_DisplayStats = true;
 		bool m_DisplayEditorCameraUI = true;
 		bool m_DisplaySceneHierarchy = true;

@@ -1,4 +1,5 @@
 #include "EditorLayer.h"
+
 #include "OpenEngine/Renderer/Renderer2D.h"
 #include "OpenEngine/Scene/Components.h"
 #include "OpenEngine/Utils/PlatformUtils.h"
@@ -20,6 +21,25 @@ namespace OpenEngine {
 	{
 	}
 
+	class PlayerMovementScript : public ScriptableEntity
+	{
+	public:
+		float speed = 5.0f;
+	public:
+		void OnUpdate(Timestep ts)
+		{
+			auto& tc = GetComponent<TransformComponent>();
+			if (Input::IsKeyPressed(Key::W))
+				tc.Translation.y += speed * ts;
+			if (Input::IsKeyPressed(Key::A))
+				tc.Translation.x -= speed * ts;
+			if (Input::IsKeyPressed(Key::S))
+				tc.Translation.y -= speed * ts;
+			if (Input::IsKeyPressed(Key::D))
+				tc.Translation.x += speed * ts;
+		}
+	};
+
 	void EditorLayer::OnAttach()
 	{
 		OE_PROFILE_FUNCTION();
@@ -29,8 +49,8 @@ namespace OpenEngine {
 
 		FramebufferSpecification fbSpec;
 		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
-		fbSpec.Width = 1280;
-		fbSpec.Height = 720;
+		fbSpec.Width = 1600;
+		fbSpec.Height = 900;
 		m_Framebuffer = Framebuffer::Create(fbSpec);
 
 		m_ActiveScene = CreateRef<Scene>();
@@ -38,6 +58,9 @@ namespace OpenEngine {
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+		//Entity entity = m_ActiveScene->CreateEntity("Player");
+		//entity.AddComponent<SpriteRendererComponent>().Color = { 0.2f, 0.25f, 0.8f, 1.0f };
+		//entity.AddComponent<NativeScriptComponent>().Bind<PlayerMovementScript>();
 	}
 
 	void EditorLayer::OnDetach()
@@ -49,6 +72,7 @@ namespace OpenEngine {
 	{
 		OE_PROFILE_FUNCTION();
 
+		m_FrameTime = ts;
 		m_EditorCamera.OnUpdate(ts);
 
 		Renderer2D::ResetStats();
@@ -83,7 +107,7 @@ namespace OpenEngine {
 			int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
 			m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.get());
 		}
-
+		
 		m_Framebuffer->UnBind();
 	}
 
@@ -302,6 +326,9 @@ namespace OpenEngine {
 		ImGui::Text("Verticies: %d", stats.GetTotalVertexCount());
 		ImGui::Text("Indicies: %d", stats.GetTotalIndexCount());
 
+		ImGui::Separator();
+		ImGui::Text("Frame Time: %f", m_FrameTime.GetMilliseconds());
+
 		ImGui::End();
 	}
 
@@ -309,25 +336,25 @@ namespace OpenEngine {
 	{
 		ImGui::Begin("Editor Camera");
 
-		float pitch = m_EditorCamera.GetPitch();
-		if (ImGui::DragFloat("Pitch", &pitch, 0.1f))
-			m_EditorCamera.SetPitch(pitch);
-
-		float yaw = m_EditorCamera.GetYaw();
-		if (ImGui::DragFloat("Yaw", &yaw, 0.1f))
-			m_EditorCamera.SetYaw(yaw);
-
 		float fov = m_EditorCamera.GetFOV();
-		if (ImGui::DragFloat("FOV", &fov, 0.5f, 0.0f, 120.0f))
+		if (ImGui::OEDragFloat("FOV", &fov, 0.5f, 0.0f, 120.0f))
 			m_EditorCamera.SetFOV(fov);
 
 		float nearClip = m_EditorCamera.GetNearClip();
-		if (ImGui::DragFloat("Near Clip", &nearClip))
+		if (ImGui::OEDragFloat("Near Clip", &nearClip))
 			m_EditorCamera.SetNearClip(nearClip);
 
 		float farClip = m_EditorCamera.GetFarClip();
-		if (ImGui::DragFloat("Far Clip", &farClip))
+		if (ImGui::OEDragFloat("Far Clip", &farClip))
 			m_EditorCamera.SetFarClip(farClip);
+
+		float pitch = m_EditorCamera.GetPitch();
+		if (ImGui::OEDragFloat("Pitch", &pitch, 0.1f))
+			m_EditorCamera.SetPitch(pitch);
+
+		float yaw = m_EditorCamera.GetYaw();
+		if (ImGui::OEDragFloat("Yaw", &yaw, 0.1f))
+			m_EditorCamera.SetYaw(yaw);
 
 		ImGui::Checkbox("Rotation enabled", &m_EditorCamera.m_Rotate);
 
@@ -399,18 +426,21 @@ namespace OpenEngine {
 			}
 
 			// Gizmo shortcuts
-			case Key::Q:
-				m_GizmoType = -1;
-				break;
-			case Key::W:
-				m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
-				break;
-			case Key::E:
-				m_GizmoType = ImGuizmo::OPERATION::ROTATE;
-				break;
-			case Key::R:
-				m_GizmoType = ImGuizmo::OPERATION::SCALE;
-				break;
+			if (m_ActiveScene->GetSceneState() == SceneState::Edit)
+			{
+				case Key::Q:
+					m_GizmoType = -1;
+					break;
+				case Key::W:
+					m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+					break;
+				case Key::E:
+					m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+					break;
+				case Key::R:
+					m_GizmoType = ImGuizmo::OPERATION::SCALE;
+					break;
+			}
 		}
 
 		return true;

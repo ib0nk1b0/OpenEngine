@@ -221,6 +221,16 @@ namespace OpenEngine {
 					// TODO: Add texture serialization
 				}
 
+				if (entity.HasComponent<CircleRendererComponent>())
+				{
+					auto& crc = entity.GetComponent<CircleRendererComponent>();
+					text += "\t\t\t\"CircleRendererComponent\": {\n\t\t\t";
+					text += GetJSONString("Color", Encode(crc.Color)) + "\t\t";
+					text += GetJSONString("Thickness", crc.Thickness) + "\t\t";
+					text += GetJSONString("Fade", crc.Fade, true);
+					text += "\t\t}\n";
+				}
+
 				if (entity.HasComponent<CameraComponent>())
 				{
 					auto& cc = entity.GetComponent<CameraComponent>();
@@ -294,6 +304,16 @@ namespace OpenEngine {
 
 						Decode(ConvertFloat4(jsonSpriteRenderer["Color"]), entity.GetComponent<SpriteRendererComponent>().Color);
 						// TODO: Add texture deserialization
+					}
+
+					if (value.contains("CircleRendererComponent"))
+					{
+						auto& jsonCircleRenderer = value["CircleRendererComponent"];
+						entity.AddComponent<CircleRendererComponent>();
+
+						Decode(ConvertFloat4(jsonCircleRenderer["Color"]), entity.GetComponent<CircleRendererComponent>().Color);
+						entity.GetComponent<CircleRendererComponent>().Thickness = jsonCircleRenderer["Thickness"].get<float>();
+						entity.GetComponent<CircleRendererComponent>().Fade = jsonCircleRenderer["Fade"].get<float>();
 					}
 
 					if (value.contains("CameraComponent"))

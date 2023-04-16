@@ -3,6 +3,8 @@
 
 #include "OpenEngine/Scene/Components.h"
 #include "ContentBrowserPanel.h"
+#include "OpenEngine/Utils/PlatformUtils.h"
+#include "OpenEngine/ImGui/ImGuiExtended.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
@@ -38,10 +40,10 @@ namespace OpenEngine {
 				m_SelectionContext = {};
 
 			m_Context->m_Registry.each([&](auto entityID)
-				{
-					Entity entity{ entityID, m_Context.get() };
-					DrawEntityNode(entity);
-				});
+			{
+				Entity entity{ entityID, m_Context.get() };
+				DrawEntityNode(entity);
+			});
 
 			if (ImGui::BeginPopupContextWindow(0, 1 | ImGuiPopupFlags_NoOpenOverItems))
 			{
@@ -120,73 +122,6 @@ namespace OpenEngine {
 		}
 	}
 
-	static void DrawVec3Controls(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		auto boldFont = io.Fonts->Fonts[0];
-
-		ImGui::PushID(label.c_str());
-
-		ImGui::Columns(2);
-		ImGui::SetColumnWidth(0, columnWidth);
-		ImGui::Text(label.c_str());
-		ImGui::NextColumn();
-
-		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
-
-		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2;
-
-		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
-		
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.4f, 0.1f, 0.15f, 1.0f });
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.65f, 0.2f, 0.2f, 1.0f });
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.4f, 0.1f, 0.15f, 1.0f });
-		ImGui::PushFont(boldFont);
-		if (ImGui::Button("X", buttonSize))
-			values.x = resetValue;
-		ImGui::PopFont();
-		ImGui::PopStyleColor(3);
-
-		ImGui::SameLine();
-		ImGui::DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, "%.2f");
-		ImGui::PopItemWidth();
-		ImGui::SameLine();
-
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.35f, 0.2f, 1.0f });
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.3f, 0.55f, 0.3f, 1.0f });
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.35f, 0.2f, 1.0f });
-		ImGui::PushFont(boldFont);
-		if (ImGui::Button("Y", buttonSize))
-			values.y = resetValue;
-		ImGui::PopFont();
-		ImGui::PopStyleColor(3);
-
-		ImGui::SameLine();
-		ImGui::DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f");
-		ImGui::PopItemWidth();
-		ImGui::SameLine();
-
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.25f, 0.4f, 1.0f });
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f });
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.25f, 0.4f, 1.0f });
-		ImGui::PushFont(boldFont);
-		if (ImGui::Button("Z", buttonSize))
-			values.z = resetValue;
-		ImGui::PopFont();
-		ImGui::PopStyleColor(3);
-
-		ImGui::SameLine();
-		ImGui::DragFloat("##Z", &values.z, 0.1f, 0.0f, 0.0f, "%.2f");
-		ImGui::PopItemWidth();
-
-		ImGui::PopStyleVar();
-
-		ImGui::Columns(1);
-
-		ImGui::PopID();
-	}
-
 	template<typename T, typename UIFunction>
 	static void DrawComponent(const std::string& label, Entity entity, UIFunction uiFunction)
 	{
@@ -200,7 +135,7 @@ namespace OpenEngine {
 
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
 
-		float lineHeight = GetImGuiLineHeight();
+		float lineHeight = ImGui::GetLineHeight();
 		ImGui::Separator();
 		bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, label.c_str());
 		ImGui::PopStyleVar();
@@ -270,19 +205,20 @@ namespace OpenEngine {
 		if (ImGui::BeginPopup("AddComponent"))
 		{
 			AddComponentItem<TransformComponent>("Transform", entity);
-			AddComponentItem<CameraComponent>("Camera", entity);
 			AddComponentItem<SpriteRendererComponent>("Sprite Renderer", entity);
+			AddComponentItem<CircleRendererComponent>("Circle Renderer", entity);
+			AddComponentItem<CameraComponent>("Camera", entity);
 
 			ImGui::EndPopup();
 		}
 
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
 		{
-			DrawVec3Controls("Translation", component.Translation);
+			ImGui::OEVec3Controls("Translation", component.Translation);
 			glm::vec3 rotation = glm::degrees(component.Rotation);
-			DrawVec3Controls("Rotation", rotation);
+			ImGui::OEVec3Controls("Rotation", rotation);
 			component.Rotation = glm::radians(rotation);
-			DrawVec3Controls("Scale", component.Scale, 1.0f);
+			ImGui::OEVec3Controls("Scale", component.Scale, 1.0f);
 		});
 
 		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [=](auto& component)
@@ -308,7 +244,8 @@ namespace OpenEngine {
 				{
 					const wchar_t* path = (const wchar_t*)payload->Data;
 					std::filesystem::path fullPath = std::filesystem::path(g_AssetPath) / path;
-					component.Texture = Texture2D::Create(fullPath.string());
+					if (FileDialogs::IsValidFile(fullPath, ".png"))
+						component.Texture = Texture2D::Create(fullPath.string());
 				}
 				ImGui::EndDragDropTarget();
 			}
@@ -318,10 +255,15 @@ namespace OpenEngine {
 			if (ImGui::Button("Clear"))
 				component.Texture = nullptr;
 
-			float scale = component.Scale;
-			if (ImGui::DragFloat("Scale", &scale, 0.1f, 1.0f, 50.0f))
-				component.Scale = scale;
+			ImGui::OEDragFloat("Scale", &component.Scale, 0.1f, 1.0f, 50.0f, 150.0f);
 
+		});
+
+		DrawComponent<CircleRendererComponent>("Circle Renderer", m_SelectionContext, [](auto& component)
+		{
+			ImGui::OEColorEdit4("Color", glm::value_ptr(component.Color));
+			ImGui::OEDragFloat("Thickness", &component.Thickness, 0.01f, 0.0f, 1.0f);
+			ImGui::OEDragFloat("Fade", &component.Fade, 0.005f, 0.0f, 1.0f, 100.0f, "%.3f");
 		});
 
 		DrawComponent<CameraComponent>("Camera", entity, [](auto& component)
@@ -354,30 +296,30 @@ namespace OpenEngine {
 			if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
 			{
 				float verticalFOV = glm::degrees(camera.GetPerspectiveVertivalFOV());
-				if (ImGui::DragFloat("VFOV", &verticalFOV))
+				if (ImGui::OEDragFloat("VFOV", &verticalFOV))
 					camera.SetPerspectiveVertivalFOV(glm::radians(verticalFOV));
 
 				float nearClip = camera.GetPerspectiveNearClip();
-				if (ImGui::DragFloat("Near", &nearClip, 0.1f))
+				if (ImGui::OEDragFloat("Near", &nearClip, 0.1f))
 					camera.SetPerspectiveNearClip(nearClip);
 
 				float farClip = camera.GetPerspectiveFarClip();
-				if (ImGui::DragFloat("Far", &farClip, 0.1f))
+				if (ImGui::OEDragFloat("Far", &farClip, 0.1f))
 					camera.SetPerspectiveFarClip(farClip);
 			}
 
 			if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
 			{
 				float orthoSize = camera.GetOrthographicSize();
-				if (ImGui::DragFloat("Size", &orthoSize, 0.1f, 0.25f, 50.0f))
+				if (ImGui::OEDragFloat("Size", &orthoSize, 0.1f, 0.25f, 50.0f))
 					camera.SetOrthographicSize(orthoSize);
 
 				float nearClip = camera.GetOrthographicNearClip();
-				if (ImGui::DragFloat("Near", &nearClip, 0.1f))
+				if (ImGui::OEDragFloat("Near", &nearClip, 0.1f))
 					camera.SetOrthographicNearClip(nearClip);
 
 				float farClip = camera.GetOrthographicFarClip();
-				if (ImGui::DragFloat("Far", &farClip, 0.1f))
+				if (ImGui::OEDragFloat("Far", &farClip, 0.1f))
 					camera.SetOrthographicFarClip(farClip);
 			}
 

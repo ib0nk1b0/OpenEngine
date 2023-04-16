@@ -7,6 +7,28 @@
 
 #include <glfw/glfw3.h>
 
+struct AllocationMetrics
+{
+	uint32_t TotalAllocated = 0;
+	uint32_t TotalFreed = 0;
+
+	uint32_t CurrentUsage() { return TotalAllocated - TotalFreed; }
+};
+
+static AllocationMetrics s_AllocationMetrics;
+
+void* operator new(size_t size)
+{
+	s_AllocationMetrics.TotalAllocated += size;
+	return malloc(size);
+}
+
+void operator delete(void* memory, size_t size)
+{
+	s_AllocationMetrics.TotalFreed += size;
+	free(memory);
+}
+
 namespace OpenEngine {
 	#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
@@ -21,7 +43,7 @@ namespace OpenEngine {
 		s_Instance = this;
 
 		m_Window = Window::Create(WindowProps(name));
-		//m_Window->SetVSync(false);
+		m_Window->SetVSync(false);
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
 		Renderer::Init();
@@ -104,6 +126,10 @@ namespace OpenEngine {
 			m_ImGuiLayer->End();
 
 			m_Window->OnUpdate();
+
+			auto memAllocated = s_AllocationMetrics.TotalAllocated;
+
+			std::cout << s_AllocationMetrics.CurrentUsage() << std::endl;
 		}
 	}
 

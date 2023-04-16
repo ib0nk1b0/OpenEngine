@@ -22,10 +22,10 @@ namespace OpenEngine {
 
 		if (m_CurrentDirectory != std::filesystem::path(g_AssetPath))
 		{
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 2));
 			if (ImGui::Button("<-"))
-			{
 				m_CurrentDirectory = m_CurrentDirectory.parent_path();
-			}
+			ImGui::PopStyleVar();
 		}
 
 		float thumbnailSize = 72.0f;
@@ -67,6 +67,7 @@ namespace OpenEngine {
 				if (directoryEntry.is_directory())
 					m_CurrentDirectory /= path.filename();
 			}
+
 			ImGui::TextWrapped(filenameString.c_str());
 
 			ImGui::NextColumn();

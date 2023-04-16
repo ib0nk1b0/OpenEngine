@@ -19,6 +19,9 @@
     <Filter Include="src\OpenEngine\ImGui">
       <UniqueIdentifier>{8EC0D010-7A4F-5ADA-236E-6ED50FDC6A80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\OpenEngine\Math">
+      <UniqueIdentifier>{BDD3F8D1-2935-D6DF-B2A2-1C921E030D9F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\OpenEngine\Renderer">
       <UniqueIdentifier>{8A84AAC8-F6BB-F25F-FFC5-56836B7C1959}</UniqueIdentifier>
     </Filter>
@@ -122,6 +125,9 @@
     </ClInclude>
     <ClInclude Include="src\OpenEngine\ImGui\ImGuiLayer.h">
       <Filter>src\OpenEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Math\Math.h">
+      <Filter>src\OpenEngine\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\Buffer.h">
       <Filter>src\OpenEngine\Renderer</Filter>
@@ -1470,7 +1476,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\Math\Math.h" />
+    <ClInclude Include="src\OpenEngine\ImGui\ImGuiExtended.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenEngine\Core\Application.cpp">
@@ -1490,6 +1496,9 @@
     </ClCompile>
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiLayer.cpp">
       <Filter>src\OpenEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Math\Math.cpp">
+      <Filter>src\OpenEngine\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\Buffer.cpp">
       <Filter>src\OpenEngine\Renderer</Filter>
@@ -1581,6 +1590,6 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\OpenEngine\Math\Math.cpp" />
+    <ClCompile Include="src\OpenEngine\ImGui\ImGuiExtended.cpp" />
   </ItemGroup>
 </Project>
