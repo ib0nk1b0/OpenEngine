@@ -1,0 +1,65 @@
+{
+	"Entities": [
+		{
+			"ID": 85493002,
+			"TagComponent": {
+				"Tag": "Perspective Camera"
+			},
+			"TransformComponent": {
+				"Translation": [0.000000, 1.700000, 4.000000],
+				"Rotation": [-0.404916, 0.000000, 0.000000],
+				"Scale": [1.000000, 1.000000, 1.000000]
+			},
+			"CameraComponent": {
+				"ProjectionType": "Perspective",
+				"VerticalFOV": 0.785398,
+				"Near": 0.010000,
+				"Far": 1000.000000,
+				"Primary": true,
+				"FixedAspectRatio": false
+			}
+		},
+		{
+			"ID": 85493002,
+			"TagComponent": {
+				"Tag": "Right"
+			},
+			"TransformComponent": {
+				"Translation": [0.355000, 0.000000, 0.350000],
+				"Rotation": [0.000000, 0.785398, 0.000000],
+				"Scale": [1.000000, 1.000000, 1.000000]
+			},
+			"SpriteRendererComponent": {
+				"Color": [1.000000, 0.029412, 0.000000, 1.000000]
+			}
+		},
+		{
+			"ID": 85493002,
+			"TagComponent": {
+				"Tag": "Left"
+			},
+			"TransformComponent": {
+				"Translation": [-0.350000, 0.000000, 0.350000],
+				"Rotation": [0.000000, -0.785398, 0.000000],
+				"Scale": [1.000000, 1.000000, 1.000000]
+			},
+			"SpriteRendererComponent": {
+				"Color": [0.117647, 1.000000, 0.000000, 1.000000]
+			}
+		},
+		{
+			"ID": 85493002,
+			"TagComponent": {
+				"Tag": "Top"
+			},
+			"TransformComponent": {
+				"Translation": [0.000000, 0.500000, 0.000000],
+				"Rotation": [1.570796, 0.785398, 0.000000],
+				"Scale": [1.000000, 1.000000, 1.000000]
+			},
+			"SpriteRendererComponent": {
+				"Color": [0.033305, 0.116006, 0.970588, 1.000000]
+			}
+		}
+	]
+}

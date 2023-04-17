@@ -23,5 +23,5 @@ void Ball::OnUpdate(OpenEngine::Timestep ts)
 	if (m_Quad.position.y >= 1.0f - m_Quad.size.y || m_Quad.position.y <= -1.0f)
 		m_Velocity.y = -m_Velocity.y;
 
-	OpenEngine::Renderer2D::DrawQuad(m_Quad);
+	//OpenEngine::Renderer2D::DrawQuad(m_Quad);
 }

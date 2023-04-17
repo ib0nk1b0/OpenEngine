@@ -2,6 +2,12 @@
 
 #include "OpenEngine.h"
 
+#include "Panels/SceneHierarchy.h"
+#include "Panels/ContentBrowserPanel.h"
+
+#include "OpenEngine/Serialization/Serializer.h"
+#include "OpenEngine/Renderer/EditorCamera.h"
+
 namespace OpenEngine {
 
 	class EditorLayer : public Layer
@@ -17,23 +23,46 @@ namespace OpenEngine {
 		virtual void OnImGuiRender() override;
 		void OnEvent(Event& e) override;
 	private:
-		OrthographicCameraController m_CameraController;
+		bool OnKeyPressed(KeyPressedEvent& e);
+		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
+
+		void NewProject();
+		void NewScene(const std::string& filepath = "UntitledScene.openengine");
+		void OpenScene();
+		void OpenScene(const std::filesystem::path& filepath);
+		void SaveScene();
+		void SaveSceneAs();
+
+		// UI panles
+		void UI_MenuBar();
+		void UI_Stats();
+		void UI_EditorCameraPanel();
+		void UI_Toolbar();
+	private:
+		Timestep m_FrameTime;
+
+		bool m_DisplayStats = true;
+		bool m_DisplayEditorCameraUI = true;
+		bool m_DisplaySceneHierarchy = true;
+		bool m_DisplayProperties = true;
 
 		Ref<Scene> m_ActiveScene;
-
-		Ref<VertexArray> m_SquareVA;
-		Ref<Shader> m_Shader;
 		Ref<Framebuffer> m_Framebuffer;
+		EditorCamera m_EditorCamera;
 
-		Ref<Texture2D> m_CheckerboardTexture;
+		Entity m_HoveredEntity;
 
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
-		glm::vec2 m_ViewportSize;
+		glm::vec2 m_ViewportSize{ 1.0f };
+		glm::vec2 m_ViewportBounds[2];
 
-		entt::entity m_SquareEntity;
+		int m_GizmoType = -1;
 
-		glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
-		glm::vec4 m_Square2Color = { 0.8f, 0.2f, 0.3f, 1.0f };
+		// Panels
+		SceneHierarchyPanel m_SceneHierarchyPanel;
+		ContentBrowserPanel m_ContentBrowserPanel;
+
+		Ref<Texture2D> m_PlayIcon, m_StopIcon;
 	};
 
 }

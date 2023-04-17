@@ -8,8 +8,8 @@ namespace OpenEngine {
 	class OpenEditor : public Application
 	{
 	public:
-		OpenEditor()
-			: Application("Open Editor")
+		OpenEditor(const ApplicationSpecification& specificaiton)
+			: Application(specificaiton)
 		{
 			PushLayer(new EditorLayer());
 		}
@@ -21,7 +21,10 @@ namespace OpenEngine {
 
 	Application* CreateApplication()
 	{
-		return new OpenEditor();
+		ApplicationSpecification spec;
+		spec.Name = "Open Editor";
+
+		return new OpenEditor(spec);
 	}
 
 }

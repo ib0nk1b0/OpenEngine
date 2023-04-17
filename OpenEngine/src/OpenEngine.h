@@ -13,16 +13,13 @@
 #include "OpenEngine/Core/MouseButtonCodes.h"
 
 #include "OpenEngine/ImGui/ImGuiLayer.h"
+#include "OpenEngine/ImGui/ImGuiExtended.h"
 #include "OpenEngine/Renderer/OrthographicCameraController.h"
 
+#include "OpenEngine/Scene/SceneCamera.h"
 #include "OpenEngine/Scene/Scene.h"
 #include "OpenEngine/Scene/Entity.h"
-
-// -- ECS -- //
-
-//#include "OpenEngine/ECS/Ecs.h"
-
-// --------- //
+#include "OpenEngine/Scene/ScriptableEntity.h"
 
 // -- Renderer -- //
 
@@ -40,6 +37,3 @@
 #include "OpenEngine/Renderer/OrthographicCamera.h"
 
 // -------------- //
-
-// -- Entry Point -- //
-// ----------------- //

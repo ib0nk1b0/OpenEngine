@@ -49,7 +49,7 @@ void GameLayer::OnUpdate(OpenEngine::Timestep ts)
 
 	for (int i = 0; i < 15; i++)
 	{
-		OpenEngine::Renderer2D::DrawQuad(centerQuad);
+		//OpenEngine::Renderer2D::DrawQuad(centerQuad);
 		centerQuad.position.y -= 0.15;
 	}
 

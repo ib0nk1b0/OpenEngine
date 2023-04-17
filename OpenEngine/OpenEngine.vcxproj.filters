@@ -13,20 +13,26 @@
     <Filter Include="src\OpenEngine\Debug">
       <UniqueIdentifier>{DA557210-C6E4-FBD9-6F03-10D55B710C80}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\OpenEngine\ECS">
-      <UniqueIdentifier>{AE16D1D7-9AFA-912D-035B-8C80EF5D7CAF}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\OpenEngine\Events">
       <UniqueIdentifier>{C8634722-34D0-021D-FDC3-9A7A69EF2485}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\OpenEngine\ImGui">
       <UniqueIdentifier>{8EC0D010-7A4F-5ADA-236E-6ED50FDC6A80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\OpenEngine\Math">
+      <UniqueIdentifier>{BDD3F8D1-2935-D6DF-B2A2-1C921E030D9F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\OpenEngine\Renderer">
       <UniqueIdentifier>{8A84AAC8-F6BB-F25F-FFC5-56836B7C1959}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\OpenEngine\Scene">
       <UniqueIdentifier>{81B88011-6D47-0ADB-1666-1ED602D41A81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\OpenEngine\Serialization">
+      <UniqueIdentifier>{F1C7FD58-DD82-ED04-863A-664F72D43795}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\OpenEngine\Utils">
+      <UniqueIdentifier>{C44CAE11-B0DB-37DB-59FA-4BD645684881}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
@@ -39,6 +45,9 @@
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\ImGuizmo">
+      <UniqueIdentifier>{73BF7F4C-DF4A-ED10-E85B-700554664911}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor\glm">
       <UniqueIdentifier>{829FC5A8-6E57-07F6-D75E-E051C335A2E6}</UniqueIdentifier>
@@ -102,9 +111,6 @@
     <ClInclude Include="src\OpenEngine\Debug\Instrumentor.h">
       <Filter>src\OpenEngine\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\ECS\Ecs.h">
-      <Filter>src\OpenEngine\ECS</Filter>
-    </ClInclude>
     <ClInclude Include="src\OpenEngine\Events\ApplicationEvent.h">
       <Filter>src\OpenEngine\Events</Filter>
     </ClInclude>
@@ -117,13 +123,19 @@
     <ClInclude Include="src\OpenEngine\Events\MouseEvent.h">
       <Filter>src\OpenEngine\Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\ImGui\ImGuiInfoLayer.h">
-      <Filter>src\OpenEngine\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="src\OpenEngine\ImGui\ImGuiLayer.h">
       <Filter>src\OpenEngine\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenEngine\Math\Math.h">
+      <Filter>src\OpenEngine\Math</Filter>
+    </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\Buffer.h">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Renderer\Camera.h">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Renderer\EditorCamera.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\Framebuffer.h">
@@ -162,11 +174,26 @@
     <ClInclude Include="src\OpenEngine\Renderer\VertexArray.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenEngine\Scene\Components.h">
+      <Filter>src\OpenEngine\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\OpenEngine\Scene\Entity.h">
       <Filter>src\OpenEngine\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Scene\Scene.h">
       <Filter>src\OpenEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Scene\SceneCamera.h">
+      <Filter>src\OpenEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Scene\ScriptableEntity.h">
+      <Filter>src\OpenEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Serialization\Serializer.h">
+      <Filter>src\OpenEngine\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Utils\PlatformUtils.h">
+      <Filter>src\OpenEngine\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
@@ -194,6 +221,9 @@
     </ClInclude>
     <ClInclude Include="src\oepch.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\ImGuizmo\ImGuizmo.h">
+      <Filter>vendor\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="vendor\glm\glm\common.hpp">
       <Filter>vendor\glm\glm</Filter>
@@ -1446,7 +1476,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\Scene\Components.h" />
+    <ClInclude Include="src\OpenEngine\ImGui\ImGuiExtended.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenEngine\Core\Application.cpp">
@@ -1464,13 +1494,16 @@
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiBuild.cpp">
       <Filter>src\OpenEngine\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="src\OpenEngine\ImGui\ImGuiInfoLayer.cpp">
-      <Filter>src\OpenEngine\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiLayer.cpp">
       <Filter>src\OpenEngine\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="src\OpenEngine\Math\Math.cpp">
+      <Filter>src\OpenEngine\Math</Filter>
+    </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\Buffer.cpp">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Renderer\EditorCamera.cpp">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\Framebuffer.cpp">
@@ -1515,6 +1548,9 @@
     <ClCompile Include="src\OpenEngine\Scene\Scene.cpp">
       <Filter>src\OpenEngine\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\OpenEngine\Scene\SceneCamera.cpp">
+      <Filter>src\OpenEngine\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
@@ -1539,14 +1575,21 @@
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
       <Filter>src\Platform\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsPlatformUtils.cpp">
+      <Filter>src\Platform\Windows</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
       <Filter>src\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\oepch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="vendor\ImGuizmo\ImGuizmo.cpp">
+      <Filter>vendor\ImGuizmo</Filter>
+    </ClCompile>
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\OpenEngine\ImGui\ImGuiExtended.cpp" />
   </ItemGroup>
 </Project>

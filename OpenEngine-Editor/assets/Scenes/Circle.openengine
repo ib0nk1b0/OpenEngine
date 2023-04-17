@@ -1,0 +1,67 @@
+{
+	"Entities": [
+		{
+			"ID": 85493002,
+			"TagComponent": {
+				"Tag": "Orthographic Camera"
+			},
+			"TransformComponent": {
+				"Translation": [0.000000, 0.000000, 0.000000],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [1.000000, 1.000000, 1.000000]
+			},
+			"CameraComponent": {
+				"ProjectionType": "Orthographic",
+				"Size": 10.000000,
+				"Near": -1.000000,
+				"Far": 1.000000,
+				"Primary": true,
+				"FixedAspectRatio": false
+			}
+		},
+		{
+			"ID": 85493002,
+			"TagComponent": {
+				"Tag": "Circle"
+			},
+			"TransformComponent": {
+				"Translation": [0.189152, 0.651488, 0.000000],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [2.554898, 2.552000, 1.160000]
+			},
+			"CircleRendererComponent": {
+				"Color": [0.037149, 0.348399, 0.687259, 1.000000],
+				"Thickness": 0.290000,
+				"Fade": 0.005000
+			}
+		},
+		{
+			"ID": 85493002,
+			"TagComponent": {
+				"Tag": "Floor"
+			},
+			"TransformComponent": {
+				"Translation": [0.000000, -2.000000, 0.000000],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [50.774010, 0.500000, 2.120000]
+			},
+			"SpriteRendererComponent": {
+				"Color": [0.224519, 0.694981, 0.185149, 1.000000]
+			}
+		},
+		{
+			"ID": 85493002,
+			"TagComponent": {
+				"Tag": "Wall"
+			},
+			"TransformComponent": {
+				"Translation": [-2.133095, 0.500000, 0.000000],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [1.000000, 4.500000, 1.000000]
+			},
+			"SpriteRendererComponent": {
+				"Color": [1.000000, 1.000000, 1.000000, 1.000000]
+			}
+		}
+	]
+}

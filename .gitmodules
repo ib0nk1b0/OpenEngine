@@ -13,3 +13,6 @@
 [submodule "glm"]
 	path = glm
 	url = https://github.com/g-truc/glm
+[submodule "OpenEngine/vendor/ImGuizmo"]
+	path = OpenEngine/vendor/ImGuizmo
+	url = https://github.com/ib0nk1b0/ImGuizmo

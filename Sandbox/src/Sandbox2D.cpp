@@ -33,45 +33,24 @@ void Sandbox2D::OnUpdate(OpenEngine::Timestep ts)
 	{
 		static float rotation = 0.0f;
 		rotation += ts * 50.0f;
-
-		OpenEngine::Quad quad1 = { { 1.0f, -0.5f, 0.0f }, { 0.8f, 0.8f }, m_SquareColor };
-		OpenEngine::Quad quad2 = { { -0.75f, 0.25f, 0.0f }, { 1.0f, 0.5f }, m_Square2Color, rotation, 1.0f };
-		OpenEngine::Quad quad3;
-		OpenEngine::Quad quad4;
-
-		quad3.position = { 0.0f, 0.0f, -0.1f };
-		quad3.size = { 20.0f, 20.0f };
-		quad3.texture = m_CheckerboardTexture;
-		quad3.scale = 10.0f;
-
-		quad4.position = { 0.0f, 2.0f, 0.0f };
-		quad4.size = { 1.0f, 1.0f };
-		quad4.texture = m_CheckerboardTexture;
-		quad4.rotation = 45.0f;
-		quad4.scale = 20.0f;
-
-
 		//Render
-
 		OpenEngine::Renderer2D::ResetStats();
 		OpenEngine::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		OpenEngine::RenderCommand::Clear();
 
 		OpenEngine::Renderer2D::BeginScene(m_CameraController.GetCamera());
-		OpenEngine::Renderer2D::DrawQuad(quad3);
-
-		OpenEngine::Renderer2D::DrawQuad(quad1);
-		OpenEngine::Renderer2D::DrawQuad(quad2);
-		OpenEngine::Renderer2D::DrawQuad(quad4);
 
 		for (float y = -5.0f; y < 5.0f; y += 0.5f)
 		{
 			for (float x = -5.0f; x < 5.0f; x += 0.5f)
 			{
 				glm::vec4 color = { (x + 5.0f) / 10.0f, 0.4f, (y + 5.0f) / 10.0f, 0.8f };
-				OpenEngine::Renderer2D::DrawQuad({ x, y, 0.1f }, { 0.45f, 0.45f }, color);
+				OpenEngine::Renderer2D::DrawQuad({ x, y, -0.1f }, { 0.45f, 0.45f }, color);
 			}
 		}
+		
+		OpenEngine::Renderer2D::DrawCircle(glm::mat4(1.0f), glm::vec4(1, 0, 1, 1));
+
 		OpenEngine::Renderer2D::EndScene();
 	}
 }

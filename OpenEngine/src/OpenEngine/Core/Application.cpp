@@ -2,28 +2,53 @@
 #include "Application.h"
 
 #include "OpenEngine/Renderer/Renderer.h"
-#include "OpenEngine/ImGui/ImGuiInfoLayer.h"
 
 #include "Input.h"
 
 #include <glfw/glfw3.h>
+#include <filesystem>
+
+struct AllocationMetrics
+{
+	uint32_t TotalAllocated = 0;
+	uint32_t TotalFreed = 0;
+
+	uint32_t CurrentUsage() { return TotalAllocated - TotalFreed; }
+};
+
+static AllocationMetrics s_AllocationMetrics;
+
+void* operator new(size_t size)
+{
+	s_AllocationMetrics.TotalAllocated += size;
+	return malloc(size);
+}
+
+void operator delete(void* memory, size_t size)
+{
+	s_AllocationMetrics.TotalFreed += size;
+	free(memory);
+}
 
 namespace OpenEngine {
 	#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application(const std::string& name)
-		: m_Name(name)
+	Application::Application(const ApplicationSpecification& specification)
+		: m_Specification(specification)
 	{
 		OE_PROFILE_FUNCTION();
 
 		OE_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
-		m_Window = Window::Create(WindowProps(name));
+		m_Window = Window::Create(WindowProps(m_Specification.Name));
 		//m_Window->SetVSync(false);
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+
+		if (!m_Specification.WorkingDirectory.empty())
+			std::filesystem::current_path(m_Specification.WorkingDirectory);
 
 		Renderer::Init();
 
@@ -105,6 +130,10 @@ namespace OpenEngine {
 			m_ImGuiLayer->End();
 
 			m_Window->OnUpdate();
+
+			auto memAllocated = s_AllocationMetrics.TotalAllocated;
+
+			std::cout << s_AllocationMetrics.CurrentUsage() << std::endl;
 		}
 	}
 

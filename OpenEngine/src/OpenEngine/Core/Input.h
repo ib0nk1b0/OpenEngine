@@ -4,7 +4,7 @@
 
 namespace OpenEngine {
 	
-	class OPENENGINE_API Input
+	class Input
 	{
 	public:
 
