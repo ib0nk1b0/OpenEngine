@@ -6,6 +6,7 @@
 #include "Input.h"
 
 #include <glfw/glfw3.h>
+#include <filesystem>
 
 struct AllocationMetrics
 {
@@ -34,17 +35,20 @@ namespace OpenEngine {
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application(const std::string& name)
-		: m_Name(name)
+	Application::Application(const ApplicationSpecification& specification)
+		: m_Specification(specification)
 	{
 		OE_PROFILE_FUNCTION();
 
 		OE_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
-		m_Window = Window::Create(WindowProps(name));
-		m_Window->SetVSync(false);
+		m_Window = Window::Create(WindowProps(m_Specification.Name));
+		//m_Window->SetVSync(false);
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+
+		if (!m_Specification.WorkingDirectory.empty())
+			std::filesystem::current_path(m_Specification.WorkingDirectory);
 
 		Renderer::Init();
 

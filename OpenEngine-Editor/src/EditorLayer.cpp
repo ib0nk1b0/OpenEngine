@@ -21,25 +21,6 @@ namespace OpenEngine {
 	{
 	}
 
-	class PlayerMovementScript : public ScriptableEntity
-	{
-	public:
-		float speed = 5.0f;
-	public:
-		void OnUpdate(Timestep ts)
-		{
-			auto& tc = GetComponent<TransformComponent>();
-			if (Input::IsKeyPressed(Key::W))
-				tc.Translation.y += speed * ts;
-			if (Input::IsKeyPressed(Key::A))
-				tc.Translation.x -= speed * ts;
-			if (Input::IsKeyPressed(Key::S))
-				tc.Translation.y -= speed * ts;
-			if (Input::IsKeyPressed(Key::D))
-				tc.Translation.x += speed * ts;
-		}
-	};
-
 	void EditorLayer::OnAttach()
 	{
 		OE_PROFILE_FUNCTION();
@@ -57,10 +38,7 @@ namespace OpenEngine {
 
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
-		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
-		//Entity entity = m_ActiveScene->CreateEntity("Player");
-		//entity.AddComponent<SpriteRendererComponent>().Color = { 0.2f, 0.25f, 0.8f, 1.0f };
-		//entity.AddComponent<NativeScriptComponent>().Bind<PlayerMovementScript>();
+		m_EditorCamera = EditorCamera(60.0f, 1.778f, 0.1f, 1000.0f);
 	}
 
 	void EditorLayer::OnDetach()
@@ -206,7 +184,7 @@ namespace OpenEngine {
 		}
 
 		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
-		if (selectedEntity && m_GizmoType != -1)
+		if (selectedEntity && m_GizmoType != -1 && m_ActiveScene->GetSceneState() != SceneState::Play)
 		{
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();

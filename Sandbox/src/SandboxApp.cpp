@@ -2,15 +2,14 @@
 #include <OpenEngine/Core/EntryPoint.h>
 
 #include "Sandbox2D.h"
-#include "GameLayer.h"
 
 class Sandbox : public OpenEngine::Application
 {
 public:
-	Sandbox()
+	Sandbox(const OpenEngine::ApplicationSpecification& specification)
+		: Application(specification)
 	{
-		//PushLayer(new Sandbox2D());
-		PushLayer(new GameLayer());
+		PushLayer(new Sandbox2D());
 	}
 
 	~Sandbox()
@@ -20,5 +19,9 @@ public:
 
 OpenEngine::Application* OpenEngine::CreateApplication()
 {
-	return new Sandbox();
+	OpenEngine::ApplicationSpecification spec;
+	spec.Name = "Sandbox";
+	spec.WorkingDirectory = "../OpenEngine-Editor";
+
+	return new Sandbox(spec);
 }

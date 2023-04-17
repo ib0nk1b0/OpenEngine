@@ -1,0 +1,53 @@
+{
+	"Entities": [
+		{
+			"ID": 85493002,
+			"TagComponent": {
+				"Tag": "Circle"
+			},
+			"TransformComponent": {
+				"Translation": [-1.551010, -1.133835, 0.000000],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [1.840000, 1.840000, 1.840000]
+			},
+			"CircleRendererComponent": {
+				"Color": [0.033765, 0.118591, 0.583012, 1.000000],
+				"Thickness": 0.410000,
+				"Fade": 0.005000
+			}
+		},
+		{
+			"ID": 85493002,
+			"TagComponent": {
+				"Tag": "Perspective Camera"
+			},
+			"TransformComponent": {
+				"Translation": [0.040771, -0.063245, 2.202820],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [1.000000, 1.000000, 1.000000]
+			},
+			"CameraComponent": {
+				"ProjectionType": "Perspective",
+				"VerticalFOV": 0.785398,
+				"Near": 0.010000,
+				"Far": 1000.000000,
+				"Primary": true,
+				"FixedAspectRatio": false
+			}
+		},
+		{
+			"ID": 85493002,
+			"TagComponent": {
+				"Tag": "Quad"
+			},
+			"TransformComponent": {
+				"Translation": [0.000000, 0.000000, 0.000000],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [1.000000, 1.000000, 1.000000]
+			},
+			"SpriteRendererComponent": {
+				"Color": [1.000000, 1.000000, 1.000000, 1.000000]
+			}
+		}
+	]
+}

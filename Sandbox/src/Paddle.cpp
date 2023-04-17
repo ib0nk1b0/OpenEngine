@@ -10,7 +10,7 @@ Paddle::Paddle(const glm::vec3& position)
 
 void Paddle::Draw()
 {
-	OpenEngine::Renderer2D::DrawQuad(m_Quad);
+	//OpenEngine::Renderer2D::DrawQuad(m_Quad);
 }
 
 PaddleController::PaddleController(const glm::vec3& position, Keybinds keybinds)

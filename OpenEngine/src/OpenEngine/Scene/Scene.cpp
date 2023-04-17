@@ -57,6 +57,8 @@ namespace OpenEngine {
 			}
 		}
 
+		Renderer2D::DrawLine(glm::vec3(0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec4(1, 0, 1, 1));
+
 		Renderer2D::EndScene();
 
 	}

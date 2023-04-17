@@ -33,9 +33,18 @@ namespace OpenEngine {
 		int EntityID;
 	};
 
+	struct LineVertex
+	{
+		glm::vec3 Position;
+		glm::vec4 Color;
+
+		// Editor only
+		int EntityID;
+	};
+
 	struct Renderer2DData
 	{
-		static const uint32_t MaxQuads = 10000;
+		static const uint32_t MaxQuads = 500;
 		static const uint32_t MaxQuadVerticies = MaxQuads * 4;
 		static const uint32_t MaxQuadIndicies = MaxQuads * 6;
 		static const uint32_t MaxTextureSlots = 32;
@@ -58,6 +67,14 @@ namespace OpenEngine {
 		uint32_t CircleIndexCount = 0;
 		CircleVertex* CircleVertexBufferBase = nullptr;
 		CircleVertex* CircleVertexBufferPtr = nullptr;
+
+		Ref<VertexArray> LineVertexArray;
+		Ref<VertexBuffer> LineVertexBuffer;
+		Ref<Shader> LineShader;
+
+		uint32_t LineVertexCount = 0;
+		LineVertex* LineVertexBufferBase = nullptr;
+		LineVertex* LineVertexBufferPtr = nullptr;
 
 		std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
 		uint32_t TextureSlotIndex = 1; // 0 = white texture
@@ -111,6 +128,18 @@ namespace OpenEngine {
 
 		s_Data.CircleVertexBufferBase = new CircleVertex[s_Data.MaxQuadVerticies];
 
+		s_Data.LineVertexArray = VertexArray::Create();
+
+		s_Data.LineVertexBuffer = VertexBuffer::Create(s_Data.MaxQuadVerticies * sizeof(LineVertex));
+		s_Data.LineVertexBuffer->SetLayout({
+			{ ShaderDataType::Float3, "a_Position" },
+			{ ShaderDataType::Float4, "a_Color"    },
+			{ ShaderDataType::Int,    "a_EntityID" }
+		});
+		s_Data.LineVertexArray->AddVertexBuffer(s_Data.LineVertexBuffer);
+
+		s_Data.LineVertexBufferBase = new LineVertex[s_Data.MaxQuadVerticies];
+
 		uint32_t* quadIndicies = new uint32_t[s_Data.MaxQuadIndicies];
 
 		uint32_t offset = 0;
@@ -138,6 +167,7 @@ namespace OpenEngine {
 
 		s_Data.QuadShader = Shader::Create("assets/shaders/Renderer2D_Quad.glsl");
 		s_Data.CircleShader = Shader::Create("assets/shaders/Renderer2D_Circle.glsl");
+		s_Data.LineShader = Shader::Create("assets/shaders/Renderer2D_Line.glsl");
 
 		// Set all texture slots to 0
 		s_Data.TextureSlots[0] = s_Data.WhiteTexture;
@@ -163,6 +193,8 @@ namespace OpenEngine {
 		s_Data.QuadShader->SetMat4("u_ViewProjection", viewProj);
 		s_Data.CircleShader->Bind();
 		s_Data.CircleShader->SetMat4("u_ViewProjection", viewProj);
+		s_Data.LineShader->Bind();
+		s_Data.LineShader->SetMat4("u_ViewProjection", viewProj);
 
 		StartBatch();
 	}
@@ -177,6 +209,8 @@ namespace OpenEngine {
 		s_Data.QuadShader->SetMat4("u_ViewProjection", viewProj);
 		s_Data.CircleShader->Bind();
 		s_Data.CircleShader->SetMat4("u_ViewProjection", viewProj);
+		s_Data.LineShader->Bind();
+		s_Data.LineShader->SetMat4("u_ViewProjection", viewProj);
 
 		StartBatch();
 	}
@@ -189,6 +223,8 @@ namespace OpenEngine {
 		s_Data.QuadShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 		s_Data.CircleShader->Bind();
 		s_Data.CircleShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		s_Data.LineShader->Bind();
+		s_Data.LineShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 
 		StartBatch();
 	}
@@ -206,6 +242,8 @@ namespace OpenEngine {
 		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
 		s_Data.CircleIndexCount = 0;
 		s_Data.CircleVertexBufferPtr = s_Data.CircleVertexBufferBase;
+		s_Data.LineVertexCount = 0;
+		s_Data.LineVertexBufferPtr = s_Data.LineVertexBufferBase;
 
 		s_Data.TextureSlotIndex = 1;
 	}
@@ -239,6 +277,16 @@ namespace OpenEngine {
 
 			s_Data.CircleShader->Bind();
 			RenderCommand::DrawIndexed(s_Data.CircleVertexArray, s_Data.CircleIndexCount);
+			s_Data.Stats.DrawCalls++;
+		}
+
+		if (s_Data.LineVertexCount)
+		{
+			uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.LineVertexBufferPtr - (uint8_t*)s_Data.LineVertexBufferBase);
+			s_Data.LineVertexBuffer->SetData(s_Data.LineVertexBufferBase, dataSize);
+
+			s_Data.LineShader->Bind();
+			RenderCommand::DrawLines(s_Data.LineVertexArray, s_Data.LineVertexCount);
 			s_Data.Stats.DrawCalls++;
 		}
 	}
@@ -469,6 +517,22 @@ namespace OpenEngine {
 		s_Data.CircleIndexCount += 6;
 
 		s_Data.Stats.QuadCount++;
+	}
+
+	void Renderer2D::DrawLine(const glm::vec3& p0, const glm::vec3& p1, const glm::vec4& color, int entityID)
+	{
+		s_Data.LineVertexBufferPtr->Position = p0;
+		s_Data.LineVertexBufferPtr->Color = color;
+		s_Data.LineVertexBufferPtr->EntityID = entityID;
+		s_Data.LineVertexBufferPtr++;
+
+		s_Data.LineVertexBufferPtr->Position = p1;
+		s_Data.LineVertexBufferPtr->Color = color;
+		s_Data.LineVertexBufferPtr->EntityID = entityID;
+		s_Data.LineVertexBufferPtr++;
+		
+		s_Data.LineVertexCount += 2;
+		s_Data.Stats.ExtraVerticies += 2;
 	}
 
 	//void Renderer2D::SetupSkybox()

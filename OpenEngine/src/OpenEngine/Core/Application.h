@@ -12,10 +12,17 @@
 #include "OpenEngine/ImGui/ImGuiLayer.h"
 
 namespace OpenEngine {
+
+	struct ApplicationSpecification
+	{
+		std::string Name = "OpenEngine Application";
+		std::string WorkingDirectory;
+	};
+
 	class Application
 	{
 	public:
-		Application(const std::string& name = "OpenEngine App");
+		Application(const ApplicationSpecification& specification);
 		virtual ~Application();
 
 		void Run();
@@ -37,6 +44,7 @@ namespace OpenEngine {
 		bool OnWindowResize(WindowResizeEvent& e);
 	private:
 		std::string m_Name;
+		ApplicationSpecification m_Specification;
 		std::unique_ptr<Window> m_Window;
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;

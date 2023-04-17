@@ -16,22 +16,38 @@ namespace OpenEngine {
 	{
 	public:
 
+		static std::string Tab(uint32_t count = 1)
+		{
+			std::string result;
+			for (size_t i = 0; i < count; i++)
+				result += "\t";
+
+			return result;
+		}
+
+		static std::string NewLine()
+		{
+			return "\n";
+		}
+
 		static std::string GetJSONString(const std::string& label)
 		{
-			return "\t\"" + label + "\": {\n";
+			return Tab(3) + "\"" + label + "\": {" + NewLine() + Tab();
 		}
 
 		static std::string GetJSONString(const std::string& label, const std::string& value, bool lastLine = false)
 		{
 			std::string result;
 
-			result += "\t\"" + label + "\": ";
+			result += Tab(3) + "\"" + label + "\": ";
 
 			if (value[0] == '[') result += value;
 			else result += "\"" + value + "\"";
 
-			if (lastLine) result += "\n\t";
-			else result += ",\n\t";
+			if (!lastLine)
+				result += ",";
+
+			result += NewLine() + Tab();
 
 			return result;
 		}
@@ -40,12 +56,14 @@ namespace OpenEngine {
 		{
 			std::string result;
 
-			result += "\t\"" + label + "\": ";
+			result += Tab(3) + "\"" + label + "\": ";
 
 			result += std::to_string(value);
 
-			if (lastLine) result += "\n\t";
-			else result += ",\n\t";
+			if (!lastLine)
+				result += ",";
+
+			result += NewLine() + Tab();
 
 			return result;
 		}
@@ -54,12 +72,14 @@ namespace OpenEngine {
 		{
 			std::string result;
 
-			result += "\t\"" + label + "\": ";
+			result += Tab(3) + "\"" + label + "\": ";
 
 			result += std::to_string(value);
 
-			if (lastLine) result += "\n\t";
-			else result += ",\n\t";
+			if (!lastLine)
+				result += ",";
+
+			result += NewLine() + Tab();
 
 			return result;
 		}
@@ -68,13 +88,15 @@ namespace OpenEngine {
 		{
 			std::string result;
 
-			result += "\t\"" + label + "\": ";
+			result += Tab(3) + "\"" + label + "\": ";
 
 			if (value) result += "true";
 			else result += "false";
 
-			if (lastLine) result += "\n\t";
-			else result += ",\n\t";
+			if (!lastLine)
+				result += ",";
+
+			result += NewLine() + Tab();
 
 			return result;
 		}
@@ -178,57 +200,65 @@ namespace OpenEngine {
 
 		void Serialize(const std::string& filepath)
 		{
-			//using namespace nlohmann;
 			std::string text;
 			
 			size_t numberOfEntities = m_Scene->m_Registry.size();
 			int count = 0;
 
-			text += "{\n\t";
-			text += "\"Entities\": [\n";
+			text += "{" + NewLine() + Tab();
+			text += "\"Entities\": [" + NewLine();
 			m_Scene->m_Registry.each([&](auto entityID)
 			{
 				Entity entity = { entityID, m_Scene.get() };
 			
-				text += "\t\t{\n\t\t";
+				text += Tab(2) + "{" + NewLine(); // Tab(2)
 
 				if (entity.HasComponent<TagComponent>())
 				{
 					std::string tag = entity.GetComponent<TagComponent>().Tag.c_str();
-					text += GetJSONString("ID", 85493002);
-					text += "\t\t\"TagComponent\": {\n\t\t\t";
+					text += Tab(3) + "\"ID\": " + "85493002," + NewLine();
+					text += GetJSONString("TagComponent");
 					text += GetJSONString("Tag", tag, true);
-					text += "\t\t},\n";
+					text += Tab(2) + "}," + NewLine();
 				}
 
 				if (entity.HasComponent<TransformComponent>())
 				{
 					auto& tc = entity.GetComponent<TransformComponent>();
 
-					text += "\t\t\t\"TransformComponent\": {\n\t\t\t";
-					text += GetJSONString("Translation", Encode(tc.Translation)) + "\t\t";
-					text += GetJSONString("Rotation", Encode(tc.Rotation)) + "\t\t";
+					text += GetJSONString("TransformComponent");
+					text += GetJSONString("Translation", Encode(tc.Translation));
+					text += GetJSONString("Rotation", Encode(tc.Rotation));
 					text += GetJSONString("Scale", Encode(tc.Scale), true);
-					text += "\t\t},\n";
+					if (!entity.HasComponent<SpriteRendererComponent>() && !entity.HasComponent<CircleRendererComponent>() && !entity.HasComponent<CameraComponent>())
+						text += Tab(2) + "}" + NewLine();
+					else
+						text += Tab(2) + "}," + NewLine();
 				}
 
 				if (entity.HasComponent<SpriteRendererComponent>())
 				{
 					auto& src = entity.GetComponent<SpriteRendererComponent>();
-					text += "\t\t\t\"SpriteRendererComponent\": {\n\t\t\t";
+					text += GetJSONString("SpriteRendererComponent");
 					text += GetJSONString("Color", Encode(src.Color), true);
-					text += "\t\t}\n";
+					if (!entity.HasComponent<CircleRendererComponent>() && !entity.HasComponent<CameraComponent>())
+						text += Tab(2) + "}" + NewLine();
+					else
+						text += Tab(2) + "}," + NewLine();
 					// TODO: Add texture serialization
 				}
 
 				if (entity.HasComponent<CircleRendererComponent>())
 				{
 					auto& crc = entity.GetComponent<CircleRendererComponent>();
-					text += "\t\t\t\"CircleRendererComponent\": {\n\t\t\t";
-					text += GetJSONString("Color", Encode(crc.Color)) + "\t\t";
-					text += GetJSONString("Thickness", crc.Thickness) + "\t\t";
+					text += GetJSONString("CircleRendererComponent");
+					text += GetJSONString("Color", Encode(crc.Color));
+					text += GetJSONString("Thickness", crc.Thickness);
 					text += GetJSONString("Fade", crc.Fade, true);
-					text += "\t\t}\n";
+					if (!entity.HasComponent<CameraComponent>())
+						text += Tab(2) + "}" + NewLine();
+					else
+						text += Tab(2) + "}," + NewLine();
 				}
 
 				if (entity.HasComponent<CameraComponent>())
@@ -237,37 +267,37 @@ namespace OpenEngine {
 					auto& camera = cc.Camera;
 					SceneCamera::ProjectionType projType = camera.GetProjectionType();
 
-					text += "\t\t\t\"CameraComponent\": {\n\t\t\t";
-					text += GetJSONString("ProjectionType", ProjectionTypeToString(projType)) + "\t\t";
+					text += GetJSONString("CameraComponent");
+					text += GetJSONString("ProjectionType", ProjectionTypeToString(projType));
 					if (projType == SceneCamera::ProjectionType::Orthographic)
 					{
-						text += GetJSONString("Size", camera.GetOrthographicSize()) + "\t\t";
-						text += GetJSONString("Near", camera.GetOrthographicNearClip()) + "\t\t";
-						text += GetJSONString("Far", camera.GetOrthographicFarClip()) + "\t\t";
+						text += GetJSONString("Size", camera.GetOrthographicSize());
+						text += GetJSONString("Near", camera.GetOrthographicNearClip());
+						text += GetJSONString("Far", camera.GetOrthographicFarClip());
 					}
 					else
 					{
-						text += GetJSONString("VerticalFOV", camera.GetPerspectiveVertivalFOV()) + "\t\t";
-						text += GetJSONString("Near", camera.GetPerspectiveNearClip()) + "\t\t";
-						text += GetJSONString("Far", camera.GetPerspectiveFarClip()) + "\t\t";
+						text += GetJSONString("VerticalFOV", camera.GetPerspectiveVertivalFOV());
+						text += GetJSONString("Near", camera.GetPerspectiveNearClip());
+						text += GetJSONString("Far", camera.GetPerspectiveFarClip());
 					}
 					
-					text += GetJSONString("Primary", cc.Primary) + "\t\t";
+					text += GetJSONString("Primary", cc.Primary);
 					text += GetJSONString("FixedAspectRatio", cc.FixedAspectRatio, true);
-					text += "\t\t}\n";
+					text += Tab(2) + "}" + NewLine();
 				}
 
 				// TODO: Add script component
 
 				if (count == numberOfEntities - 1)
-					text += "\t\t}\n";
+					text += Tab(2) + "}" + NewLine();
 				else
-					text += "\t\t},\n";
+					text += Tab(2) + "}," + NewLine();
 
 				count++;
 			});
 
-			text += "\t]\n";
+			text += Tab() + "]" + NewLine();
 			text += "}";
 
 			std::ofstream file;
