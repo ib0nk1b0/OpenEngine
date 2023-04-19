@@ -1,8 +1,10 @@
 #pragma once
 
-#include "entt.hpp"
 #include "OpenEngine/Core/Timestep.h"
+#include "OpenEngine/Core/UUID.h"
 #include "OpenEngine/Renderer/EditorCamera.h"
+
+#include "entt.hpp"
 
 namespace OpenEngine {
 
@@ -19,6 +21,7 @@ namespace OpenEngine {
 		~Scene();
 
 		Entity CreateEntity(const std::string& name = std::string());
+		Entity CreateEntityWithUUID(UUID uuid, const std::string& name = std::string());
 		void DestroyEntity(Entity entity);
 
 		void OnUpdateEditor(Timestep ts, EditorCamera& camera);

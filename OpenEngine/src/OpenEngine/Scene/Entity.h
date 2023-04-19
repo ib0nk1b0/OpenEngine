@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Scene.h"
+#include "OpenEngine/Core/UUID.h"
+#include "OpenEngine/Scene/Scene.h"
+#include "OpenEngine/Scene/Components.h"
 
 #include <entt.hpp>
 
@@ -42,6 +44,9 @@ namespace OpenEngine {
 		operator bool() const { return m_EntityHandle != entt::null; }
 		operator entt::entity() const { return m_EntityHandle; }
 		operator uint32_t() const { return (uint32_t)m_EntityHandle; }
+
+		UUID GetUUID() { return GetComponent<IDComponent>().ID; }
+		glm::mat4 GetTransform() { return GetComponent<TransformComponent>().GetTransform(); }
 
 		bool operator==(const Entity& other) const { return m_EntityHandle == other.m_EntityHandle && m_Scene == other.m_Scene; }
 		bool operator!=(const Entity& other) const { return !(*this == other); }

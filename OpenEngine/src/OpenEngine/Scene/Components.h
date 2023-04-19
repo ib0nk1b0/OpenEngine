@@ -1,6 +1,8 @@
 #pragma once
 
-#include "OpenEngine.h"
+#include "OpenEngine/Core/UUID.h"
+#include "OpenEngine/Renderer/Renderer2D.h"
+#include "OpenEngine/Scene/SceneCamera.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -9,6 +11,14 @@
 #include <glm/gtx/quaternion.hpp>
 
 namespace OpenEngine {
+
+	struct IDComponent
+	{
+		UUID ID;
+
+		IDComponent() = default;
+		IDComponent(const IDComponent&) = default;
+	};
 
 	struct TagComponent
 	{
@@ -79,6 +89,8 @@ namespace OpenEngine {
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;
 	};
+
+	class ScriptableEntity;
 
 	struct NativeScriptComponent
 	{

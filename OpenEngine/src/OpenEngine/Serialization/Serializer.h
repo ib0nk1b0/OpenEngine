@@ -216,7 +216,7 @@ namespace OpenEngine {
 				if (entity.HasComponent<TagComponent>())
 				{
 					std::string tag = entity.GetComponent<TagComponent>().Tag.c_str();
-					text += Tab(3) + "\"ID\": " + "85493002," + NewLine();
+					text += Tab(3) + "\"ID\": " + std::to_string(entity.GetUUID()) + "," + NewLine();
 					text += GetJSONString("TagComponent");
 					text += GetJSONString("Tag", tag, true);
 					text += Tab(2) + "}," + NewLine();
@@ -346,9 +346,10 @@ namespace OpenEngine {
 				for (auto& [key, value] : entities.items())
 				{
 					uint64_t uuid = value["ID"].get<uint64_t>();
-					//std::string tag = value["TagComponent"]["Tag"].get<std::string>();
+					std::string tag = value["TagComponent"]["Tag"].get<std::string>();
 
-					Entity entity = m_Scene->CreateEntity(value["TagComponent"]["Tag"].get<std::string>());
+					Entity entity = m_Scene->CreateEntityWithUUID(uuid, tag);
+
 					auto& jsonTransform = value["TransformComponent"];
 					TransformComponent& transformComponent = entity.GetComponent<TransformComponent>();
 
