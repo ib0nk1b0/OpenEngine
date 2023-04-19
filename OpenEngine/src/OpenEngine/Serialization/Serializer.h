@@ -164,7 +164,7 @@ namespace OpenEngine {
 
 			return result;
 		}
-
+		
 		static void Decode(std::string values, glm::vec4& result)
 		{
 			std::string delimiter = ", ";
@@ -240,12 +240,41 @@ namespace OpenEngine {
 				{
 					auto& src = entity.GetComponent<SpriteRendererComponent>();
 					text += GetJSONString("SpriteRendererComponent");
-					text += GetJSONString("Color", Encode(src.Color), true);
+
+					if (src.Texture)
+					{
+						std::string filepathOrginal = src.Texture->GetFilePath();
+						std::string filepath;
+						char delimiter = '\\';
+						size_t pos = 0;
+						std::string token;
+
+						int no_of_backslash = (int)std::count(filepathOrginal.begin(), filepathOrginal.end(), '\\');
+						if (no_of_backslash > 0)
+						{
+							for (int i = 0; i < no_of_backslash + 1; i++)
+							{
+								pos = filepathOrginal.find(delimiter);
+								token = filepathOrginal.substr(0, pos);
+								filepath += token + "/";
+								filepathOrginal.erase(0, pos + 1);
+							}
+							filepath.erase(filepath.length() - 1, filepath.length());
+						}
+						else
+							filepath = filepathOrginal;
+
+						text += GetJSONString("Color", Encode(src.Color));
+						text += GetJSONString("Texture", filepath);
+						text += GetJSONString("Scale", src.Scale, true);
+					}
+					else
+						text += GetJSONString("Color", Encode(src.Color), true);
+
 					if (!entity.HasComponent<CircleRendererComponent>() && !entity.HasComponent<CameraComponent>())
 						text += Tab(2) + "}" + NewLine();
 					else
 						text += Tab(2) + "}," + NewLine();
-					// TODO: Add texture serialization
 				}
 
 				if (entity.HasComponent<CircleRendererComponent>())
@@ -330,9 +359,14 @@ namespace OpenEngine {
 					if (value.contains("SpriteRendererComponent"))
 					{
 						auto& jsonSpriteRenderer = value["SpriteRendererComponent"];
-						entity.AddComponent<SpriteRendererComponent>();
+						auto& src = entity.AddComponent<SpriteRendererComponent>();
 
-						Decode(ConvertFloat4(jsonSpriteRenderer["Color"]), entity.GetComponent<SpriteRendererComponent>().Color);
+						Decode(ConvertFloat4(jsonSpriteRenderer["Color"]), src.Color);
+						if (jsonSpriteRenderer.contains("Texture"))
+						{
+							src.Texture = Texture2D::Create(jsonSpriteRenderer["Texture"].get<std::string>());
+							src.Scale = jsonSpriteRenderer["Scale"].get<float>();
+						}
 						// TODO: Add texture deserialization
 					}
 
