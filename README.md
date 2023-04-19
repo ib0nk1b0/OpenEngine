@@ -4,6 +4,7 @@
 Simple 2D / 3D game engine
 
 NOTE: This engine is in development and currently only supports Windows OS
+
 NOTE: This project uses premake so Visual Studio 2022 is required
 
 To clone this repository:
