@@ -14,7 +14,7 @@ Simple 2D / 3D game engine
 ## Configuring the dependecies
   - Open the cloned repository in file explorer
   - Open the `scripts` folder
-  - Run the [Win-GenProjects.bat](https://github.com/ib0nk1b0/OpenEngine/scripts/Win-GenProjects.bat) file to generate the Visual Studio projects using premake
+  - Run the [Win-GenProjects.bat](https://github.com/ib0nk1b0/OpenEngine/blob/Dev/scripts/Win-GenProjects.bat) file to generate the Visual Studio projects using premake
   - Open the `OpenEngine.sln` file in the root directory
   - `Ctrl+Shift+B` in Visual Studio to check that all projects link and build successfully
   - `F5` to launch and look around
