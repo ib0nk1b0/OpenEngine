@@ -1,7 +1,49 @@
 {
 	"Entities": [
 		{
-			"ID": 85493002,
+			"ID": 8107428310560329152,
+			"TagComponent": {
+				"Tag": "Top"
+			},
+			"TransformComponent": {
+				"Translation": [0.000000, 0.500000, 0.000000],
+				"Rotation": [1.570796, 0.785398, 0.000000],
+				"Scale": [1.000000, 1.000000, 1.000000]
+			},
+			"SpriteRendererComponent": {
+				"Color": [0.033305, 0.116006, 0.970588, 1.000000]
+			}
+		},
+		{
+			"ID": 14325990555450140549,
+			"TagComponent": {
+				"Tag": "Left"
+			},
+			"TransformComponent": {
+				"Translation": [-0.350000, 0.000000, 0.350000],
+				"Rotation": [0.000000, -0.785398, 0.000000],
+				"Scale": [1.000000, 1.000000, 1.000000]
+			},
+			"SpriteRendererComponent": {
+				"Color": [0.117647, 1.000000, 0.000000, 1.000000]
+			}
+		},
+		{
+			"ID": 15450069640051744460,
+			"TagComponent": {
+				"Tag": "Right"
+			},
+			"TransformComponent": {
+				"Translation": [0.355000, 0.000000, 0.350000],
+				"Rotation": [0.000000, 0.785398, 0.000000],
+				"Scale": [1.000000, 1.000000, 1.000000]
+			},
+			"SpriteRendererComponent": {
+				"Color": [1.000000, 0.029412, 0.000000, 1.000000]
+			}
+		},
+		{
+			"ID": 11224656347505385460,
 			"TagComponent": {
 				"Tag": "Perspective Camera"
 			},
@@ -17,48 +59,6 @@
 				"Far": 1000.000000,
 				"Primary": true,
 				"FixedAspectRatio": false
-			}
-		},
-		{
-			"ID": 85493002,
-			"TagComponent": {
-				"Tag": "Right"
-			},
-			"TransformComponent": {
-				"Translation": [0.355000, 0.000000, 0.350000],
-				"Rotation": [0.000000, 0.785398, 0.000000],
-				"Scale": [1.000000, 1.000000, 1.000000]
-			},
-			"SpriteRendererComponent": {
-				"Color": [1.000000, 0.029412, 0.000000, 1.000000]
-			}
-		},
-		{
-			"ID": 85493002,
-			"TagComponent": {
-				"Tag": "Left"
-			},
-			"TransformComponent": {
-				"Translation": [-0.350000, 0.000000, 0.350000],
-				"Rotation": [0.000000, -0.785398, 0.000000],
-				"Scale": [1.000000, 1.000000, 1.000000]
-			},
-			"SpriteRendererComponent": {
-				"Color": [0.117647, 1.000000, 0.000000, 1.000000]
-			}
-		},
-		{
-			"ID": 85493002,
-			"TagComponent": {
-				"Tag": "Top"
-			},
-			"TransformComponent": {
-				"Translation": [0.000000, 0.500000, 0.000000],
-				"Rotation": [1.570796, 0.785398, 0.000000],
-				"Scale": [1.000000, 1.000000, 1.000000]
-			},
-			"SpriteRendererComponent": {
-				"Color": [0.033305, 0.116006, 0.970588, 1.000000]
 			}
 		}
 	]

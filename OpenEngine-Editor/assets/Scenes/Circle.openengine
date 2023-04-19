@@ -1,26 +1,35 @@
 {
 	"Entities": [
 		{
-			"ID": 85493002,
+			"ID": 15219768736248723056,
 			"TagComponent": {
-				"Tag": "Orthographic Camera"
+				"Tag": "Wall"
 			},
 			"TransformComponent": {
-				"Translation": [0.000000, 0.000000, 0.000000],
+				"Translation": [-2.133095, 0.500000, 0.000000],
 				"Rotation": [0.000000, 0.000000, 0.000000],
-				"Scale": [1.000000, 1.000000, 1.000000]
+				"Scale": [1.000000, 4.500000, 1.000000]
 			},
-			"CameraComponent": {
-				"ProjectionType": "Orthographic",
-				"Size": 10.000000,
-				"Near": -1.000000,
-				"Far": 1.000000,
-				"Primary": true,
-				"FixedAspectRatio": false
+			"SpriteRendererComponent": {
+				"Color": [1.000000, 1.000000, 1.000000, 1.000000]
 			}
 		},
 		{
-			"ID": 85493002,
+			"ID": 13062501810835238771,
+			"TagComponent": {
+				"Tag": "Floor"
+			},
+			"TransformComponent": {
+				"Translation": [0.000000, -2.000000, 0.000000],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [50.774010, 0.500000, 2.120000]
+			},
+			"SpriteRendererComponent": {
+				"Color": [0.224519, 0.694981, 0.185149, 1.000000]
+			}
+		},
+		{
+			"ID": 17410675888435094697,
 			"TagComponent": {
 				"Tag": "Circle"
 			},
@@ -36,31 +45,22 @@
 			}
 		},
 		{
-			"ID": 85493002,
+			"ID": 1525475942671170306,
 			"TagComponent": {
-				"Tag": "Floor"
+				"Tag": "Orthographic Camera"
 			},
 			"TransformComponent": {
-				"Translation": [0.000000, -2.000000, 0.000000],
+				"Translation": [0.000000, 0.000000, 0.000000],
 				"Rotation": [0.000000, 0.000000, 0.000000],
-				"Scale": [50.774010, 0.500000, 2.120000]
+				"Scale": [1.000000, 1.000000, 1.000000]
 			},
-			"SpriteRendererComponent": {
-				"Color": [0.224519, 0.694981, 0.185149, 1.000000]
-			}
-		},
-		{
-			"ID": 85493002,
-			"TagComponent": {
-				"Tag": "Wall"
-			},
-			"TransformComponent": {
-				"Translation": [-2.133095, 0.500000, 0.000000],
-				"Rotation": [0.000000, 0.000000, 0.000000],
-				"Scale": [1.000000, 4.500000, 1.000000]
-			},
-			"SpriteRendererComponent": {
-				"Color": [1.000000, 1.000000, 1.000000, 1.000000]
+			"CameraComponent": {
+				"ProjectionType": "Orthographic",
+				"Size": 10.000000,
+				"Near": -1.000000,
+				"Far": 1.000000,
+				"Primary": true,
+				"FixedAspectRatio": false
 			}
 		}
 	]
