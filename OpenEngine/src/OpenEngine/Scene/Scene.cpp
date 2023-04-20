@@ -3,6 +3,7 @@
 #include "Entity.h"
 #include "Components.h"
 #include "ScriptableEntity.h"
+#include "OpenEngine/Renderer/Renderer.h"
 
 #include <glm/glm.hpp>
 
@@ -35,6 +36,68 @@ namespace OpenEngine {
 	void Scene::DestroyEntity(Entity entity)
 	{
 		m_Registry.destroy(entity);
+	}
+
+	Entity Scene::DuplicateEntity(Entity other)
+	{
+		Entity newEntity = CreateEntity(other.GetComponent<TagComponent>().Tag);
+		newEntity.GetComponent<TransformComponent>().Translation = other.GetComponent<TransformComponent>().Translation;
+		newEntity.GetComponent<TransformComponent>().Rotation = other.GetComponent<TransformComponent>().Rotation;
+		newEntity.GetComponent<TransformComponent>().Scale = other.GetComponent<TransformComponent>().Scale;
+
+		if (other.HasComponent<SpriteRendererComponent>())
+		{
+			auto& src = newEntity.AddComponent<SpriteRendererComponent>();
+			src.Color = other.GetComponent<SpriteRendererComponent>().Color;
+			src.Texture = other.GetComponent<SpriteRendererComponent>().Texture;
+			src.Scale = other.GetComponent<SpriteRendererComponent>().Scale;
+		}
+
+		if (other.HasComponent<CircleRendererComponent>())
+		{
+			auto& crc = newEntity.AddComponent<CircleRendererComponent>();
+			crc.Color = other.GetComponent<CircleRendererComponent>().Color;
+			crc.Thickness = other.GetComponent<CircleRendererComponent>().Thickness;
+			crc.Fade = other.GetComponent<CircleRendererComponent>().Fade;
+		}
+
+		if (other.HasComponent<CameraComponent>())
+		{
+			auto& cc = newEntity.AddComponent<CameraComponent>();
+			cc.Camera = other.GetComponent<CameraComponent>().Camera;
+			cc.FixedAspectRatio = other.GetComponent<CameraComponent>().FixedAspectRatio;
+			cc.Primary = other.GetComponent<CameraComponent>().Primary;
+		}
+
+		return newEntity;
+	}
+
+	Entity Scene::GetEntityByUUID(UUID uuid)
+	{
+		Entity entity;
+
+		auto view = m_Registry.view<IDComponent>();
+		for (auto e : view)
+		{
+			if (m_Registry.get<IDComponent>(e).ID == uuid)
+				entity = { e, this };
+		}
+
+		return entity;
+	}
+
+	Entity Scene::GetEntityByName(const std::string& name)
+	{
+		Entity entity;
+
+		auto view = m_Registry.view<TagComponent>();
+		for (auto e : view)
+		{
+			if (m_Registry.get<TagComponent>(e).Tag == name)
+				entity = { e, this };
+		}
+
+		return entity;
 	}
 
 	void Scene::OnUpdateEditor(Timestep ts, EditorCamera& camera)
