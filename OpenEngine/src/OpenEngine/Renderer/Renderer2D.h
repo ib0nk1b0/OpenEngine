@@ -5,8 +5,6 @@
 #include "OpenEngine/Renderer/Texture.h"
 #include "OpenEngine/Renderer/SubTexture2D.h"
 #include "OpenEngine/Renderer/EditorCamera.h"
-#include "OpenEngine/Scene/Components.h"
-struct SpriteRendererComponent;
 
 namespace OpenEngine
 {

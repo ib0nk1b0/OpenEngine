@@ -154,6 +154,7 @@
     <ClInclude Include="src\OpenEngine\Core\Log.h" />
     <ClInclude Include="src\OpenEngine\Core\MouseButtonCodes.h" />
     <ClInclude Include="src\OpenEngine\Core\Timestep.h" />
+    <ClInclude Include="src\OpenEngine\Core\UUID.h" />
     <ClInclude Include="src\OpenEngine\Core\Window.h" />
     <ClInclude Include="src\OpenEngine\Debug\Instrumentor.h" />
     <ClInclude Include="src\OpenEngine\Events\ApplicationEvent.h" />
@@ -618,6 +619,7 @@
     <ClCompile Include="src\OpenEngine\Core\Layer.cpp" />
     <ClCompile Include="src\OpenEngine\Core\LayerStack.cpp" />
     <ClCompile Include="src\OpenEngine\Core\Log.cpp" />
+    <ClCompile Include="src\OpenEngine\Core\UUID.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiExtended.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiLayer.cpp" />
