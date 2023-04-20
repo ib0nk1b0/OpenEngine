@@ -39,6 +39,51 @@ namespace OpenEngine {
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
 		m_EditorCamera = EditorCamera(60.0f, 1.778f, 0.1f, 1000.0f);
+
+#if 0
+		class PlayerMovementSctipt : public ScriptableEntity
+		{
+		public:
+			void OnUpdate(Timestep ts)
+			{
+				float speed = 2.0f;
+				auto& translation = GetComponent<TransformComponent>().Translation;
+				if (Input::IsKeyPressed(Key::W))
+					translation.y += speed * ts;
+				if (Input::IsKeyPressed(Key::A))
+					translation.x -= speed * ts;
+				if (Input::IsKeyPressed(Key::S))
+					translation.y -= speed * ts;
+				if (Input::IsKeyPressed(Key::D))
+					translation.x += speed * ts;
+			}
+		};
+
+		class PlayerMovementSctipt2 : public ScriptableEntity
+		{
+		public:
+			void OnUpdate(Timestep ts)
+			{
+				float speed = 2.0f;
+				auto& translation = GetComponent<TransformComponent>().Translation;
+				if (Input::IsKeyPressed(Key::W))
+					translation.y -= speed * ts;
+				if (Input::IsKeyPressed(Key::A))
+					translation.x += speed * ts;
+				if (Input::IsKeyPressed(Key::S))
+					translation.y += speed * ts;
+				if (Input::IsKeyPressed(Key::D))
+					translation.x -= speed * ts;
+			}
+		};
+
+		OpenScene("assets/Scenes/Test.openengine");
+		Entity player = m_ActiveScene->CreateEntity("Player");
+		player.AddComponent<NativeScriptComponent>().Bind<PlayerMovementSctipt>();
+		player.AddComponent<SpriteRendererComponent>();
+		m_ActiveScene->DuplicateEntity(player).AddComponent<NativeScriptComponent>().Bind<PlayerMovementSctipt2>();
+		m_ActiveScene->DuplicateEntity(m_ActiveScene->GetEntityByName("Quad"));
+#endif
 	}
 
 	void EditorLayer::OnDetach()
