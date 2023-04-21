@@ -119,21 +119,22 @@ namespace OpenEngine {
 						layer->OnUpdate(timestep);
 				}
 			}
-
-			m_ImGuiLayer->Begin();
+			if (RendererAPI::GetAPI() == RendererAPI::API::OpenGL)
 			{
-				OE_PROFILE_SCOPE("LayerStack OnImGuiRender");
+				m_ImGuiLayer->Begin();
+				{
+					OE_PROFILE_SCOPE("LayerStack OnImGuiRender");
 
-				for (Layer* layer : m_LayerStack)
-					layer->OnImGuiRender();
+					for (Layer* layer : m_LayerStack)
+						layer->OnImGuiRender();
+				}
+				m_ImGuiLayer->End();
 			}
-			m_ImGuiLayer->End();
-
 			m_Window->OnUpdate();
 
 			auto memAllocated = s_AllocationMetrics.TotalAllocated;
 
-			std::cout << s_AllocationMetrics.CurrentUsage() << std::endl;
+			//std::cout << s_AllocationMetrics.CurrentUsage() << std::endl;
 		}
 	}
 

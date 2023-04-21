@@ -20,6 +20,7 @@ IncludeDir["stb_image"] = "OpenEngine/vendor/stb_image"
 IncludeDir["entt"] = "OpenEngine/vendor/EnTT/include"
 IncludeDir["json"] = "OpenEngine/vendor/Json/"
 IncludeDir["ImGuizmo"] = "OpenEngine/vendor/ImGuizmo/"
+IncludeDir["Vulkan"] = "OpenEngine/vendor/Vulkan/1.3.243.0/Include"
 
 group "Dependencies"
   include "OpenEngine/vendor/GLFW"
@@ -68,7 +69,8 @@ project "OpenEngine"
     "%{IncludeDir.stb_image}",
     "%{IncludeDir.entt}",
     "%{IncludeDir.ImGuizmo}",
-    "%{IncludeDir.json}"
+    "%{IncludeDir.json}",
+    "%{IncludeDir.Vulkan}"
   }
 
   links

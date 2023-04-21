@@ -3,6 +3,7 @@
 
 #include "OpenEngine/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLShader.h"
+#include "Platform/Vulkan/VulkanShader.h"
 
 namespace OpenEngine {
 
@@ -12,6 +13,7 @@ namespace OpenEngine {
 		{
 			case RendererAPI::API::None:    OE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
 			case RendererAPI::API::OpenGL:  return CreateRef<OpenGLShader>(filepath);
+			case RendererAPI::API::Vulkan:  return CreateRef<VulkanShader>(filepath);
 		}
 
 		OE_CORE_ASSERT(false, "Unknown RendererAPI!");
@@ -24,6 +26,7 @@ namespace OpenEngine {
 		{
 			case RendererAPI::API::None:    OE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
 			case RendererAPI::API::OpenGL:  return CreateRef<OpenGLShader>(name, vertexSrc, fragmentSrc);
+			case RendererAPI::API::Vulkan:  return CreateRef<VulkanShader>(name, vertexSrc, fragmentSrc);
 		}
 
 		OE_CORE_ASSERT(false, "Unknown RendererAPI!");

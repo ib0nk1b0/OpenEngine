@@ -12,7 +12,6 @@ public:
 	virtual void OnDetach() override;
 
 	void OnUpdate(OpenEngine::Timestep ts) override;
-	virtual void OnImGuiRender() override;
 	void OnEvent(OpenEngine::Event& e) override;
 private:
 	OpenEngine::OrthographicCameraController m_CameraController;

@@ -27,7 +27,7 @@ void Sandbox2D::OnDetach()
 void Sandbox2D::OnUpdate(OpenEngine::Timestep ts)
 {
 	OE_PROFILE_FUNCTION();
-
+#if 0
 	//Update
 	m_CameraController.OnUpdate(ts);
 	{
@@ -53,26 +53,7 @@ void Sandbox2D::OnUpdate(OpenEngine::Timestep ts)
 
 		OpenEngine::Renderer2D::EndScene();
 	}
-}
-
-void Sandbox2D::OnImGuiRender()
-{
-	OE_PROFILE_FUNCTION();
-
-    ImGui::Begin("Settings");
-
-    auto stats = OpenEngine::Renderer2D::GetStats();
-    ImGui::Text("Renderer2D Stats:");
-    ImGui::Text("Draw Calls: %d", stats.DrawCalls);
-    ImGui::Text("Quad Count: %d", stats.QuadCount);
-    ImGui::Text("Verticies: %d", stats.GetTotalVertexCount());
-    ImGui::Text("Indicies: %d", stats.GetTotalIndexCount());
-
-    ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
-    ImGui::ColorEdit4("Square2 Color", glm::value_ptr(m_Square2Color));
-    uint32_t textureID = m_CheckerboardTexture->GetRendererID();
-
-    ImGui::End();
+#endif
 }
 
 void Sandbox2D::OnEvent(OpenEngine::Event& e)
