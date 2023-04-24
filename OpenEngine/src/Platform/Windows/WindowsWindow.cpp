@@ -28,6 +28,7 @@ namespace OpenEngine {
 
 		Init(props);
 		InitVulkanInstance();
+		InitPhysicalDevice();
 	}
 
 	WindowsWindow::~WindowsWindow()
@@ -164,6 +165,15 @@ namespace OpenEngine {
 	void WindowsWindow::InitVulkanInstance()
 	{
 		m_VulkanInstance = VulkanContext::MakeInstance(OE_DEBUG, m_Data.Title.c_str());
+		m_VulkanDLD = vk::DispatchLoaderDynamic(m_VulkanInstance, vkGetInstanceProcAddr);
+		
+		if (OE_DEBUG)
+			m_VulkanDebugMessenger = VulkanContext::MakeDebugMessenger(m_VulkanInstance, m_VulkanDLD);
+	}
+
+	void WindowsWindow::InitPhysicalDevice()
+	{
+		m_VulkanPhysicalDevice = VulkanContext::ChoosePhysicalDevice(m_VulkanInstance, OE_DEBUG);
 	}
 
 	void WindowsWindow::Shutdown()
@@ -178,6 +188,7 @@ namespace OpenEngine {
 			glfwTerminate();
 		}
 
+		m_VulkanInstance.destroyDebugUtilsMessengerEXT(m_VulkanDebugMessenger, nullptr, m_VulkanDLD);
 		m_VulkanInstance.destroy();
 	}
 

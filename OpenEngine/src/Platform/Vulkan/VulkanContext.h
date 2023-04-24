@@ -15,8 +15,14 @@ namespace OpenEngine {
 		virtual ~VulkanContext();
 
 		virtual void Init();
+
 		static vk::Instance MakeInstance(bool debug, const char* applicationName);
+		static vk::DebugUtilsMessengerEXT MakeDebugMessenger(vk::Instance instance, vk::DispatchLoaderDynamic dld);
+		static vk::PhysicalDevice ChoosePhysicalDevice(vk::Instance instance, bool debug);
+		
 		virtual void SwapBuffers();
+	private:
+		static bool Supported(std::vector<const char*> extensions, std::vector<const char*> layers, bool debug);
 	private:
 		GLFWwindow* m_WindowHandle;
 	};

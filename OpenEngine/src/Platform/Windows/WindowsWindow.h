@@ -25,12 +25,20 @@ namespace OpenEngine {
 		inline virtual void* GetNativeWindow() const { return m_Window; }
 	private:
 		virtual void Init(const WindowProps& props);
+
 		void InitVulkanInstance();
+		void InitPhysicalDevice();
+
 		virtual void Shutdown();
 	private:
 		GLFWwindow* m_Window;
 		GraphicsContext* m_Context;
-		vk::Instance m_VulkanInstance;
+
+		vk::Instance m_VulkanInstance{ nullptr };
+		vk::DebugUtilsMessengerEXT m_VulkanDebugMessenger{ nullptr };
+		vk::DispatchLoaderDynamic m_VulkanDLD;
+
+		vk::PhysicalDevice m_VulkanPhysicalDevice{ nullptr };
 
 		struct WindowData
 		{
