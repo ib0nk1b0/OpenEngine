@@ -18,6 +18,9 @@ namespace OpenEngine {
 		virtual void OnDetach() override;
 		virtual void OnEvent(Event& e) override;
 
+		void InitOpenGL();
+		void InitVulkan();
+
 		void Begin();
 		void End();
 

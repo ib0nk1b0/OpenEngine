@@ -2,6 +2,8 @@
 
 #include "OpenEngine/Renderer/GraphicsContext.h"
 
+#include <vulkan/vulkan.hpp>
+
 struct GLFWwindow;
 
 namespace OpenEngine {
@@ -13,6 +15,7 @@ namespace OpenEngine {
 		virtual ~VulkanContext();
 
 		virtual void Init();
+		static vk::Instance MakeInstance(bool debug, const char* applicationName);
 		virtual void SwapBuffers();
 	private:
 		GLFWwindow* m_WindowHandle;

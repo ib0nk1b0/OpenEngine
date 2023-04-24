@@ -15,37 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Ball.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameLayer.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Paddle.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Sandbox2D.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="vendor\EnTT\include\entt.hpp">
-      <Filter>vendor\EnTT\include</Filter>
-    </ClInclude>
+    <ClCompile Include="src\SandboxApp.cpp" />
+    <ClCompile Include="src\Sandbox2D.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Ball.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameLayer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Paddle.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Sandbox2D.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SandboxApp.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
+    <ClInclude Include="src\Sandbox2D.h" />
   </ItemGroup>
 </Project>

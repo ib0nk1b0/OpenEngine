@@ -1,22 +1,14 @@
 #include "Sandbox2D.h"
 #include "OpenEngine/Renderer/Renderer2D.h"
 
-#include "imgui/imgui.h"
-
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 Sandbox2D::Sandbox2D()
-	: Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f)
+	: Layer("Sandbox2D")
 {
 }
 
 void Sandbox2D::OnAttach()
 {
 	OE_PROFILE_FUNCTION();
-
-	m_CheckerboardTexture = OpenEngine::Texture2D::Create("assets/textures/Checkerboard.png");
-	m_CameraController.SetZoomLevel(5.0f);
 }
 
 void Sandbox2D::OnDetach()
@@ -27,6 +19,8 @@ void Sandbox2D::OnDetach()
 void Sandbox2D::OnUpdate(OpenEngine::Timestep ts)
 {
 	OE_PROFILE_FUNCTION();
+
+
 #if 0
 	//Update
 	m_CameraController.OnUpdate(ts);
@@ -58,5 +52,5 @@ void Sandbox2D::OnUpdate(OpenEngine::Timestep ts)
 
 void Sandbox2D::OnEvent(OpenEngine::Event& e)
 {
-	m_CameraController.OnEvent(e);
+	//m_CameraController.OnEvent(e);
 }

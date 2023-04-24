@@ -51,9 +51,10 @@ namespace OpenEngine {
 			std::filesystem::current_path(m_Specification.WorkingDirectory);
 
 		Renderer::Init();
-
+#if 0
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
+#endif
 	}
 
 	Application::~Application()

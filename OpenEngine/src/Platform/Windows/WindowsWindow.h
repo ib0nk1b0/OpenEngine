@@ -4,6 +4,7 @@
 #include "OpenEngine/Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
+#include <vulkan/vulkan.hpp>
 
 namespace OpenEngine {
 	class WindowsWindow : public Window
@@ -24,10 +25,12 @@ namespace OpenEngine {
 		inline virtual void* GetNativeWindow() const { return m_Window; }
 	private:
 		virtual void Init(const WindowProps& props);
+		void InitVulkanInstance();
 		virtual void Shutdown();
 	private:
 		GLFWwindow* m_Window;
 		GraphicsContext* m_Context;
+		vk::Instance m_VulkanInstance;
 
 		struct WindowData
 		{

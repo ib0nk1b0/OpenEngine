@@ -6,6 +6,7 @@
 #include "OpenEngine/Events/KeyEvent.h"
 
 #include "Platform/OpenGL/OpenGLContext.h"
+#include "Platform/Vulkan/VulkanContext.h"
 
 namespace OpenEngine {
 
@@ -26,6 +27,7 @@ namespace OpenEngine {
 		OE_PROFILE_FUNCTION();
 
 		Init(props);
+		InitVulkanInstance();
 	}
 
 	WindowsWindow::~WindowsWindow()
@@ -54,13 +56,13 @@ namespace OpenEngine {
 				glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 			}
 			OE_CORE_ASSERT(success, "Could not initialize GLFW!");
-
-			glfwSetErrorCallback(GLFWErrorCallback);
+			if (RendererAPI::GetAPI() == RendererAPI::API::OpenGL)
+				glfwSetErrorCallback(GLFWErrorCallback);
 		}
 
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 		++s_GLFWWindowCount;
-
+		
 		if (RendererAPI::GetAPI() == RendererAPI::API::OpenGL)
 		{
 			m_Context = GraphicsContext::Create(m_Window);
@@ -159,6 +161,11 @@ namespace OpenEngine {
 		}
 	}
 
+	void WindowsWindow::InitVulkanInstance()
+	{
+		m_VulkanInstance = VulkanContext::MakeInstance(OE_DEBUG, m_Data.Title.c_str());
+	}
+
 	void WindowsWindow::Shutdown()
 	{
 		OE_PROFILE_FUNCTION();
@@ -170,6 +177,8 @@ namespace OpenEngine {
 		{
 			glfwTerminate();
 		}
+
+		m_VulkanInstance.destroy();
 	}
 
 	void WindowsWindow::OnUpdate()

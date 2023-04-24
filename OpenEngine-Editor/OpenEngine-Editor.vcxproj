@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>OE_PLATFORM_WINDOWS;OE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\OpenEngine\vendor\spdlog\include;..\OpenEngine\src;..\OpenEngine\vendor;..\OpenEngine\vendor\glm;..\OpenEngine\vendor\EnTT\include;..\OpenEngine\vendor\Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>OpenEngine\vendor\spdlog\include;OpenEngine\src;OpenEngine\vendor;..\OpenEngine\vendor\glm;..\OpenEngine\vendor\EnTT\include;..\OpenEngine\vendor\Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -96,7 +96,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>OE_PLATFORM_WINDOWS;OE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\OpenEngine\vendor\spdlog\include;..\OpenEngine\src;..\OpenEngine\vendor;..\OpenEngine\vendor\glm;..\OpenEngine\vendor\EnTT\include;..\OpenEngine\vendor\Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>OpenEngine\vendor\spdlog\include;OpenEngine\src;OpenEngine\vendor;..\OpenEngine\vendor\glm;..\OpenEngine\vendor\EnTT\include;..\OpenEngine\vendor\Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -117,7 +117,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>OE_PLATFORM_WINDOWS;OE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\OpenEngine\vendor\spdlog\include;..\OpenEngine\src;..\OpenEngine\vendor;..\OpenEngine\vendor\glm;..\OpenEngine\vendor\EnTT\include;..\OpenEngine\vendor\Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>OpenEngine\vendor\spdlog\include;OpenEngine\src;OpenEngine\vendor;..\OpenEngine\vendor\glm;..\OpenEngine\vendor\EnTT\include;..\OpenEngine\vendor\Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -133,17 +133,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="src\EditorLayer.h" />
-    <ClInclude Include="src\Panels\ContentBrowserPanel.h" />
-    <ClInclude Include="src\Panels\SceneHierarchy.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\EditorLayer.cpp" />
-    <ClCompile Include="src\OpenEngineEditorApp.cpp" />
-    <ClCompile Include="src\Panels\ContentBrowserPanel.cpp" />
-    <ClCompile Include="src\Panels\SceneHierarchy.cpp" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenEngine\OpenEngine.vcxproj">
       <Project>{ADF3D55D-99AB-17AB-02B3-F006EE89B29B}</Project>

@@ -14,6 +14,7 @@ public:
 	void OnUpdate(OpenEngine::Timestep ts) override;
 	void OnEvent(OpenEngine::Event& e) override;
 private:
+#if 0
 	OpenEngine::OrthographicCameraController m_CameraController;
 	
 	OpenEngine::Ref<OpenEngine::VertexArray> m_SquareVA;
@@ -23,4 +24,5 @@ private:
 
 	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 	glm::vec4 m_Square2Color = { 0.8f, 0.2f, 0.3f, 1.0f };
+#endif
 };

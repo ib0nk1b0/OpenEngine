@@ -5,7 +5,7 @@
 #include "Shader.h"
 #include "VertexArray.h"
 #include "Buffer.h"
-#include "OpenEngine/Renderer/EditorCamera.h"
+#include "EditorCamera.h"
 
 namespace OpenEngine {
 
