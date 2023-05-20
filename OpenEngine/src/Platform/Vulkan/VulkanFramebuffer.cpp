@@ -92,12 +92,80 @@ namespace OpenEngine {
 #endif
 
 	VulkanFramebuffer::VulkanFramebuffer(const FramebufferSpecification& spec)
-		: m_Specification(spec)
+		: m_Specification(spec) {}
+
+#if 0
+	VulkanFramebuffer::VulkanFramebuffer(VulkanFramebufferInputSpecification inputChuck, std::vector<SwapChainFrame>& frames)
 	{
+
+		for (int i = 0; i < frames.size(); i++)
+		{
+			std::vector<vk::ImageView> attachments = {
+				frames[i].ImageView
+			};
+
+			vk::FramebufferCreateInfo framebufferCreateInfo = {};
+			framebufferCreateInfo.flags = vk::FramebufferCreateFlags();
+			framebufferCreateInfo.renderPass = inputChuck.RenderPass;
+			framebufferCreateInfo.attachmentCount = attachments.size();
+			framebufferCreateInfo.pAttachments = attachments.data();
+			framebufferCreateInfo.width = inputChuck.SwapchainExtent.width;
+			framebufferCreateInfo.height = inputChuck.SwapchainExtent.height;
+			framebufferCreateInfo.layers = 1;
+
+			try
+			{
+				frames[i].FrameBuffer = inputChuck.Device.createFramebuffer(framebufferCreateInfo);
+
+				if (OE_DEBUG)
+					OE_CORE_INFO("Created framebuffer for frame {0}", i);
+			}
+			catch (vk::SystemError error)
+			{
+				OE_CORE_ASSERT(false, "Failed to create framebuffer for frame {0}", i);
+			}
+
+		}
+
 	}
+#endif
 
 	VulkanFramebuffer::~VulkanFramebuffer()
 	{
+	}
+
+	void VulkanFramebuffer::MakeFramebuffer(VulkanFramebufferInputSpecification inputChuck, std::vector<SwapChainFrame>& frames)
+	{
+
+		for (int i = 0; i < frames.size(); i++)
+		{
+			std::vector<vk::ImageView> attachments = {
+				frames[i].ImageView
+			};
+
+			vk::FramebufferCreateInfo framebufferCreateInfo = {};
+			framebufferCreateInfo.flags = vk::FramebufferCreateFlags();
+			framebufferCreateInfo.renderPass = inputChuck.RenderPass;
+			framebufferCreateInfo.attachmentCount = attachments.size();
+			framebufferCreateInfo.pAttachments = attachments.data();
+			framebufferCreateInfo.width = inputChuck.SwapchainExtent.width;
+			framebufferCreateInfo.height = inputChuck.SwapchainExtent.height;
+			framebufferCreateInfo.layers = 1;
+
+			try
+			{
+				frames[i].FrameBuffer = inputChuck.Device.createFramebuffer(framebufferCreateInfo);
+
+				if (OE_DEBUG)
+					OE_CORE_INFO("Created framebuffer for frame {0}", i);
+			}
+			catch (vk::SystemError error)
+			{
+				OE_CORE_ASSERT(false, "Failed to create framebuffer for frame {0}", i);
+			}
+
+		}
+
 	}
 
 	void VulkanFramebuffer::Invalidate()

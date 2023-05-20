@@ -17,8 +17,14 @@
   <ItemGroup>
     <ClCompile Include="src\SandboxApp.cpp" />
     <ClCompile Include="src\Sandbox2D.cpp" />
+    <ClCompile Include="src\Ball.cpp" />
+    <ClCompile Include="src\GameLayer.cpp" />
+    <ClCompile Include="src\Paddle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Sandbox2D.h" />
+    <ClInclude Include="src\Ball.h" />
+    <ClInclude Include="src\GameLayer.h" />
+    <ClInclude Include="src\Paddle.h" />
   </ItemGroup>
 </Project>

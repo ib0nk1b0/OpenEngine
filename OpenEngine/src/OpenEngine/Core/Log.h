@@ -5,7 +5,7 @@
 #include "spdlog/fmt/ostr.h"
 
 namespace OpenEngine {
-	class OPENENGINE_API Log
+	class Log
 	{
 	public:
 		static void Init();

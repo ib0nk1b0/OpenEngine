@@ -7,6 +7,10 @@
 
 #include "Platform/OpenGL/OpenGLContext.h"
 #include "Platform/Vulkan/VulkanContext.h"
+#include "Platform/Vulkan/VulkanFramebuffer.h"
+
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_glfw.cpp>
 
 namespace OpenEngine {
 
@@ -28,7 +32,9 @@ namespace OpenEngine {
 
 		Init(props);
 		InitVulkanInstance();
-		InitPhysicalDevice();
+		InitVulkanDevice();
+		InitVulkanPipeline();
+		FinializeSetup();
 	}
 
 	WindowsWindow::~WindowsWindow()
@@ -64,11 +70,11 @@ namespace OpenEngine {
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 		++s_GLFWWindowCount;
 		
+		m_Context = GraphicsContext::Create(m_Window);
+		m_Context->Init();
+
 		if (RendererAPI::GetAPI() == RendererAPI::API::OpenGL)
 		{
-			m_Context = GraphicsContext::Create(m_Window);
-			m_Context->Init();
-
 			glfwSetWindowUserPointer(m_Window, &m_Data);
 			SetVSync(true);
 			// Set GLFW callbacks
@@ -164,16 +170,62 @@ namespace OpenEngine {
 
 	void WindowsWindow::InitVulkanInstance()
 	{
-		m_VulkanInstance = VulkanContext::MakeInstance(OE_DEBUG, m_Data.Title.c_str());
+		m_VulkanInstance = VulkanContext::MakeInstance(m_Data.Title.c_str());
 		m_VulkanDLD = vk::DispatchLoaderDynamic(m_VulkanInstance, vkGetInstanceProcAddr);
 		
 		if (OE_DEBUG)
 			m_VulkanDebugMessenger = VulkanContext::MakeDebugMessenger(m_VulkanInstance, m_VulkanDLD);
+
+		VkSurfaceKHR cStyleSurface;
+		if (glfwCreateWindowSurface(m_VulkanInstance, m_Window, nullptr, &cStyleSurface) != VK_SUCCESS)
+		{
+			if (OE_DEBUG)
+				OE_CORE_WARN("Failed to abstract the glfw surface for Vulkan!");
+		}
+
+		if (OE_DEBUG)
+			OE_CORE_INFO("Successfully abstracted the glfw surface for Vulkan!");
+
+		m_Surface = cStyleSurface;
 	}
 
-	void WindowsWindow::InitPhysicalDevice()
+	void WindowsWindow::InitVulkanDevice()
 	{
-		m_VulkanPhysicalDevice = VulkanContext::ChoosePhysicalDevice(m_VulkanInstance, OE_DEBUG);
+		m_DeviceSpec.PhysicalDevice = VulkanContext::ChoosePhysicalDevice(m_VulkanInstance);
+		m_DeviceSpec.Device = VulkanContext::CreateLogicalDevice(m_DeviceSpec.PhysicalDevice, m_Surface);
+		std::array<vk::Queue, 2> queues = VulkanContext::GetQueues(m_DeviceSpec.PhysicalDevice, m_DeviceSpec.Device, m_Surface);
+		m_DeviceSpec.GraphicsQueue = queues[0];
+		m_DeviceSpec.PresentQueue = queues[1];
+		SwapChainBundle bundle = VulkanContext::CreateSwapChain(m_DeviceSpec.Device, m_DeviceSpec.PhysicalDevice, m_Surface, 1600, 900);
+		m_SwapchainSpec.Swapchain = bundle.Swapchain;
+		m_SwapchainSpec.Frames = bundle.Frames;
+		m_SwapchainSpec.Format = bundle.Format;
+		m_SwapchainSpec.Extent = bundle.Extent;
+	}
+
+	void WindowsWindow::InitVulkanPipeline()
+	{
+		GraphicsPipelineInBundle spec = {};
+		spec.VertexPath = "assets/shaders/vertex.spv";
+		spec.FragmentPath = "assets/shaders/fragment.spv";
+		spec.Device = m_DeviceSpec.Device;
+		spec.SwapchainExtent = m_SwapchainSpec.Extent;
+		spec.SwapchainImageFormat = m_SwapchainSpec.Format;
+
+		auto output = m_VulkanPipeline.CreateGraphicsPipeline(spec);
+		m_PipelineSpecification.Layout = output.Layout;
+		m_PipelineSpecification.RenderPass = output.RenderPass;
+		m_PipelineSpecification.Pipeline = output.Pipeline;
+	}
+
+	void WindowsWindow::FinializeSetup()
+	{
+		VulkanFramebufferInputSpecification framebufferInput;
+		framebufferInput.Device = m_DeviceSpec.Device;
+		framebufferInput.RenderPass = m_PipelineSpecification.RenderPass;
+		framebufferInput.SwapchainExtent = m_SwapchainSpec.Extent;
+
+		VulkanFramebuffer::MakeFramebuffer(framebufferInput, m_SwapchainSpec.Frames);
 	}
 
 	void WindowsWindow::Shutdown()
@@ -188,6 +240,18 @@ namespace OpenEngine {
 			glfwTerminate();
 		}
 
+		for (auto frame : m_SwapchainSpec.Frames)
+		{
+			m_DeviceSpec.Device.destroyImageView(frame.ImageView);
+			m_DeviceSpec.Device.destroyFramebuffer(frame.FrameBuffer);
+		}
+
+		m_DeviceSpec.Device.destroyPipeline(m_PipelineSpecification.Pipeline);
+		m_DeviceSpec.Device.destroyPipelineLayout(m_PipelineSpecification.Layout);
+		m_DeviceSpec.Device.destroyRenderPass(m_PipelineSpecification.RenderPass);
+		m_DeviceSpec.Device.destroySwapchainKHR(m_SwapchainSpec.Swapchain);
+		m_DeviceSpec.Device.destroy();
+		m_VulkanInstance.destroySurfaceKHR(m_Surface);
 		m_VulkanInstance.destroyDebugUtilsMessengerEXT(m_VulkanDebugMessenger, nullptr, m_VulkanDLD);
 		m_VulkanInstance.destroy();
 	}

@@ -1,6 +1,8 @@
 #include "oepch.h"
 #include "VulkanShader.h"
 
+#include "VulkanGraphicsPipeline.h"
+
 #include <fstream>
 
 #include <glm/gtc/type_ptr.hpp>
@@ -20,15 +22,46 @@ namespace OpenEngine {
 	{
 	}
 
-	std::string VulkanShader::ReadFile(const std::string& filepath)
+	std::vector<char> VulkanShader::ReadFile(const std::string& filepath)
 	{
-		return "Nothing to do!";
+		std::ifstream file(filepath, std::ios::ate | std::ios::binary);
+
+		OE_CORE_ASSERT(file.is_open(), "Failed to open the file!");
+
+		size_t filesize{ static_cast<size_t>(file.tellg()) };
+		std::vector<char> result(filesize);
+		file.seekg(0);
+		file.read(result.data(), filesize);
+		file.close();
+
+		return result;
 	}
+
+	vk::ShaderModule VulkanShader::CreateModule(const std::string& filepath, vk::Device device)
+	{
+		std::vector<char> sourceCode = ReadFile(filepath);
+
+		vk::ShaderModuleCreateInfo moduleInfo = {};
+		moduleInfo.flags = vk::ShaderModuleCreateFlags();
+		moduleInfo.codeSize = sourceCode.size();
+		moduleInfo.pCode = reinterpret_cast<const uint32_t*>(sourceCode.data());
+
+		try
+		{
+			return device.createShaderModule(moduleInfo);
+		}
+		catch (vk::SystemError error)
+		{
+			OE_CORE_ASSERT(false, "Failed to create shader module!");
+		}
+	}
+
 #if 0
 	std::unordered_map<GLenum, std::string> VulkanShader::PreProcess(const std::string& source)
 	{
 	}
 #endif
+
 	void VulkanShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSources)
 	{
 	}

@@ -1,14 +1,25 @@
 #pragma once
 
 #include "OpenEngine/Renderer/Framebuffer.h"
+#include "Platform/Vulkan/VulkanContext.h"
 
 namespace OpenEngine {
+
+	struct VulkanFramebufferInputSpecification
+	{
+		vk::Device Device;
+		vk::RenderPass RenderPass;
+		vk::Extent2D SwapchainExtent;
+	};
 
 	class VulkanFramebuffer : public Framebuffer
 	{
 	public:
 		VulkanFramebuffer(const FramebufferSpecification& spec);
+		//VulkanFramebuffer(VulkanFramebufferInputSpecification inputChunk, std::vector<SwapChainFrame>& frames);
 		virtual ~VulkanFramebuffer();
+
+		static void MakeFramebuffer(VulkanFramebufferInputSpecification inputChunk, std::vector<SwapChainFrame>& frames);
 
 		void Invalidate();
 		
@@ -21,17 +32,17 @@ namespace OpenEngine {
 
 		virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const override { OE_CORE_ASSERT(index < m_ColorAttachments.size(), ""); return m_ColorAttachments[index]; }
 
-		virtual const FramebufferSpecification& GetSpecification() const override { return m_Specification; }
+		virtual const FramebufferSpecification& GetSpecification() const override { /*return m_Specification;*/ return FramebufferSpecification(); }
 
 	private:
 		uint32_t m_RendererID = 0;
 		FramebufferSpecification m_Specification;
 
-		std::vector<FramebufferTextureSpecification> m_ColorAttachmentSpecifications;
-		FramebufferTextureSpecification m_DepthAttachmentSpecifications = FramebufferTextureFormat::None;
+		//std::vector<FramebufferTextureSpecification> m_ColorAttachmentSpecifications;
+		//FramebufferTextureSpecification m_DepthAttachmentSpecifications = FramebufferTextureFormat::None;
 
 		std::vector<uint32_t> m_ColorAttachments;
-		uint32_t m_DepthAttachment;
+		//uint32_t m_DepthAttachment;
 	};
 
 }

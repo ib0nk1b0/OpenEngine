@@ -2,11 +2,13 @@
 
 #include "OpenEngine/Core/Window.h"
 #include "OpenEngine/Renderer/GraphicsContext.h"
+#include "Platform/Vulkan/VulkanGraphicsPipeline.h"
 
 #include <GLFW/glfw3.h>
 #include <vulkan/vulkan.hpp>
 
 namespace OpenEngine {
+	struct SwapChainFrame;
 	class WindowsWindow : public Window
 	{
 	public:
@@ -27,7 +29,10 @@ namespace OpenEngine {
 		virtual void Init(const WindowProps& props);
 
 		void InitVulkanInstance();
-		void InitPhysicalDevice();
+		void InitVulkanDevice();
+		void InitVulkanPipeline();
+
+		void FinializeSetup();
 
 		virtual void Shutdown();
 	private:
@@ -37,8 +42,32 @@ namespace OpenEngine {
 		vk::Instance m_VulkanInstance{ nullptr };
 		vk::DebugUtilsMessengerEXT m_VulkanDebugMessenger{ nullptr };
 		vk::DispatchLoaderDynamic m_VulkanDLD;
+		vk::SurfaceKHR m_Surface;
 
-		vk::PhysicalDevice m_VulkanPhysicalDevice{ nullptr };
+		VulkanGraphicsPipeline m_VulkanPipeline;
+
+		struct VulkanDeviceSpecification
+		{
+			vk::Device Device{ nullptr };
+			vk::PhysicalDevice PhysicalDevice{ nullptr };
+			vk::Queue GraphicsQueue{ nullptr };
+			vk::Queue PresentQueue{ nullptr };
+		};
+
+		struct VulkanSwapchainSpecification
+		{
+			vk::SwapchainKHR Swapchain;
+			std::vector<SwapChainFrame> Frames;
+			vk::Format Format;
+			vk::Extent2D Extent;
+		};
+
+		struct VulkanPipelineSpecification
+		{
+			vk::PipelineLayout Layout;
+			vk::RenderPass RenderPass;
+			vk::Pipeline Pipeline;
+		};
 
 		struct WindowData
 		{
@@ -49,6 +78,9 @@ namespace OpenEngine {
 			EventCallbackFn EventCallback;
 		};
 
+		VulkanDeviceSpecification m_DeviceSpec;
+		VulkanSwapchainSpecification m_SwapchainSpec;
+		VulkanPipelineSpecification m_PipelineSpecification;
 		WindowData m_Data;
 	};
 }
