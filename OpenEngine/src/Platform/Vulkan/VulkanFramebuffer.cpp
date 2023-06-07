@@ -156,8 +156,7 @@ namespace OpenEngine {
 			{
 				frames[i].FrameBuffer = inputChuck.Device.createFramebuffer(framebufferCreateInfo);
 
-				if (OE_DEBUG)
-					OE_CORE_INFO("Created framebuffer for frame {0}", i);
+				OE_CORE_INFO("Created framebuffer for frame {0}", i);
 			}
 			catch (vk::SystemError error)
 			{

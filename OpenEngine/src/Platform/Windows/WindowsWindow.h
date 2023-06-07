@@ -25,26 +25,23 @@ namespace OpenEngine {
 		bool IsVSync() const override;
 
 		inline virtual void* GetNativeWindow() const { return m_Window; }
+
+		//void Render();
 	private:
 		virtual void Init(const WindowProps& props);
 
-		void InitVulkanInstance();
+		/*void InitVulkanInstance();
 		void InitVulkanDevice();
 		void InitVulkanPipeline();
 
 		void FinializeSetup();
 
+		void RecordDrawCalls(vk::CommandBuffer commandBuffer, uint32_t imageIndex);*/
+
 		virtual void Shutdown();
 	private:
 		GLFWwindow* m_Window;
 		GraphicsContext* m_Context;
-
-		vk::Instance m_VulkanInstance{ nullptr };
-		vk::DebugUtilsMessengerEXT m_VulkanDebugMessenger{ nullptr };
-		vk::DispatchLoaderDynamic m_VulkanDLD;
-		vk::SurfaceKHR m_Surface;
-
-		VulkanGraphicsPipeline m_VulkanPipeline;
 
 		struct VulkanDeviceSpecification
 		{
@@ -69,6 +66,23 @@ namespace OpenEngine {
 			vk::Pipeline Pipeline;
 		};
 
+		vk::Instance m_VulkanInstance{ nullptr };
+		vk::DebugUtilsMessengerEXT m_VulkanDebugMessenger{ nullptr };
+		vk::DispatchLoaderDynamic m_VulkanDLD;
+		vk::SurfaceKHR m_Surface;
+
+		//VulkanGraphicsPipeline m_VulkanPipeline;
+
+		VulkanDeviceSpecification m_DeviceSpec;
+		VulkanSwapchainSpecification m_SwapchainSpec;
+		VulkanPipelineSpecification m_PipelineSpecification;
+
+		vk::CommandPool m_CommandPool;
+		vk::CommandBuffer m_MainCommandBuffer;
+
+		vk::Fence m_InFilghtFence;
+		vk::Semaphore m_ImageAvailable, m_RenderFinished;
+
 		struct WindowData
 		{
 			std::string Title;
@@ -78,9 +92,6 @@ namespace OpenEngine {
 			EventCallbackFn EventCallback;
 		};
 
-		VulkanDeviceSpecification m_DeviceSpec;
-		VulkanSwapchainSpecification m_SwapchainSpec;
-		VulkanPipelineSpecification m_PipelineSpecification;
 		WindowData m_Data;
 	};
 }

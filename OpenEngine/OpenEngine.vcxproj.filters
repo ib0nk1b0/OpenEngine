@@ -1507,6 +1507,7 @@
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\VulkanGraphicsPipeline.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanCommands.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenEngine\Core\Application.cpp">
@@ -1648,5 +1649,6 @@
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\VulkanGraphicsPipeline.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanCommands.cpp" />
   </ItemGroup>
 </Project>

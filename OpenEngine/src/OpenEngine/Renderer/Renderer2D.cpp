@@ -92,10 +92,8 @@ namespace OpenEngine {
 
 	static Renderer2DData s_Data;
 
-	void Renderer2D::Init()
+	static void InitOpenGL()
 	{
-		OE_PROFILE_FUNCTION();
-
 		// Quads
 		s_Data.QuadVertexArray = VertexArray::Create();
 
@@ -107,7 +105,7 @@ namespace OpenEngine {
 			{ ShaderDataType::Float,  "a_TexIndex" },
 			{ ShaderDataType::Float,  "a_Scale"    },
 			{ ShaderDataType::Int,    "a_EntityID" }
-		});
+			});
 		s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
 
 		s_Data.QuadVertexBufferBase = new QuadVertex[s_Data.MaxQuadVerticies];
@@ -123,7 +121,7 @@ namespace OpenEngine {
 			{ ShaderDataType::Float,  "a_Thickness"     },
 			{ ShaderDataType::Float,  "a_Fade"          },
 			{ ShaderDataType::Int,    "a_EntityID"      }
-		});
+			});
 		s_Data.CircleVertexArray->AddVertexBuffer(s_Data.CircleVertexBuffer);
 
 		s_Data.CircleVertexBufferBase = new CircleVertex[s_Data.MaxQuadVerticies];
@@ -135,7 +133,7 @@ namespace OpenEngine {
 			{ ShaderDataType::Float3, "a_Position" },
 			{ ShaderDataType::Float4, "a_Color"    },
 			{ ShaderDataType::Int,    "a_EntityID" }
-		});
+			});
 		s_Data.LineVertexArray->AddVertexBuffer(s_Data.LineVertexBuffer);
 
 		s_Data.LineVertexBufferBase = new LineVertex[s_Data.MaxQuadVerticies];
@@ -173,8 +171,96 @@ namespace OpenEngine {
 		s_Data.TextureSlots[0] = s_Data.WhiteTexture;
 
 		s_Data.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
-		s_Data.QuadVertexPositions[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
-		s_Data.QuadVertexPositions[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
+		s_Data.QuadVertexPositions[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
+		s_Data.QuadVertexPositions[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
+		s_Data.QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
+
+		//SetupSkybox();
+	}
+
+	void Renderer2D::Init()
+	{
+		OE_PROFILE_FUNCTION();
+		
+		// Quads
+		s_Data.QuadVertexArray = VertexArray::Create();
+
+		s_Data.QuadVertexBuffer = VertexBuffer::Create(s_Data.MaxQuadVerticies * sizeof(QuadVertex));
+		s_Data.QuadVertexBuffer->SetLayout({
+			{ ShaderDataType::Float3, "a_Position" },
+			{ ShaderDataType::Float4, "a_Color"    },
+			{ ShaderDataType::Float2, "a_TexCoord" },
+			{ ShaderDataType::Float,  "a_TexIndex" },
+			{ ShaderDataType::Float,  "a_Scale"    },
+			{ ShaderDataType::Int,    "a_EntityID" }
+			});
+		s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
+
+		s_Data.QuadVertexBufferBase = new QuadVertex[s_Data.MaxQuadVerticies];
+
+		// Circles
+		s_Data.CircleVertexArray = VertexArray::Create();
+
+		s_Data.CircleVertexBuffer = VertexBuffer::Create(s_Data.MaxQuadVerticies * sizeof(CircleVertex));
+		s_Data.CircleVertexBuffer->SetLayout({
+			{ ShaderDataType::Float3, "a_WorldPosition" },
+			{ ShaderDataType::Float3, "a_LocalPosition" },
+			{ ShaderDataType::Float4, "a_Color"         },
+			{ ShaderDataType::Float,  "a_Thickness"     },
+			{ ShaderDataType::Float,  "a_Fade"          },
+			{ ShaderDataType::Int,    "a_EntityID"      }
+			});
+		s_Data.CircleVertexArray->AddVertexBuffer(s_Data.CircleVertexBuffer);
+
+		s_Data.CircleVertexBufferBase = new CircleVertex[s_Data.MaxQuadVerticies];
+
+		s_Data.LineVertexArray = VertexArray::Create();
+
+		s_Data.LineVertexBuffer = VertexBuffer::Create(s_Data.MaxQuadVerticies * sizeof(LineVertex));
+		s_Data.LineVertexBuffer->SetLayout({
+			{ ShaderDataType::Float3, "a_Position" },
+			{ ShaderDataType::Float4, "a_Color"    },
+			{ ShaderDataType::Int,    "a_EntityID" }
+			});
+		s_Data.LineVertexArray->AddVertexBuffer(s_Data.LineVertexBuffer);
+
+		s_Data.LineVertexBufferBase = new LineVertex[s_Data.MaxQuadVerticies];
+
+		uint32_t* quadIndicies = new uint32_t[s_Data.MaxQuadIndicies];
+
+		uint32_t offset = 0;
+		for (uint32_t i = 0; i < s_Data.MaxQuadIndicies; i += 6)
+		{
+			quadIndicies[i + 0] = offset + 0;
+			quadIndicies[i + 1] = offset + 1;
+			quadIndicies[i + 2] = offset + 2;
+
+			quadIndicies[i + 3] = offset + 2;
+			quadIndicies[i + 4] = offset + 3;
+			quadIndicies[i + 5] = offset + 0;
+
+			offset += 4;
+		}
+
+		Ref<IndexBuffer> quadIB = IndexBuffer::Create(quadIndicies, s_Data.MaxQuadIndicies);
+		s_Data.QuadVertexArray->SetIndexBuffer(quadIB);
+		s_Data.CircleVertexArray->SetIndexBuffer(quadIB);
+		delete[] quadIndicies;
+
+		s_Data.WhiteTexture = Texture2D::Create(1, 1);
+		uint32_t whiteTextureData = 0xffffffff;
+		s_Data.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
+
+		s_Data.QuadShader = Shader::Create("assets/shaders/Renderer2D_Quad.glsl");
+		s_Data.CircleShader = Shader::Create("assets/shaders/Renderer2D_Circle.glsl");
+		s_Data.LineShader = Shader::Create("assets/shaders/Renderer2D_Line.glsl");
+
+		// Set all texture slots to 0
+		s_Data.TextureSlots[0] = s_Data.WhiteTexture;
+
+		s_Data.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
+		s_Data.QuadVertexPositions[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
+		s_Data.QuadVertexPositions[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
 		s_Data.QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
 
 		//SetupSkybox();

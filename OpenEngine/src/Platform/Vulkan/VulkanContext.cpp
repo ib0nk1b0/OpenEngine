@@ -29,13 +29,11 @@ namespace OpenEngine {
 	{
 		std::vector<vk::ExtensionProperties> supportedExtensions = vk::enumerateInstanceExtensionProperties();
 
-		if (OE_DEBUG)
-		{
-			OE_CORE_INFO("Checking for supported extensions...");
-			OE_CORE_TRACE("Device can support the following extensions");
-			for (auto supportedExtension : supportedExtensions)
-				OE_CORE_TRACE("\t{0}", supportedExtension.extensionName);
-		}
+		
+		OE_CORE_INFO("Checking for supported extensions...");
+		OE_CORE_TRACE("Device can support the following extensions");
+		for (auto supportedExtension : supportedExtensions)
+			OE_CORE_TRACE("\t{0}", supportedExtension.extensionName);
 		bool found = false;
 		for (const char* extension : extensions)
 		{
@@ -45,28 +43,23 @@ namespace OpenEngine {
 				if (strcmp(extension, supported.extensionName) == 0)
 				{
 					found = true;
-					if (OE_DEBUG)
-						OE_CORE_TRACE("Extension \"{0}\" is supported", extension);
+					OE_CORE_TRACE("Extension \"{0}\" is supported", extension);
 				}
 			}
 
 			if (!found)
 			{
-				if (OE_DEBUG)
-					OE_CORE_TRACE("Extension \"{0}\" is not supported", extension);
+				OE_CORE_TRACE("Extension \"{0}\" is not supported", extension);
 				return false;
 			}
 		}
 
 		std::vector<vk::LayerProperties> supprotedLayers = vk::enumerateInstanceLayerProperties();
 
-		if (OE_DEBUG)
-		{
-			OE_CORE_INFO("Checking for supported layers...");
-			OE_CORE_TRACE("Device can support the following layers:");
-			for (vk::LayerProperties supportedLayer : supprotedLayers)
-				OE_CORE_TRACE("\t{0}", supportedLayer.layerName);
-		}
+		OE_CORE_INFO("Checking for supported layers...");
+		OE_CORE_TRACE("Device can support the following layers:");
+		for (vk::LayerProperties supportedLayer : supprotedLayers)
+			OE_CORE_TRACE("\t{0}", supportedLayer.layerName);
 
 		for (const char* layer : layers)
 		{
@@ -76,15 +69,13 @@ namespace OpenEngine {
 				if (strcmp(layer, supported.layerName) == 0)
 				{
 					found = true;
-					if (OE_DEBUG)
-						OE_CORE_TRACE("Layer \"{0}\" is supported", layer);
+					OE_CORE_TRACE("Layer \"{0}\" is supported", layer);
 				}
 			}
 
 			if (!found)
 			{
-				if (OE_DEBUG)
-					OE_CORE_TRACE("Layer \"{0}\" is not supported", layer);
+				OE_CORE_TRACE("Layer \"{0}\" is not supported", layer);
 				return false;
 			}
 		}
@@ -94,19 +85,15 @@ namespace OpenEngine {
 
 	vk::Instance VulkanContext::MakeInstance(const char* applicationName)
 	{
-		if (OE_DEBUG)
-			OE_CORE_WARN("Making a Vulkan instance...");
+		OE_CORE_WARN("Making a Vulkan instance...");
 
 		uint32_t version{ 0 };
 		vkEnumerateInstanceVersion(&version);
 		
-		if (OE_DEBUG)
-		{
-			OE_CORE_WARN("System can support vulkan variant: {0}", VK_API_VERSION_VARIANT(version));
-			OE_CORE_WARN("\tMajor: {0}", VK_API_VERSION_MAJOR(version));
-			OE_CORE_WARN("\tMinor: {0}", VK_API_VERSION_MINOR(version));
-			OE_CORE_WARN("\tPatch: {0}", VK_API_VERSION_PATCH(version));
-		}
+		OE_CORE_WARN("System can support vulkan variant: {0}", VK_API_VERSION_VARIANT(version));
+		OE_CORE_WARN("\tMajor: {0}", VK_API_VERSION_MAJOR(version));
+		OE_CORE_WARN("\tMinor: {0}", VK_API_VERSION_MINOR(version));
+		OE_CORE_WARN("\tPatch: {0}", VK_API_VERSION_PATCH(version));
 
 		// select which version to use:
 		// can either use the highest version and set path to 0
@@ -130,18 +117,14 @@ namespace OpenEngine {
 
 		std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
-		if (OE_DEBUG)
-		{
-			extensions.push_back("VK_EXT_debug_utils");
-			OE_CORE_TRACE("Extensions to be requested:");
+		extensions.push_back("VK_EXT_debug_utils");
+		OE_CORE_TRACE("Extensions to be requested:");
 
-			for (const char* extensionName : extensions)
-				OE_CORE_TRACE("\t\"{0}\"", extensionName);
-		}
+		for (const char* extensionName : extensions)
+			OE_CORE_TRACE("\t\"{0}\"", extensionName);
 
 		std::vector<const char*> layers;
-		if (OE_DEBUG)
-			layers.push_back("VK_LAYER_KHRONOS_validation");
+		layers.push_back("VK_LAYER_KHRONOS_validation");
 
 		if (!Supported(extensions, layers))
 			return nullptr;
@@ -159,8 +142,7 @@ namespace OpenEngine {
 		}
 		catch (vk::SystemError error)
 		{
-			if (OE_DEBUG)
-				OE_CORE_ASSERT(false, "Failed to create instance!");
+			OE_CORE_ASSERT(false, "Failed to create instance!");
 
 			return nullptr;
 		}
@@ -219,13 +201,11 @@ namespace OpenEngine {
 	{
 		std::set<std::string> requiredExtensions(requestedExtensions.begin(), requestedExtensions.end());
 
-		if (OE_DEBUG)
-			OE_CORE_TRACE("Device can support extensions:");
+		OE_CORE_TRACE("Device can support extensions:");
 
 		for (vk::ExtensionProperties& extension : device.enumerateDeviceExtensionProperties())
 		{
-			if (OE_DEBUG)
-				OE_CORE_TRACE("\t{0}", extension.extensionName);
+			OE_CORE_TRACE("\t{0}", extension.extensionName);
 
 			requiredExtensions.erase(extension.extensionName);
 		}
@@ -235,28 +215,20 @@ namespace OpenEngine {
 
 	static bool IsSuitable(vk::PhysicalDevice device)
 	{
-		if (OE_DEBUG)
-			OE_CORE_INFO("Checking if the device is suitable");
+		OE_CORE_INFO("Checking if the device is suitable");
 
 		const std::vector<const char*> requestedExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
-		if (OE_DEBUG)
-		{
-			OE_CORE_TRACE("We are requesting device extensions:");
+		OE_CORE_TRACE("We are requesting device extensions:");
 
-			for (const char* extension : requestedExtensions)
-				OE_CORE_TRACE("\t{0}", extension);
-		}
+		for (const char* extension : requestedExtensions)
+			OE_CORE_TRACE("\t{0}", extension);
 
 		if (bool supported = DeviceExtensionsSupported(device, requestedExtensions))
-		{
-			if (OE_DEBUG)
-				OE_CORE_INFO("Device can support the requested extensions.");
-		}
+			OE_CORE_INFO("Device can support the requested extensions.");
 		else
 		{
-			if (OE_DEBUG)
-				OE_CORE_WARN("Device can't support the requested extensions.");
+			OE_CORE_WARN("Device can't support the requested extensions.");
 
 			return false;
 		}
@@ -266,18 +238,15 @@ namespace OpenEngine {
 
 	vk::PhysicalDevice VulkanContext::ChoosePhysicalDevice(vk::Instance instance)
 	{
-		if (OE_DEBUG)
-			OE_CORE_INFO("Choosing Physical Device...");
+		OE_CORE_INFO("Choosing Physical Device...");
 
 		std::vector<vk::PhysicalDevice> availableDevices = instance.enumeratePhysicalDevices();
 
-		if (OE_DEBUG)
-			OE_CORE_TRACE("There are {0} physical device(s) available on this system", availableDevices.size());
+		OE_CORE_TRACE("There are {0} physical device(s) available on this system", availableDevices.size());
 
 		for (vk::PhysicalDevice device : availableDevices)
 		{
-			if (OE_DEBUG)
-				LogDeviceProperties(device);
+			LogDeviceProperties(device);
 			
 			if (IsSuitable(device))
 				return device;
@@ -308,8 +277,7 @@ namespace OpenEngine {
 		vk::PhysicalDeviceFeatures deviceFeatures = vk::PhysicalDeviceFeatures();
 
 		std::vector<const char*> enabledLayers;
-		if (OE_DEBUG)
-			enabledLayers.push_back("VK_LYAER_KHRONOS_validation");
+		enabledLayers.push_back("VK_LYAER_KHRONOS_validation");
 
 		vk::DeviceCreateInfo deviceCreateInfo = vk::DeviceCreateInfo(
 			vk::DeviceCreateFlags(),
@@ -321,8 +289,7 @@ namespace OpenEngine {
 		try
 		{
 			vk::Device device = physicalDevice.createDevice(deviceCreateInfo);
-			if (OE_DEBUG)
-				OE_CORE_INFO("GPU has been successfully abstracted");
+			OE_CORE_INFO("GPU has been successfully abstracted");
 			return device;
 		}
 		catch (vk::SystemError error)
@@ -352,8 +319,7 @@ namespace OpenEngine {
 
 		std::vector<vk::QueueFamilyProperties> queueFamilies = physicalDevice.getQueueFamilyProperties();
 
-		if (OE_DEBUG)
-			OE_CORE_INFO("System can support {0} queue families", queueFamilies.size());
+		OE_CORE_INFO("System can support {0} queue families", queueFamilies.size());
 
 		int i = 0;
 		for (const vk::QueueFamilyProperties& queueFamily : queueFamilies)
@@ -362,16 +328,14 @@ namespace OpenEngine {
 			{
 				indices.GraphicsFamily = i;
 
-				if (OE_DEBUG)
-					OE_CORE_INFO("Queue family {0} is suitable for graphics.", i);
+				OE_CORE_INFO("Queue family {0} is suitable for graphics.", i);
 			}
 
 			if (physicalDevice.getSurfaceSupportKHR(i, surface))
 			{
 				indices.PresentFamily = i;
 
-				if (OE_DEBUG)
-					OE_CORE_INFO("Queue family {0} is suitable for presenting.", i);
+				OE_CORE_INFO("Queue family {0} is suitable for presenting.", i);
 			}
 
 			if (indices.IsComplete())
@@ -389,25 +353,22 @@ namespace OpenEngine {
 
 		support.Capabilities = physicalDevice.getSurfaceCapabilitiesKHR(surface);
 
-		if (OE_DEBUG)
-		{
-			OE_CORE_TRACE("Swapchain can support the following surface capabilites");
-			OE_CORE_TRACE("-------------------------------------------------------");
-			OE_CORE_TRACE("\t Image count:");
-			OE_CORE_TRACE("\t\tMinimum image count: {0}", support.Capabilities.minImageCount);
-			OE_CORE_TRACE("\t\tMaximum image count: {0}", support.Capabilities.maxImageCount);
-			OE_CORE_TRACE("\t Current extent:");
-			OE_CORE_TRACE("\t\tWidth: {0}", support.Capabilities.currentExtent.width);
-			OE_CORE_TRACE("\t\tHeight: {0}", support.Capabilities.currentExtent.height);
-			OE_CORE_TRACE("\t Minimum extent:");
-			OE_CORE_TRACE("\t\tWidth: {0}", support.Capabilities.minImageExtent.width);
-			OE_CORE_TRACE("\t\tHeight: {0}", support.Capabilities.minImageExtent.height);
-			OE_CORE_TRACE("\t Maximum extent:");
-			OE_CORE_TRACE("\t\tWidth: {0}", support.Capabilities.maxImageExtent.width);
-			OE_CORE_TRACE("\t\tHeight: {0}", support.Capabilities.maxImageExtent.height);
-			OE_CORE_TRACE("\t Maximum image array layers: {0}", support.Capabilities.maxImageArrayLayers);
-			OE_CORE_TRACE("-------------------------------------------------------");
-		}
+		OE_CORE_TRACE("Swapchain can support the following surface capabilites");
+		OE_CORE_TRACE("-------------------------------------------------------");
+		OE_CORE_TRACE("\t Image count:");
+		OE_CORE_TRACE("\t\tMinimum image count: {0}", support.Capabilities.minImageCount);
+		OE_CORE_TRACE("\t\tMaximum image count: {0}", support.Capabilities.maxImageCount);
+		OE_CORE_TRACE("\t Current extent:");
+		OE_CORE_TRACE("\t\tWidth: {0}", support.Capabilities.currentExtent.width);
+		OE_CORE_TRACE("\t\tHeight: {0}", support.Capabilities.currentExtent.height);
+		OE_CORE_TRACE("\t Minimum extent:");
+		OE_CORE_TRACE("\t\tWidth: {0}", support.Capabilities.minImageExtent.width);
+		OE_CORE_TRACE("\t\tHeight: {0}", support.Capabilities.minImageExtent.height);
+		OE_CORE_TRACE("\t Maximum extent:");
+		OE_CORE_TRACE("\t\tWidth: {0}", support.Capabilities.maxImageExtent.width);
+		OE_CORE_TRACE("\t\tHeight: {0}", support.Capabilities.maxImageExtent.height);
+		OE_CORE_TRACE("\t Maximum image array layers: {0}", support.Capabilities.maxImageArrayLayers);
+		OE_CORE_TRACE("-------------------------------------------------------");
 
 		support.Formats = physicalDevice.getSurfaceFormatsKHR(surface);
 

@@ -36,6 +36,11 @@ namespace OpenEngine {
 		{
 			s_RendererAPI->DrawLines(vertexArray, vertexCount);
 		}
+
+		static void Render()
+		{
+			s_RendererAPI->Render();
+		}
 	private:
 		static RendererAPI* s_RendererAPI;
 	};

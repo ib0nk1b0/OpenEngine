@@ -194,6 +194,7 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanBuffer.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanCommands.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanContext.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanFramebuffer.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanGraphicsPipeline.h" />
@@ -657,6 +658,7 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanBuffer.cpp" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanCommands.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanContext.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanFramebuffer.cpp" />
     <ClCompile Include="src\Platform\Vulkan\VulkanGraphicsPipeline.cpp" />

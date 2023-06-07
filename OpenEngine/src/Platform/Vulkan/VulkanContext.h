@@ -19,6 +19,16 @@ namespace OpenEngine {
 		{
 			return GraphicsFamily.has_value() && PresentFamily.has_value();
 		}
+
+		uint32_t GetGraphicsFamily()
+		{
+			return GraphicsFamily.has_value() ? GraphicsFamily.value() : 0;
+		}
+
+		uint32_t GetPresentFamily()
+		{
+			return PresentFamily.has_value() ? PresentFamily.value() : 0;
+		}
 	};
 
 	struct SwapChainSupportDetails

@@ -6,13 +6,49 @@
 #include "OpenEngine/Events/KeyEvent.h"
 
 #include "Platform/OpenGL/OpenGLContext.h"
+
+//#include "Platform/Vulkan/VulkanCommands.h"
 #include "Platform/Vulkan/VulkanContext.h"
-#include "Platform/Vulkan/VulkanFramebuffer.h"
+//#include "Platform/Vulkan/VulkanFramebuffer.h"
 
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_glfw.cpp>
 
 namespace OpenEngine {
+
+	// TODO: MOVE THESE SOMEWHERE ELSE
+	// VULKAN FUNCTIONS THAT I DON'T UNDERSTAND
+	//----------------------------------------------------------------
+	/*vk::Semaphore MakeSemaphore(vk::Device device)
+	{
+		vk::SemaphoreCreateInfo semaphoreCreateInfo = {};
+		semaphoreCreateInfo.flags = vk::SemaphoreCreateFlags();
+
+		try {
+			return device.createSemaphore(semaphoreCreateInfo);
+		}
+		catch (vk::SystemError error)
+		{
+			OE_CORE_ASSERT(false, "");
+			return nullptr;
+		}
+	}
+
+	vk::Fence MakeFence(vk::Device device)
+	{
+		vk::FenceCreateInfo fenceCreateInfo = {};
+		fenceCreateInfo.flags = vk::FenceCreateFlags();
+
+		try {
+			return device.createFence(fenceCreateInfo);
+		}
+		catch (vk::SystemError error)
+		{
+			OE_CORE_ASSERT(false, "");
+			return nullptr;
+		}
+	}*/
+	//----------------------------------------------------------------
 
 	static uint8_t s_GLFWWindowCount = 0;
 
@@ -31,10 +67,10 @@ namespace OpenEngine {
 		OE_PROFILE_FUNCTION();
 
 		Init(props);
-		InitVulkanInstance();
+		/*InitVulkanInstance();
 		InitVulkanDevice();
 		InitVulkanPipeline();
-		FinializeSetup();
+		FinializeSetup();*/
 	}
 
 	WindowsWindow::~WindowsWindow()
@@ -43,6 +79,44 @@ namespace OpenEngine {
 
 		Shutdown();
 	}
+
+	/*void WindowsWindow::Render()
+	{
+		m_DeviceSpec.Device.waitForFences(1, &m_InFilghtFence, VK_TRUE, UINT64_MAX);
+		m_DeviceSpec.Device.resetFences(1, &m_InFilghtFence);
+
+		uint32_t imageIndex{ m_DeviceSpec.Device.acquireNextImageKHR(m_SwapchainSpec.Swapchain, UINT64_MAX, m_ImageAvailable, nullptr).value };
+
+		vk::CommandBuffer commandBuffer = m_SwapchainSpec.Frames[imageIndex].CommandBuffer;
+		commandBuffer.reset();
+
+		RecordDrawCalls(commandBuffer, imageIndex);
+
+		vk::SubmitInfo submitInfo = {};
+		vk::Semaphore waitSemaphores[] = { m_ImageAvailable };
+		vk::PipelineStageFlags waitStages[] = { vk::PipelineStageFlagBits::eColorAttachmentOutput };
+		submitInfo.waitSemaphoreCount = 1;
+		submitInfo.pWaitSemaphores = waitSemaphores;
+		submitInfo.pWaitDstStageMask = waitStages;
+		submitInfo.commandBufferCount = 1;
+		submitInfo.pCommandBuffers = &commandBuffer;
+		vk::Semaphore signalSemaphores[] = { m_RenderFinished };
+		submitInfo.signalSemaphoreCount = 1;
+		submitInfo.pSignalSemaphores = signalSemaphores;
+
+		m_DeviceSpec.GraphicsQueue.submit(submitInfo, m_InFilghtFence);
+
+		vk::PresentInfoKHR presentInfo = {};
+		presentInfo.waitSemaphoreCount = 1;
+		presentInfo.pWaitSemaphores = signalSemaphores;
+		vk::SwapchainKHR swapchains[] = { m_SwapchainSpec.Swapchain };
+		presentInfo.swapchainCount = 1;
+		presentInfo.pSwapchains = swapchains;
+		presentInfo.pImageIndices = &imageIndex;
+
+		m_DeviceSpec.PresentQueue.presentKHR(presentInfo);
+
+	}*/
 
 	void WindowsWindow::Init(const WindowProps& props)
 	{
@@ -168,23 +242,20 @@ namespace OpenEngine {
 		}
 	}
 
-	void WindowsWindow::InitVulkanInstance()
+	/*void WindowsWindow::InitVulkanInstance()
 	{
 		m_VulkanInstance = VulkanContext::MakeInstance(m_Data.Title.c_str());
 		m_VulkanDLD = vk::DispatchLoaderDynamic(m_VulkanInstance, vkGetInstanceProcAddr);
 		
-		if (OE_DEBUG)
-			m_VulkanDebugMessenger = VulkanContext::MakeDebugMessenger(m_VulkanInstance, m_VulkanDLD);
+		m_VulkanDebugMessenger = VulkanContext::MakeDebugMessenger(m_VulkanInstance, m_VulkanDLD);
 
 		VkSurfaceKHR cStyleSurface;
 		if (glfwCreateWindowSurface(m_VulkanInstance, m_Window, nullptr, &cStyleSurface) != VK_SUCCESS)
 		{
-			if (OE_DEBUG)
-				OE_CORE_WARN("Failed to abstract the glfw surface for Vulkan!");
+			OE_CORE_WARN("Failed to abstract the glfw surface for Vulkan!");
 		}
 
-		if (OE_DEBUG)
-			OE_CORE_INFO("Successfully abstracted the glfw surface for Vulkan!");
+		OE_CORE_INFO("Successfully abstracted the glfw surface for Vulkan!");
 
 		m_Surface = cStyleSurface;
 	}
@@ -226,7 +297,48 @@ namespace OpenEngine {
 		framebufferInput.SwapchainExtent = m_SwapchainSpec.Extent;
 
 		VulkanFramebuffer::MakeFramebuffer(framebufferInput, m_SwapchainSpec.Frames);
+		m_CommandPool = VulkanCommands::MakeCommandPool(m_DeviceSpec.Device, m_DeviceSpec.PhysicalDevice, m_Surface);
+		VulkanCommands::CommandBufferInputChunk inputChunk = { m_DeviceSpec.Device, m_CommandPool, m_SwapchainSpec.Frames };
+		m_MainCommandBuffer = VulkanCommands::MakeCommandBuffer(inputChunk);
+
+		m_InFilghtFence = MakeFence(m_DeviceSpec.Device);
+		m_ImageAvailable = MakeSemaphore(m_DeviceSpec.Device);
+		m_RenderFinished = MakeSemaphore(m_DeviceSpec.Device);
 	}
+
+	void WindowsWindow::RecordDrawCalls(vk::CommandBuffer commandBuffer, uint32_t imageIndex)
+	{
+		vk::CommandBufferBeginInfo beginInfo = {};
+		try
+		{
+			commandBuffer.begin(beginInfo);
+		}
+		catch (vk::SystemError error)
+		{
+			OE_CORE_ASSERT(false, "Failed to begin command buffer.");
+		}
+
+		vk::RenderPassBeginInfo renderPassBeginInfo = {};
+		renderPassBeginInfo.renderPass = m_PipelineSpecification.RenderPass;
+		renderPassBeginInfo.framebuffer = m_SwapchainSpec.Frames[imageIndex].FrameBuffer;
+		renderPassBeginInfo.renderArea.offset.x = 0;
+		renderPassBeginInfo.renderArea.offset.y = 0;
+		renderPassBeginInfo.renderArea.extent = m_SwapchainSpec.Extent;
+
+		vk::ClearValue clearColor = { std::array<float, 4>{ 1.0f, 0.0f, 1.0f, 1.0f } };
+		renderPassBeginInfo.clearValueCount = 1;
+		renderPassBeginInfo.pClearValues = &clearColor;
+
+		commandBuffer.beginRenderPass(&renderPassBeginInfo, vk::SubpassContents::eInline);
+
+		commandBuffer.bindPipeline(vk::PipelineBindPoint::eGraphics, m_PipelineSpecification.Pipeline);
+
+		commandBuffer.draw(3, 1, 0, 0);
+
+		commandBuffer.endRenderPass();
+
+		commandBuffer.end();
+	}*/
 
 	void WindowsWindow::Shutdown()
 	{
@@ -246,14 +358,20 @@ namespace OpenEngine {
 			m_DeviceSpec.Device.destroyFramebuffer(frame.FrameBuffer);
 		}
 
+		m_DeviceSpec.Device.destroyCommandPool(m_CommandPool);
+		m_DeviceSpec.Device.destroyFence(m_InFilghtFence);
 		m_DeviceSpec.Device.destroyPipeline(m_PipelineSpecification.Pipeline);
 		m_DeviceSpec.Device.destroyPipelineLayout(m_PipelineSpecification.Layout);
 		m_DeviceSpec.Device.destroyRenderPass(m_PipelineSpecification.RenderPass);
+		m_DeviceSpec.Device.destroySemaphore(m_ImageAvailable);
+		m_DeviceSpec.Device.destroySemaphore(m_RenderFinished);
 		m_DeviceSpec.Device.destroySwapchainKHR(m_SwapchainSpec.Swapchain);
 		m_DeviceSpec.Device.destroy();
+
 		m_VulkanInstance.destroySurfaceKHR(m_Surface);
 		m_VulkanInstance.destroyDebugUtilsMessengerEXT(m_VulkanDebugMessenger, nullptr, m_VulkanDLD);
 		m_VulkanInstance.destroy();
+
 	}
 
 	void WindowsWindow::OnUpdate()
