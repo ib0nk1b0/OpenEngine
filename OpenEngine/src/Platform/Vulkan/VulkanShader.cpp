@@ -13,8 +13,8 @@ namespace OpenEngine {
 	{
 	}
 
-	VulkanShader::VulkanShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
-		: m_Name(name)
+	VulkanShader::VulkanShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath)
+		: m_Name(name), m_VertexPath(vertexPath), m_FragmentPath(fragmentPath)
 	{
 	}
 
@@ -37,23 +37,37 @@ namespace OpenEngine {
 		return result;
 	}
 
-	vk::ShaderModule VulkanShader::CreateModule(const std::string& filepath, vk::Device device)
+	std::pair<vk::ShaderModule, vk::ShaderModule> VulkanShader::CreateModules(vk::Device device)
 	{
-		std::vector<char> sourceCode = ReadFile(filepath);
+		std::pair<vk::ShaderModule, vk::ShaderModule> result;
 
-		vk::ShaderModuleCreateInfo moduleInfo = {};
-		moduleInfo.flags = vk::ShaderModuleCreateFlags();
-		moduleInfo.codeSize = sourceCode.size();
-		moduleInfo.pCode = reinterpret_cast<const uint32_t*>(sourceCode.data());
+		{
+			std::vector<char> sourceCode = ReadFile(m_VertexPath);
 
-		try
-		{
-			return device.createShaderModule(moduleInfo);
+			vk::ShaderModuleCreateInfo moduleInfo = {};
+			moduleInfo.flags = vk::ShaderModuleCreateFlags();
+			moduleInfo.codeSize = sourceCode.size();
+			moduleInfo.pCode = reinterpret_cast<const uint32_t*>(sourceCode.data());
+
+			vk::ShaderModule shaderModule = device.createShaderModule(moduleInfo);
+
+			result.first = shaderModule;
 		}
-		catch (vk::SystemError error)
+
 		{
-			OE_CORE_ASSERT(false, "Failed to create shader module!");
+			std::vector<char> sourceCode = ReadFile(m_FragmentPath);
+
+			vk::ShaderModuleCreateInfo moduleInfo = {};
+			moduleInfo.flags = vk::ShaderModuleCreateFlags();
+			moduleInfo.codeSize = sourceCode.size();
+			moduleInfo.pCode = reinterpret_cast<const uint32_t*>(sourceCode.data());
+
+			vk::ShaderModule shaderModule = device.createShaderModule(moduleInfo);
+
+			result.second = shaderModule;
 		}
+
+		return result;
 	}
 
 #if 0

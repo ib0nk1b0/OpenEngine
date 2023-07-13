@@ -21,10 +21,14 @@ namespace OpenEngine {
 
 	void VulkanVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
 	{
+		vertexBuffer->Bind();
+		m_VertexBuffers.push_back(vertexBuffer);
 	}
 
 	void VulkanVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer)
 	{
+		indexBuffer->Bind();
+		m_IndexBuffer = indexBuffer;
 	}
 
 }

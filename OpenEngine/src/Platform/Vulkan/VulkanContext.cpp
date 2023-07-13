@@ -29,7 +29,6 @@ namespace OpenEngine {
 	{
 		std::vector<vk::ExtensionProperties> supportedExtensions = vk::enumerateInstanceExtensionProperties();
 
-		
 		OE_CORE_INFO("Checking for supported extensions...");
 		OE_CORE_TRACE("Device can support the following extensions");
 		for (auto supportedExtension : supportedExtensions)

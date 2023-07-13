@@ -8,8 +8,15 @@
 #include "OpenEngine/Core/Application.h"
 
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 namespace OpenEngine {
+
+	struct PushConstantData
+	{
+		glm::vec2 Offset;
+		alignas(16) glm::vec4 Color;
+	};
 
 	// TODO: MOVE THESE SOMEWHERE ELSE
 	// VULKAN FUNCTIONS THAT I DON'T UNDERSTAND
@@ -155,6 +162,18 @@ namespace OpenEngine {
 
 	}
 
+	struct QuadVertex
+	{
+		glm::vec3 Position;
+		glm::vec4 Color;
+		//glm::vec2 TexCoord;
+		//float TexIndex;
+		//float Scale;
+
+		//// Editor only
+		//int EntityID;
+	};
+
 	void VulkanRendererAPI::RecordDrawCalls(vk::CommandBuffer commandBuffer, uint32_t imageIndex)
 	{
 		vk::CommandBufferBeginInfo beginInfo = {};
@@ -174,13 +193,53 @@ namespace OpenEngine {
 		renderPassBeginInfo.renderArea.offset.y = 0;
 		renderPassBeginInfo.renderArea.extent = m_SwapchainSpec.Extent;
 
-		vk::ClearValue clearColor = { std::array<float, 4>{ 0.85f, 0.85f, 0.85f, 0.85f } };
+		vk::ClearValue clearColor = { std::array<float, 4>{ 1.0f, 0.0f, 1.0f, 1.0f } };
 		renderPassBeginInfo.clearValueCount = 1;
 		renderPassBeginInfo.pClearValues = &clearColor;
 
 		commandBuffer.beginRenderPass(&renderPassBeginInfo, vk::SubpassContents::eInline);
 
 		commandBuffer.bindPipeline(vk::PipelineBindPoint::eGraphics, m_PipelineSpecification.Pipeline);
+
+		/*for (int i = 0; i < 4; i++)
+		{
+			PushConstantData push = {};
+			push.Offset = { 0.0f, -0.4 + 0.25 * i };
+			push.Color = { 0.0f, 0.0f, 0.2 + 0.2 * i, 1.0f };
+
+			commandBuffer.pushConstants(m_PipelineSpecification.Layout, vk::ShaderStageFlagBits::eVertex, 0, sizeof (PushConstantData), &push);
+		}*/
+
+		vk::VertexInputBindingDescription binding = {};
+		binding.binding = 0;
+		binding.stride = sizeof(QuadVertex);
+		binding.inputRate = vk::VertexInputRate::eVertex;
+
+		vk::VertexInputAttributeDescription attributes[] = {
+			{
+				0,
+				binding.binding,
+				vk::Format::eR32G32B32Sfloat,
+				0
+			},
+			{
+				1,
+				binding.binding,
+				vk::Format::eR32G32B32A32Sfloat,
+				4 * sizeof(float)
+			}
+		};
+		
+		vk::PipelineVertexInputStateCreateInfo vertexInfo = {};
+		vertexInfo.vertexBindingDescriptionCount = 1;
+		vertexInfo.pVertexBindingDescriptions = &binding;
+		vertexInfo.vertexAttributeDescriptionCount = 2;
+		vertexInfo.pVertexAttributeDescriptions = attributes;
+		
+		
+
+		//commandBuffer.setVertexInputEXT(binding, attributes);
+		//commandBuffer.bindVertexBuffers(0, )
 
 		commandBuffer.draw(3, 1, 0, 0);
 

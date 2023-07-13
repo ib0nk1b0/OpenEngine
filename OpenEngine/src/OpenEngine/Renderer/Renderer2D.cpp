@@ -197,7 +197,7 @@ namespace OpenEngine {
 		s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
 
 		s_Data.QuadVertexBufferBase = new QuadVertex[s_Data.MaxQuadVerticies];
-
+#if 0
 		// Circles
 		s_Data.CircleVertexArray = VertexArray::Create();
 
@@ -225,7 +225,7 @@ namespace OpenEngine {
 		s_Data.LineVertexArray->AddVertexBuffer(s_Data.LineVertexBuffer);
 
 		s_Data.LineVertexBufferBase = new LineVertex[s_Data.MaxQuadVerticies];
-
+#endif
 		uint32_t* quadIndicies = new uint32_t[s_Data.MaxQuadIndicies];
 
 		uint32_t offset = 0;
@@ -244,16 +244,16 @@ namespace OpenEngine {
 
 		Ref<IndexBuffer> quadIB = IndexBuffer::Create(quadIndicies, s_Data.MaxQuadIndicies);
 		s_Data.QuadVertexArray->SetIndexBuffer(quadIB);
-		s_Data.CircleVertexArray->SetIndexBuffer(quadIB);
+		//s_Data.CircleVertexArray->SetIndexBuffer(quadIB);
 		delete[] quadIndicies;
 
 		s_Data.WhiteTexture = Texture2D::Create(1, 1);
 		uint32_t whiteTextureData = 0xffffffff;
 		s_Data.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
-		s_Data.QuadShader = Shader::Create("assets/shaders/Renderer2D_Quad.glsl");
-		s_Data.CircleShader = Shader::Create("assets/shaders/Renderer2D_Circle.glsl");
-		s_Data.LineShader = Shader::Create("assets/shaders/Renderer2D_Line.glsl");
+		s_Data.QuadShader = Shader::Create("");
+		//s_Data.CircleShader = Shader::Create("assets/shaders/Renderer2D_Circle.glsl");
+		//s_Data.LineShader = Shader::Create("assets/shaders/Renderer2D_Line.glsl");
 
 		// Set all texture slots to 0
 		s_Data.TextureSlots[0] = s_Data.WhiteTexture;

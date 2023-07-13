@@ -15,7 +15,7 @@ namespace OpenEngine {
 	{
 	public:
 		VulkanShader(const std::string& filepath);
-		VulkanShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
+		VulkanShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath);
 		virtual ~VulkanShader();
 
 		virtual void Bind() const override;
@@ -41,7 +41,7 @@ namespace OpenEngine {
 		void UploadUniformMat3(const std::string& name, const glm::mat3& matrix);
 		void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
 
-		static vk::ShaderModule CreateModule(const std::string& filepath, vk::Device device);
+		std::pair<vk::ShaderModule, vk::ShaderModule> CreateModules(vk::Device device);
 	private:
 		static std::vector<char> ReadFile(const std::string& filepath);
 		//std::unordered_map<GLenum, std::string> PreProcess(const std::string& source);
@@ -49,6 +49,7 @@ namespace OpenEngine {
 	private:
 		uint32_t m_RendererID;
 		std::string m_Name;
+		std::string m_VertexPath, m_FragmentPath;
 	};
 
 }

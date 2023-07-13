@@ -4,6 +4,13 @@
 
 #include "VertexArray.h"
 
+namespace vk {
+
+	class Device;
+	class PhysicalDevice;
+
+}
+
 namespace OpenEngine {
 
 	class RendererAPI
@@ -28,6 +35,8 @@ namespace OpenEngine {
 		static API GetAPI() { return s_API; }
 
 		virtual void Render() = 0;
+		virtual vk::Device GetDevice() = 0;
+		virtual vk::PhysicalDevice GetPhysicalDevice() = 0;
 	private:
 		static API s_API;
 	};

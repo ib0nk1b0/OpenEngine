@@ -4,6 +4,7 @@
 
 #include "Platform/Vulkan/VulkanContext.h"
 #include "Platform/Vulkan/VulkanGraphicsPipeline.h"
+#include "Platform/Vulkan/VulkanBuffer.h"
 
 #include <vulkan/vulkan.hpp>
 
@@ -22,6 +23,8 @@ namespace OpenEngine {
 		virtual void DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount) override;
 		
 		virtual void Render() override;
+		virtual vk::Device GetDevice() override { return m_DeviceSpec.Device; }
+		virtual vk::PhysicalDevice GetPhysicalDevice() override { return m_DeviceSpec.PhysicalDevice; }
 	private:
 		void InitVulkanInstance();
 		void InitVulkanDevice();
@@ -68,6 +71,7 @@ namespace OpenEngine {
 
 		vk::Fence m_InFilghtFence;
 		vk::Semaphore m_ImageAvailable, m_RenderFinished;
+		friend class VulkanVertexBuffer;
 	};
 
 }

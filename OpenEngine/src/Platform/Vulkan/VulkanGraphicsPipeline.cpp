@@ -3,7 +3,15 @@
 
 #include "Platform/Vulkan/VulkanShader.h"
 
+#include <glm/glm.hpp>
+
 namespace OpenEngine {
+
+	struct PushConstantData
+	{
+		glm::vec2 Offset;
+		alignas(16) glm::vec4 Color;
+	};
 
 	VulkanGraphicsPipeline::VulkanGraphicsPipeline()
 	{
@@ -12,10 +20,16 @@ namespace OpenEngine {
 
 	vk::PipelineLayout VulkanGraphicsPipeline::CreatePipelineLayout(vk::Device device)
 	{
+		vk::PushConstantRange pushConstantRange = {};
+		pushConstantRange.stageFlags = vk::ShaderStageFlagBits::eVertex;
+		pushConstantRange.offset = 0;
+		pushConstantRange.size = sizeof(PushConstantData);
+
 		vk::PipelineLayoutCreateInfo layoutInfo = {};
 		layoutInfo.flags = vk::PipelineLayoutCreateFlags();
 		layoutInfo.setLayoutCount = 0;
-		layoutInfo.pushConstantRangeCount = 0;
+		layoutInfo.pushConstantRangeCount = 1;
+		layoutInfo.pPushConstantRanges = &pushConstantRange;
 
 		try
 		{
@@ -88,8 +102,9 @@ namespace OpenEngine {
 		pipelineInfo.pInputAssemblyState = &inputAssemblyInfo;
 
 		// Vertex shader
-		Ref<VulkanShader> vertexShader = CreateRef<VulkanShader>("");
-		vk::ShaderModule vertexShaderModule = vertexShader->CreateModule(specification.VertexPath, specification.Device);
+		Ref<VulkanShader> shader = CreateRef<VulkanShader>("shader", specification.VertexPath, specification.FragmentPath);
+		auto [vertexShaderModule, fragmentShaderModule] = shader->CreateModules(specification.Device);
+
 		vk::PipelineShaderStageCreateInfo vertexShaderInfo = {};
 		vertexShaderInfo.flags = vk::PipelineShaderStageCreateFlags();
 		vertexShaderInfo.stage = vk::ShaderStageFlagBits::eVertex;
@@ -132,8 +147,6 @@ namespace OpenEngine {
 		pipelineInfo.pRasterizationState = &rasterizer;
 
 		// Fragment shader
-		Ref<VulkanShader> fragmentShader = CreateRef<VulkanShader>("");
-		vk::ShaderModule fragmentShaderModule = fragmentShader->CreateModule(specification.FragmentPath, specification.Device);
 		vk::PipelineShaderStageCreateInfo fragmentShaderInfo = {};
 		fragmentShaderInfo.flags = vk::PipelineShaderStageCreateFlags();
 		fragmentShaderInfo.stage = vk::ShaderStageFlagBits::eFragment;
@@ -197,7 +210,7 @@ namespace OpenEngine {
 
 		specification.Device.destroyShaderModule(vertexShaderModule);
 		specification.Device.destroyShaderModule(fragmentShaderModule);
-
+		
 		return output;
 	}
 
