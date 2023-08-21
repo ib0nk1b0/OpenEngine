@@ -134,12 +134,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\FlappyBird\Ground.h" />
+    <ClInclude Include="src\FlappyBird\Camera.h" />
     <ClInclude Include="src\EditorLayer.h" />
+    <ClInclude Include="src\FlappyBird\Player.h" />
     <ClInclude Include="src\Panels\ContentBrowserPanel.h" />
     <ClInclude Include="src\Panels\SceneHierarchy.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\FlappyBird\Ground.cpp" />
+    <ClCompile Include="src\FlappyBird\Camera.cpp" />
     <ClCompile Include="src\EditorLayer.cpp" />
+    <ClCompile Include="src\FlappyBird\Player.cpp" />
     <ClCompile Include="src\OpenEngineEditorApp.cpp" />
     <ClCompile Include="src\Panels\ContentBrowserPanel.cpp" />
     <ClCompile Include="src\Panels\SceneHierarchy.cpp" />

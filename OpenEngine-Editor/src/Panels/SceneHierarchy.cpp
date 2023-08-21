@@ -57,14 +57,21 @@ namespace OpenEngine {
 						Entity quad = m_Context->CreateEntity("Quad");
 						quad.AddComponent<SpriteRendererComponent>();
 					}
-
+					ImGui::Separator();
 					if (ImGui::BeginMenu("Camera"))
 					{
 						if (ImGui::MenuItem("Perspective"))
-							m_Context->CreateEntity("Perspective Camera").AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Perspective);
-
+						{
+							auto camera = m_Context->CreateEntity("Perspective Camera");
+							camera.AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Perspective);
+							camera.AddComponent<EditorRendererComponent>().Texture = Texture2D::Create("assets/textures/camera.png");
+						}
 						if (ImGui::MenuItem("Orthographic"))
-							m_Context->CreateEntity("Orthographic Camera").AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Orthographic);
+						{
+							auto camera = m_Context->CreateEntity("Orthographic Camera");
+							camera.AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Orthographic);
+							camera.AddComponent<EditorRendererComponent>().Texture = Texture2D::Create("assets/textures/camera.png");
+						}
 
 						ImGui::EndMenu();
 					}
@@ -91,26 +98,49 @@ namespace OpenEngine {
 	{
 		auto& tag = entity.GetComponent<TagComponent>().Tag;
 
-		ImGuiTreeNodeFlags flags = ((m_SelectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
-		flags |= ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_FramePadding;
-		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.f, 4.f));
-		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.c_str());
-		if (ImGui::IsItemClicked())
+		if (!entity.HasParent())
 		{
-			m_SelectionContext = entity;
-		}
+			ImGuiTreeNodeFlags flags = ((m_SelectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
+			flags |= ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_FramePadding;
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.f, 4.f));
+			bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.c_str());
+			if (ImGui::IsItemClicked())
+				m_SelectionContext = entity;
 
-		bool entityDeleted = false;
-		if (ImGui::BeginPopupContextItem())
-		{
-			if (ImGui::MenuItem("Delete Entity"))
-				entityDeleted = true;
+			bool entityDeleted = false;
+			if (ImGui::BeginPopupContextItem())
+			{
+				if (ImGui::MenuItem("Create Child"))
+					m_Context->CreateEntity("ChildEntity").SetParent(entity);
+				ImGui::Separator();
+				if (ImGui::MenuItem("Duplicate"))
+					m_Context->DuplicateEntity(entity);
+				if (ImGui::MenuItem("Delete"))
+					entityDeleted = true;
 
-			ImGui::EndPopup();
-		}
-
+				ImGui::EndPopup();
+			}
 		if (opened)
 		{
+			auto entites = m_Context->GetEntitiesWithParents();
+			for (auto entityID : entites)
+			{
+				Entity child = { entityID, m_Context.get() };
+				if (child.GetComponent<ParentComponent>().ParentID == entity.GetUUID())
+				{
+					if (entity.GetName() != child.GetComponent<ParentComponent>().ParentName)
+						child.GetComponent<ParentComponent>().ParentName = entity.GetName();
+
+					bool childOpened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)child, flags, child.GetComponent<TagComponent>().Tag.c_str());
+					
+					if (ImGui::IsItemClicked())
+						m_SelectionContext = child;
+
+					if (childOpened)
+						ImGui::TreePop();
+				}
+			}
+			
 			ImGui::TreePop();
 		}
 		ImGui::PopStyleVar();
@@ -119,6 +149,8 @@ namespace OpenEngine {
 		{
 			m_Context->DestroyEntity(entity);
 			if (m_SelectionContext == entity) m_SelectionContext = {};
+		}
+
 		}
 	}
 
@@ -207,10 +239,37 @@ namespace OpenEngine {
 			AddComponentItem<TransformComponent>("Transform", entity);
 			AddComponentItem<SpriteRendererComponent>("Sprite Renderer", entity);
 			AddComponentItem<CircleRendererComponent>("Circle Renderer", entity);
+			AddComponentItem<EditorRendererComponent>("Editor Renderer", entity);
 			AddComponentItem<CameraComponent>("Camera", entity);
 
 			ImGui::EndPopup();
 		}
+
+		DrawComponent<ParentComponent>("Parent", entity, [](auto& component)
+		{
+
+			std::vector<Entity> entites;
+			//Add change parent
+			if (ImGui::BeginCombo("Parent", "None"))
+			{
+				for (int i = 0; i < entites.size(); i++)
+				{
+					bool isSelected = false;
+					if (ImGui::Selectable(entites[i].GetName().c_str(), isSelected))
+					{
+						
+					}
+
+					if (isSelected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+
+				ImGui::EndCombo();
+			}
+			ImGui::OEVec3Controls("Offset", component.Offset);
+		});
 
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
 		{
@@ -258,6 +317,41 @@ namespace OpenEngine {
 			ImGui::OEDragFloat("Scale", &component.Scale, 0.1f, 1.0f, 50.0f, 150.0f);
 
 		});
+
+		DrawComponent<EditorRendererComponent>("Editor Renderer", entity, [=](auto& component)
+			{
+				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+
+				Ref<Texture2D> texturePreview;
+
+				if (!component.Texture)
+					texturePreview = Texture2D::Create("assets/icons/BlankTexture.png");
+				else
+				{
+					texturePreview = component.Texture;
+					ImGui::Text("%s", component.Texture->GetFilePath().c_str());
+					ImGui::SameLine();
+				}
+
+				ImGuiID id = 1;
+				ImGui::ImageButtonEx(id, (ImTextureID)texturePreview->GetRendererID(), { 32, 32 }, { 0, 1 }, { 1, 0 }, { 0, 0, 0, 0 }, { 1, 1, 1, 1 });
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+					{
+						const wchar_t* path = (const wchar_t*)payload->Data;
+						std::filesystem::path fullPath = std::filesystem::path(g_AssetPath) / path;
+						if (FileDialogs::IsValidFile(fullPath, ".png"))
+							component.Texture = Texture2D::Create(fullPath.string());
+					}
+					ImGui::EndDragDropTarget();
+				}
+
+				ImGui::SameLine();
+
+				if (ImGui::Button("Clear"))
+					component.Texture = nullptr;
+			});
 
 		DrawComponent<CircleRendererComponent>("Circle Renderer", m_SelectionContext, [](auto& component)
 		{

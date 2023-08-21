@@ -27,9 +27,6 @@
     <ClInclude Include="src\Sandbox2D.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="vendor\EnTT\include\entt.hpp">
-      <Filter>vendor\EnTT\include</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ball.cpp">

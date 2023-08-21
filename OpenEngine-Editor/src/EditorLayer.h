@@ -22,6 +22,9 @@ namespace OpenEngine {
 		void OnUpdate(Timestep ts) override;
 		virtual void OnImGuiRender() override;
 		void OnEvent(Event& e) override;
+
+		void ScenePlay();
+		void SceneStop();
 	private:
 		bool OnKeyPressed(KeyPressedEvent& e);
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
@@ -46,7 +49,8 @@ namespace OpenEngine {
 		bool m_DisplaySceneHierarchy = true;
 		bool m_DisplayProperties = true;
 
-		Ref<Scene> m_ActiveScene;
+		Ref<Scene> m_EditorScene;
+		Ref<Scene> m_RuntimeScene;
 		Ref<Framebuffer> m_Framebuffer;
 		EditorCamera m_EditorCamera;
 
@@ -63,6 +67,7 @@ namespace OpenEngine {
 		ContentBrowserPanel m_ContentBrowserPanel;
 
 		Ref<Texture2D> m_PlayIcon, m_StopIcon;
+		SceneState m_SceneState = SceneState::Edit;
 	};
 
 }

@@ -11,7 +11,7 @@
 #include <glm/gtx/quaternion.hpp>
 
 namespace OpenEngine {
-
+	
 	struct IDComponent
 	{
 		UUID ID;
@@ -54,6 +54,19 @@ namespace OpenEngine {
 		}
 	};
 
+	struct ParentComponent
+	{
+		std::string ParentName;
+		uint64_t ParentID{ 0 };
+
+		glm::vec3 Offset = { 0.0f, 0.0f, 0.0f };
+
+		ParentComponent() = default;
+		ParentComponent(const ParentComponent&) = default;
+		ParentComponent(std::string name, UUID parentID)
+			: ParentName(name), ParentID(parentID) {}
+	};
+
 	struct SpriteRendererComponent
 	{
 		glm::vec4 Color = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -80,6 +93,19 @@ namespace OpenEngine {
 			: Color(color) {}
 	};
 
+	struct EditorRendererComponent
+	{
+		glm::vec4 Color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		Ref<Texture2D> Texture;
+
+		EditorRendererComponent() = default;
+		EditorRendererComponent(const EditorRendererComponent&) = default;
+		EditorRendererComponent(const glm::vec4& color)
+			: Color(color) {}
+		EditorRendererComponent(const Ref<Texture2D>& texture)
+			: Texture(texture) {}
+	};
+
 	struct CameraComponent
 	{
 		SceneCamera Camera;
@@ -88,6 +114,21 @@ namespace OpenEngine {
 
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;
+	};
+
+	enum class BodyType { Static = 0, Dynamic };
+
+	struct RigidBody2DComponent
+	{
+		BodyType Type = BodyType::Static;
+
+		RigidBody2DComponent() = default;
+		RigidBody2DComponent(const RigidBody2DComponent&) = default;
+
+		RigidBody2DComponent(const BodyType& Type)
+			: Type(Type)
+		{
+		}
 	};
 
 	class ScriptableEntity;

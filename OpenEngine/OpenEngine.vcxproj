@@ -164,6 +164,8 @@
     <ClInclude Include="src\OpenEngine\ImGui\ImGuiExtended.h" />
     <ClInclude Include="src\OpenEngine\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\OpenEngine\Math\Math.h" />
+    <ClInclude Include="src\OpenEngine\Physics\Physics.h" />
+    <ClInclude Include="src\OpenEngine\Physics\World.h" />
     <ClInclude Include="src\OpenEngine\Renderer\Buffer.h" />
     <ClInclude Include="src\OpenEngine\Renderer\Camera.h" />
     <ClInclude Include="src\OpenEngine\Renderer\EditorCamera.h" />
@@ -624,6 +626,8 @@
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiExtended.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\OpenEngine\Math\Math.cpp" />
+    <ClCompile Include="src\OpenEngine\Physics\Physics.cpp" />
+    <ClCompile Include="src\OpenEngine\Physics\World.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\Buffer.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\Framebuffer.cpp" />
@@ -641,6 +645,7 @@
     <ClCompile Include="src\OpenEngine\Scene\Entity.cpp" />
     <ClCompile Include="src\OpenEngine\Scene\Scene.cpp" />
     <ClCompile Include="src\OpenEngine\Scene\SceneCamera.cpp" />
+    <ClCompile Include="src\OpenEngine\Serialization\Serializer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp" />

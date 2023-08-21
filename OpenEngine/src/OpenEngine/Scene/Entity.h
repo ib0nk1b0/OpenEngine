@@ -47,6 +47,25 @@ namespace OpenEngine {
 
 		UUID GetUUID() { return GetComponent<IDComponent>().ID; }
 		glm::mat4 GetTransform() { return GetComponent<TransformComponent>().GetTransform(); }
+		glm::vec3 GetTranslation() { return GetComponent<TransformComponent>().Translation; }
+		glm::vec3 GetScale() { return GetComponent<TransformComponent>().Scale; }
+		glm::vec3 GetRotation() { return GetComponent<TransformComponent>().Rotation; }
+		std::string GetName() { return GetComponent<TagComponent>().Tag; }
+		bool HasParent()
+		{
+			return !GetComponent<ParentComponent>().ParentName.empty();
+		}
+
+		Entity FindEntityByName(const std::string& name) { return m_Scene->GetEntityByName(name); }
+
+		void SetParent(Entity parent)
+		{
+			if (!HasComponent<ParentComponent>())
+				AddComponent<ParentComponent>();
+			auto& parentComponent = GetComponent<ParentComponent>();
+			parentComponent.ParentName = parent.GetName();
+			parentComponent.ParentID = parent.GetUUID();
+		}
 
 		bool operator==(const Entity& other) const { return m_EntityHandle == other.m_EntityHandle && m_Scene == other.m_Scene; }
 		bool operator!=(const Entity& other) const { return !(*this == other); }

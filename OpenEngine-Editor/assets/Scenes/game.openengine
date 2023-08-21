@@ -1,0 +1,89 @@
+{
+	"Entities": [
+		{
+			"ID": 8135343853828962267,
+			"TagComponent": {
+				"Tag": "Quad"
+			},
+			"ParentComponent": {
+				"ParentName": "",
+				"ParentID": 0,
+				"Offset": [0.000000, 0.000000, 0.000000]
+			},
+			"TransformComponent": {
+				"Translation": [-1.700000, -1.900000, 0.000000],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [0.500000, 0.500000, 1.000000]
+			},
+			"SpriteRendererComponent": {
+				"Color": [0.076369, 0.868726, 0.010062, 1.000000]
+			}
+		},
+		{
+			"ID": 7770029882925706037,
+			"TagComponent": {
+				"Tag": "Block"
+			},
+			"ParentComponent": {
+				"ParentName": "",
+				"ParentID": 0,
+				"Offset": [0.000000, 0.000000, 0.000000]
+			},
+			"TransformComponent": {
+				"Translation": [2.000000, 0.000000, 0.000000],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [1.500000, 4.000000, 1.000000]
+			},
+			"SpriteRendererComponent": {
+				"Color": [0.000000, 0.000000, 1.000000, 1.000000]
+			}
+		},
+		{
+			"ID": 18314600617434442609,
+			"TagComponent": {
+				"Tag": "Camera"
+			},
+			"ParentComponent": {
+				"ParentName": "Player",
+				"ParentID": 17768638948225150745,
+				"Offset": [0.000000, 0.000000, 0.100000]
+			},
+			"TransformComponent": {
+				"Translation": [0.000000, 0.000000, 0.100000],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [1.000000, 1.000000, 1.806148]
+			},
+			"EditorRendererComponent": {
+				"Color": [1.000000, 1.000000, 1.000000, 1.000000],
+				"Texture": "assets/textures/camera.png"
+			},
+			"CameraComponent": {
+				"ProjectionType": "Orthographic",
+				"Size": 10.000000,
+				"Near": -1.000000,
+				"Far": 1.000000,
+				"Primary": true,
+				"FixedAspectRatio": false
+			}
+		},
+		{
+			"ID": 17768638948225150745,
+			"TagComponent": {
+				"Tag": "Player"
+			},
+			"ParentComponent": {
+				"ParentName": "",
+				"ParentID": 0,
+				"Offset": [0.000000, 0.000000, 0.000000]
+			},
+			"TransformComponent": {
+				"Translation": [0.000000, 0.000000, 0.000000],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [1.000000, 1.000000, 1.000000]
+			},
+			"SpriteRendererComponent": {
+				"Color": [0.915058, 0.749250, 0.409833, 1.000000]
+			}
+		}
+	]
+}

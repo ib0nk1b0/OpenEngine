@@ -12,6 +12,10 @@
 
 #include <EnTT/include/entt.hpp>
 
+#include "FlappyBird/Player.h"
+#include "FlappyBird/Camera.h"
+#include "FlappyBird/Ground.h"
+
 namespace OpenEngine {
 
 	extern const std::filesystem::path g_AssetPath;
@@ -34,56 +38,12 @@ namespace OpenEngine {
 		fbSpec.Height = 900;
 		m_Framebuffer = Framebuffer::Create(fbSpec);
 
-		m_ActiveScene = CreateRef<Scene>();
+		m_EditorScene = CreateRef<Scene>();
+		m_RuntimeScene = CreateRef<Scene>();
 
-		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+		m_SceneHierarchyPanel.SetContext(m_EditorScene);
 
-		m_EditorCamera = EditorCamera(60.0f, 1.778f, 0.1f, 1000.0f);
-
-#if 0
-		class PlayerMovementSctipt : public ScriptableEntity
-		{
-		public:
-			void OnUpdate(Timestep ts)
-			{
-				float speed = 2.0f;
-				auto& translation = GetComponent<TransformComponent>().Translation;
-				if (Input::IsKeyPressed(Key::W))
-					translation.y += speed * ts;
-				if (Input::IsKeyPressed(Key::A))
-					translation.x -= speed * ts;
-				if (Input::IsKeyPressed(Key::S))
-					translation.y -= speed * ts;
-				if (Input::IsKeyPressed(Key::D))
-					translation.x += speed * ts;
-			}
-		};
-
-		class PlayerMovementSctipt2 : public ScriptableEntity
-		{
-		public:
-			void OnUpdate(Timestep ts)
-			{
-				float speed = 2.0f;
-				auto& translation = GetComponent<TransformComponent>().Translation;
-				if (Input::IsKeyPressed(Key::W))
-					translation.y -= speed * ts;
-				if (Input::IsKeyPressed(Key::A))
-					translation.x += speed * ts;
-				if (Input::IsKeyPressed(Key::S))
-					translation.y += speed * ts;
-				if (Input::IsKeyPressed(Key::D))
-					translation.x -= speed * ts;
-			}
-		};
-
-		OpenScene("assets/Scenes/Test.openengine");
-		Entity player = m_ActiveScene->CreateEntity("Player");
-		player.AddComponent<NativeScriptComponent>().Bind<PlayerMovementSctipt>();
-		player.AddComponent<SpriteRendererComponent>();
-		m_ActiveScene->DuplicateEntity(player).AddComponent<NativeScriptComponent>().Bind<PlayerMovementSctipt2>();
-		m_ActiveScene->DuplicateEntity(m_ActiveScene->GetEntityByName("Quad"));
-#endif
+		m_EditorCamera = EditorCamera(60.0f, 1.778f, 0.1f, 1000.0f);		
 	}
 
 	void EditorLayer::OnDetach()
@@ -107,13 +67,13 @@ namespace OpenEngine {
 
 		m_Framebuffer->ClearColorAttachment(1, -1);
 
-		switch (m_ActiveScene->GetSceneState())
+		switch (m_SceneState)
 		{
 			case SceneState::Edit:
-				m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+				m_EditorScene->OnUpdateEditor(ts, m_EditorCamera);
 				break;
 			case SceneState::Play:
-				m_ActiveScene->OnUpdateRuntime(ts);
+				m_RuntimeScene->OnUpdateRuntime(ts);
 				break;
 		}
 
@@ -128,9 +88,9 @@ namespace OpenEngine {
 		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
 		{
 			int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
-			m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.get());
+			m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_EditorScene.get());
 		}
-		
+
 		m_Framebuffer->UnBind();
 	}
 
@@ -212,7 +172,7 @@ namespace OpenEngine {
 		}
 
 		//TODO: Rethink this approach to fix the camera not having correct aspectRatio until window is resized
-		m_ActiveScene->OnViewportResize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
+		m_EditorScene->OnViewportResize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 		m_EditorCamera.SetViewportSize(viewportPanelSize.x, viewportPanelSize.y);
 
 		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
@@ -229,7 +189,7 @@ namespace OpenEngine {
 		}
 
 		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
-		if (selectedEntity && m_GizmoType != -1 && m_ActiveScene->GetSceneState() != SceneState::Play)
+		if (selectedEntity && m_GizmoType != -1 && m_SceneState != SceneState::Play)
 		{
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();
@@ -283,6 +243,18 @@ namespace OpenEngine {
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<KeyPressedEvent>(OE_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
 		dispatcher.Dispatch<MouseButtonPressedEvent>(OE_BIND_EVENT_FN(EditorLayer::OnMouseButtonPressed));
+	}
+
+	void EditorLayer::ScenePlay()
+	{
+		m_SceneState = SceneState::Play;
+		m_EditorScene->CopyTo(m_RuntimeScene);
+	}
+
+	void EditorLayer::SceneStop()
+	{
+		m_SceneState = SceneState::Edit;
+		m_RuntimeScene = CreateRef<Scene>();
 	}
 
 	void EditorLayer::UI_MenuBar()
@@ -397,14 +369,22 @@ namespace OpenEngine {
 
 		ImGui::Begin("##Toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 		float size = ImGui::GetWindowHeight() - 4;
-		Ref<Texture2D> icon = m_ActiveScene->GetSceneState() == SceneState::Edit ? m_PlayIcon : m_StopIcon;
+		Ref<Texture2D> icon = m_SceneState == SceneState::Edit ? m_PlayIcon : m_StopIcon;
 		ImGui::SetCursorPosX(ImGui::GetWindowContentRegionMax().x * 0.5f - size * 0.5f);
 		if (ImGui::ImageButton((ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
 		{
-			if (m_ActiveScene->GetSceneState() == SceneState::Edit)
-				m_ActiveScene->SetSceneState(SceneState::Play);
-			else if (m_ActiveScene->GetSceneState() == SceneState::Play)
-				m_ActiveScene->SetSceneState(SceneState::Edit);
+			if (m_SceneState == SceneState::Edit)
+			{
+				if (m_EditorScene->GetFilepath() == "assets\\Scenes\\game.openengine")
+				{
+					if (!m_EditorScene->GetEntityByName("Player").HasComponent<NativeScriptComponent>())
+						m_EditorScene->GetEntityByName("Player").AddComponent<NativeScriptComponent>().Bind<Player>();
+				}
+
+				ScenePlay();
+			}
+			else if (m_SceneState == SceneState::Play)
+				SceneStop();
 		}
 		ImGui::PopStyleVar(2);
 		ImGui::PopStyleColor(3);
@@ -449,7 +429,7 @@ namespace OpenEngine {
 			}
 
 			// Gizmo shortcuts
-			if (m_ActiveScene->GetSceneState() == SceneState::Edit)
+			if (m_SceneState == SceneState::Edit)
 			{
 				case Key::Q:
 					m_GizmoType = -1;
@@ -484,10 +464,10 @@ namespace OpenEngine {
 
 	void EditorLayer::NewScene(const std::string& filepath)
 	{
-		m_ActiveScene = CreateRef<Scene>();
-		m_ActiveScene->SetFilepath(filepath);
-		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+		m_EditorScene = CreateRef<Scene>();
+		m_EditorScene->SetFilepath(filepath);
+		m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_SceneHierarchyPanel.SetContext(m_EditorScene);
 	}
 
 	void EditorLayer::OpenScene()
@@ -503,19 +483,19 @@ namespace OpenEngine {
 		{
 			NewScene(filepath.string());
 
-			Serializer serializer(m_ActiveScene);
+			Serializer serializer(m_EditorScene);
 			serializer.Deserialize(filepath.string());
 		}
 	}
 
 	void EditorLayer::SaveScene()
 	{
-		const std::string filepath = m_ActiveScene->GetFilepath();
+		const std::string filepath = m_EditorScene->GetFilepath();
 		if (filepath == "UntitledScene.openengine")
 			SaveSceneAs();
 		else
 		{
-			Serializer serializer(m_ActiveScene);
+			Serializer serializer(m_EditorScene);
 			serializer.Serialize(filepath);
 		}
 	}
@@ -525,8 +505,9 @@ namespace OpenEngine {
 		std::string filepath = FileDialogs::SaveFile("OpenEngine Scene (*.openengine)\0*.openengine\0");
 		if (!filepath.empty())
 		{
-			Serializer serializer(m_ActiveScene);
+			Serializer serializer(m_EditorScene);
 			serializer.Serialize(filepath);
+			m_EditorScene->SetFilepath(filepath);
 		}
 	}
 

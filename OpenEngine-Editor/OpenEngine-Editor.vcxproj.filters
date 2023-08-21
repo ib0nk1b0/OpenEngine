@@ -13,6 +13,9 @@
     <ClInclude Include="src\Panels\SceneHierarchy.h">
       <Filter>Panels</Filter>
     </ClInclude>
+    <ClInclude Include="src\FlappyBird\Player.h" />
+    <ClInclude Include="src\FlappyBird\Camera.h" />
+    <ClInclude Include="src\FlappyBird\Ground.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorLayer.cpp" />
@@ -23,5 +26,8 @@
     <ClCompile Include="src\Panels\SceneHierarchy.cpp">
       <Filter>Panels</Filter>
     </ClCompile>
+    <ClCompile Include="src\FlappyBird\Player.cpp" />
+    <ClCompile Include="src\FlappyBird\Camera.cpp" />
+    <ClCompile Include="src\FlappyBird\Ground.cpp" />
   </ItemGroup>
 </Project>

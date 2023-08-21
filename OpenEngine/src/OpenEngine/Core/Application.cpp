@@ -44,7 +44,7 @@ namespace OpenEngine {
 		s_Instance = this;
 
 		m_Window = Window::Create(WindowProps(m_Specification.Name));
-		//m_Window->SetVSync(false);
+		//m_Window->SetVSync(false); // V-SYNC //
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
 		if (!m_Specification.WorkingDirectory.empty())
@@ -133,7 +133,7 @@ namespace OpenEngine {
 
 			auto memAllocated = s_AllocationMetrics.TotalAllocated;
 
-			std::cout << s_AllocationMetrics.CurrentUsage() << std::endl;
+			//std::cout << s_AllocationMetrics.CurrentUsage() << std::endl;
 		}
 	}
 

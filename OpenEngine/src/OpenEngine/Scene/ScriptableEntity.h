@@ -14,6 +14,17 @@ namespace OpenEngine {
 		{
 			return m_Entity.GetComponent<T>();
 		}
+
+		glm::vec3& GetTranslation()
+		{
+			auto& translation = m_Entity.GetTranslation();
+			return translation;
+		}
+
+		Entity FindEntityByName(const std::string& name)
+		{
+			return m_Entity.FindEntityByName(name);
+		}
 	protected:
 		virtual void OnCreate() {}
 		virtual void OnDestroy() {}
