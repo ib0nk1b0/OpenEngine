@@ -60,6 +60,8 @@ namespace OpenEngine {
 		glm::vec2 m_ViewportSize{ 1.0f };
 		glm::vec2 m_ViewportBounds[2];
 
+		bool m_CursorEnabled = true;
+
 		int m_GizmoType = -1;
 
 		// Panels

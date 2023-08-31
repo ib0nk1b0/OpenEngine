@@ -12,6 +12,7 @@
 
 #include <EnTT/include/entt.hpp>
 
+#include "FPSCameraController.h"
 #include "FlappyBird/Player.h"
 #include "FlappyBird/Camera.h"
 #include "FlappyBird/Ground.h"
@@ -43,7 +44,7 @@ namespace OpenEngine {
 
 		m_SceneHierarchyPanel.SetContext(m_EditorScene);
 
-		m_EditorCamera = EditorCamera(60.0f, 1.778f, 0.1f, 1000.0f);		
+		m_EditorCamera = EditorCamera(60.0f, 1.778f, 0.1f, 1000.0f);
 	}
 
 	void EditorLayer::OnDetach()
@@ -247,14 +248,27 @@ namespace OpenEngine {
 
 	void EditorLayer::ScenePlay()
 	{
+		if (m_EditorScene->GetFilepath() == "assets\\Scenes\\game.openengine")
+		{
+			if (!m_EditorScene->GetEntityByName("Player").HasComponent<NativeScriptComponent>())
+				m_EditorScene->GetEntityByName("Player").AddComponent<NativeScriptComponent>().Bind<Player>();
+			if (!m_EditorScene->GetEntityByName("Camera").HasComponent<NativeScriptComponent>())
+				m_EditorScene->GetEntityByName("Camera").AddComponent<NativeScriptComponent>().Bind<FPSCameraController>();
+		}
+
 		m_SceneState = SceneState::Play;
 		m_EditorScene->CopyTo(m_RuntimeScene);
+		m_RuntimeScene->SetFilepath(m_EditorScene->GetFilepath());
+		m_SceneHierarchyPanel.SetContext(m_RuntimeScene);
+		m_RuntimeScene->OnRuntimeStart();
 	}
 
 	void EditorLayer::SceneStop()
 	{
 		m_SceneState = SceneState::Edit;
 		m_RuntimeScene = CreateRef<Scene>();
+		m_SceneHierarchyPanel.SetContext(m_EditorScene);
+		m_EditorScene->OnEditorStart();
 	}
 
 	void EditorLayer::UI_MenuBar()
@@ -323,6 +337,11 @@ namespace OpenEngine {
 
 		ImGui::Separator();
 		ImGui::Text("Frame Time: %f", m_FrameTime.GetMilliseconds());
+		
+		ImGui::Separator();
+		float gridSize = m_EditorScene->GetGridSize();
+		if (ImGui::OEDragFloat("Grid size", &gridSize, 1))
+			m_EditorScene->SetGridSize(gridSize);
 
 		ImGui::End();
 	}
@@ -374,15 +393,7 @@ namespace OpenEngine {
 		if (ImGui::ImageButton((ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
 		{
 			if (m_SceneState == SceneState::Edit)
-			{
-				if (m_EditorScene->GetFilepath() == "assets\\Scenes\\game.openengine")
-				{
-					if (!m_EditorScene->GetEntityByName("Player").HasComponent<NativeScriptComponent>())
-						m_EditorScene->GetEntityByName("Player").AddComponent<NativeScriptComponent>().Bind<Player>();
-				}
-
 				ScenePlay();
-			}
 			else if (m_SceneState == SceneState::Play)
 				SceneStop();
 		}
@@ -426,6 +437,37 @@ namespace OpenEngine {
 					SaveScene();
 
 				break;
+			}
+			case Key::F5:
+			{
+				if (control)
+				{
+					if (m_SceneState == SceneState::Edit)
+					{
+						ScenePlay();
+
+						break;
+					}
+					if (m_SceneState == SceneState::Play)
+					{
+						SceneStop();
+
+						break;
+					}
+				}
+
+				break;
+			}
+			case Key::Escape:
+			{
+				m_RuntimeScene->ToggleCursor();
+			}
+			case Key::G:
+			{
+				if (alt)
+				{
+					m_EditorScene->ToggleGrid();
+				}
 			}
 
 			// Gizmo shortcuts

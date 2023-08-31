@@ -30,37 +30,53 @@ namespace OpenEngine {
 
 	void Player::OnUpdate(Timestep ts)
 	{
-		/*if ((Input::IsKeyPressed(Key::Space) || Input::IsMouseButtonPressed(Mouse::ButtonLeft)) && m_Velocity.y <= 0.0f)
-			m_Velocity.y = m_Power;
-		else
-			m_Velocity.y -= m_Gravity;
+		Move(ts);
+	}
 
-		auto translation = GetComponent<TransformComponent>().Translation;
-		translation.x += m_Velocity.x * ts;
-		translation.y += m_Velocity.y * ts;
-		GetComponent<TransformComponent>().Translation = translation;
+	void Player::Move(Timestep ts)
+	{
+		auto& translation = GetComponent<TransformComponent>().Translation;
 
-		Entity ground = FindEntityByName("Ground");
-		if (CollisionQuads(FindEntityByName("Player"), ground))
-			OE_CORE_INFO("COLLISION");*/
-		float speed = 2.0f;
-		auto& transform = GetComponent<TransformComponent>();
-		//auto& translation = GetComponent<TransformComponent>().Translation;
-		//auto& translation = GetTranslation();
-		auto& translation = transform.Translation;
 		if (Input::IsKeyPressed(Key::W))
-			translation.y += speed * ts;
-		if (Input::IsKeyPressed(Key::A))
-			translation.x -= speed * ts;
+		{
+			translation.x -= GetForwardDirection().x * m_Speed * (float)ts;
+			translation.z += GetForwardDirection().z * m_Speed * (float)ts;
+		}
 		if (Input::IsKeyPressed(Key::S))
-			translation.y -= speed * ts;
+		{
+			translation.x += GetForwardDirection().x * m_Speed * (float)ts;
+			translation.z -= GetForwardDirection().z * m_Speed * (float)ts;
+		}
+		if (Input::IsKeyPressed(Key::A))
+		{
+			translation.x -= GetRightDirection().x * m_Speed * (float)ts;
+			translation.z += GetRightDirection().z * m_Speed * (float)ts;
+		}
 		if (Input::IsKeyPressed(Key::D))
-			translation.x += speed * ts;
+		{
+			translation.x += GetRightDirection().x * m_Speed * (float)ts;
+			translation.z -= GetRightDirection().z * m_Speed * (float)ts;
+		}
 	}
 
 	void Player::OnDestroy()
 	{
 
+	}
+
+	glm::vec3 Player::GetForwardDirection()
+	{
+		return glm::rotate(GetOrientation(), glm::vec3(0.0f, 0.0f, -1.0f));
+	}
+
+	glm::vec3 Player::GetRightDirection()
+	{
+		return glm::rotate(GetOrientation(), glm::vec3(1.0f, 0.0f, 0.0f));
+	}
+
+	glm::quat Player::GetOrientation()
+	{
+		return glm::quat(glm::vec3(GetComponent<TransformComponent>().Rotation.x, -GetComponent<TransformComponent>().Rotation.y, 0.0f));
 	}
 
 }

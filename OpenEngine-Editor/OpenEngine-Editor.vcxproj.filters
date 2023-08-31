@@ -16,6 +16,7 @@
     <ClInclude Include="src\FlappyBird\Player.h" />
     <ClInclude Include="src\FlappyBird\Camera.h" />
     <ClInclude Include="src\FlappyBird\Ground.h" />
+    <ClInclude Include="src\FPSCameraController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorLayer.cpp" />
@@ -29,5 +30,6 @@
     <ClCompile Include="src\FlappyBird\Player.cpp" />
     <ClCompile Include="src\FlappyBird\Camera.cpp" />
     <ClCompile Include="src\FlappyBird\Ground.cpp" />
+    <ClCompile Include="src\FPSCameraController.cpp" />
   </ItemGroup>
 </Project>

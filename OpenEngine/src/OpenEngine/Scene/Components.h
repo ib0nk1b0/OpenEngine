@@ -3,6 +3,7 @@
 #include "OpenEngine/Core/UUID.h"
 #include "OpenEngine/Renderer/Renderer2D.h"
 #include "OpenEngine/Scene/SceneCamera.h"
+#include "OpenEngine/Renderer/Renderer.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -106,6 +107,17 @@ namespace OpenEngine {
 			: Texture(texture) {}
 	};
 
+	enum class MeshType { Cube = 0 };
+
+	struct MeshComponent
+	{
+		MeshType Type = MeshType::Cube;
+		glm::vec3 Color = { 1.0f, 1.0f, 1.0f };
+
+		MeshComponent() = default;
+		MeshComponent(const MeshComponent&) = default;
+	};
+
 	struct CameraComponent
 	{
 		SceneCamera Camera;
@@ -129,6 +141,17 @@ namespace OpenEngine {
 			: Type(Type)
 		{
 		}
+	};
+
+	struct BoxColider2DComponent
+	{
+		glm::vec3 Size = { 1.0f, 1.0f, 1.0f };
+		glm::vec3 Offset = { 0.0f, 0.0f, 0.0f };
+
+		BoxColider2DComponent() = default;
+		BoxColider2DComponent(const BoxColider2DComponent&) = default;
+		BoxColider2DComponent(const glm::vec3& size, const glm::vec3& offset)
+			: Size(size), Offset(offset) {}
 	};
 
 	class ScriptableEntity;

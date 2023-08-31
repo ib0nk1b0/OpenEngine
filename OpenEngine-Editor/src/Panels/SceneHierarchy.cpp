@@ -58,6 +58,12 @@ namespace OpenEngine {
 						quad.AddComponent<SpriteRendererComponent>();
 					}
 					ImGui::Separator();
+					if (ImGui::MenuItem("Cube"))
+					{
+						Entity cube = m_Context->CreateEntity("Cube");
+						cube.AddComponent<MeshComponent>();
+					}
+					ImGui::Separator();
 					if (ImGui::BeginMenu("Camera"))
 					{
 						if (ImGui::MenuItem("Perspective"))
@@ -120,36 +126,36 @@ namespace OpenEngine {
 
 				ImGui::EndPopup();
 			}
-		if (opened)
-		{
-			auto entites = m_Context->GetEntitiesWithParents();
-			for (auto entityID : entites)
+			if (opened)
 			{
-				Entity child = { entityID, m_Context.get() };
-				if (child.GetComponent<ParentComponent>().ParentID == entity.GetUUID())
+				auto entites = m_Context->GetEntitiesWithParents();
+				for (auto entityID : entites)
 				{
-					if (entity.GetName() != child.GetComponent<ParentComponent>().ParentName)
-						child.GetComponent<ParentComponent>().ParentName = entity.GetName();
+					Entity child = { entityID, m_Context.get() };
+					if (child.GetComponent<ParentComponent>().ParentID == entity.GetUUID())
+					{
+						if (entity.GetName() != child.GetComponent<ParentComponent>().ParentName)
+							child.GetComponent<ParentComponent>().ParentName = entity.GetName();
 
-					bool childOpened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)child, flags, child.GetComponent<TagComponent>().Tag.c_str());
+						bool childOpened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)child, flags, child.GetComponent<TagComponent>().Tag.c_str());
 					
-					if (ImGui::IsItemClicked())
-						m_SelectionContext = child;
+						if (ImGui::IsItemClicked())
+							m_SelectionContext = child;
 
-					if (childOpened)
-						ImGui::TreePop();
+						if (childOpened)
+							ImGui::TreePop();
+					}
 				}
-			}
 			
-			ImGui::TreePop();
-		}
-		ImGui::PopStyleVar();
+				ImGui::TreePop();
+			}
+			ImGui::PopStyleVar();
 
-		if (entityDeleted)
-		{
-			m_Context->DestroyEntity(entity);
-			if (m_SelectionContext == entity) m_SelectionContext = {};
-		}
+			if (entityDeleted)
+			{
+				m_Context->DestroyEntity(entity);
+				if (m_SelectionContext == entity) m_SelectionContext = {};
+			}
 
 		}
 	}
@@ -231,7 +237,7 @@ namespace OpenEngine {
 		ImGui::SameLine();
 		ImGui::PushItemWidth(-1);
 
-		if (ImGui::Button("Add"))
+		if (ImGui::Button("+"))
 			ImGui::OpenPopup("AddComponent");
 
 		if (ImGui::BeginPopup("AddComponent"))
@@ -240,7 +246,10 @@ namespace OpenEngine {
 			AddComponentItem<SpriteRendererComponent>("Sprite Renderer", entity);
 			AddComponentItem<CircleRendererComponent>("Circle Renderer", entity);
 			AddComponentItem<EditorRendererComponent>("Editor Renderer", entity);
+			AddComponentItem<MeshComponent>("Mesh", entity);
 			AddComponentItem<CameraComponent>("Camera", entity);
+			AddComponentItem<RigidBody2DComponent>("RigidBody2D", entity);
+			AddComponentItem<BoxColider2DComponent>("BoxColider2D", entity);
 
 			ImGui::EndPopup();
 		}
@@ -353,6 +362,11 @@ namespace OpenEngine {
 					component.Texture = nullptr;
 			});
 
+		DrawComponent<MeshComponent>("Mesh", entity, [=](auto& component)
+		{
+			ImGui::ColorEdit3("Color", glm::value_ptr(component.Color));
+		});
+
 		DrawComponent<CircleRendererComponent>("Circle Renderer", m_SelectionContext, [](auto& component)
 		{
 			ImGui::OEColorEdit4("Color", glm::value_ptr(component.Color));
@@ -419,6 +433,38 @@ namespace OpenEngine {
 
 			ImGui::Checkbox("Camera Enabled", &component.Primary);
 			ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
+		});
+	
+		DrawComponent<RigidBody2DComponent>("RigidBody2D", entity, [](auto& component)
+		{
+			const char* bodyTypeStrings[] = { "Static", "Dynamic" };
+			const char* currentBodyTypeString = bodyTypeStrings[(int)component.Type];
+
+			if (ImGui::BeginCombo("BodyType", currentBodyTypeString))
+			{
+				for (int i = 0; i < 2; i++)
+				{
+					bool isSelected = currentBodyTypeString == bodyTypeStrings[i];
+					if (ImGui::Selectable(bodyTypeStrings[i], isSelected))
+					{
+						currentBodyTypeString = bodyTypeStrings[i];
+						component.Type = ((BodyType)i);
+					}
+
+					if (isSelected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+
+				ImGui::EndCombo();
+			}
+		});
+
+		DrawComponent<BoxColider2DComponent>("BoxColider2D", entity, [](auto& component)
+		{
+			ImGui::OEVec3Controls("Size", component.Size);
+			ImGui::OEVec3Controls("Offset", component.Offset);
 		});
 	}
 

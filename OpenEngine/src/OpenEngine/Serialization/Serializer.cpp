@@ -6,7 +6,7 @@
 namespace OpenEngine {
 
 #pragma region StaticFunctions
-
+	
 	static std::string Tab(uint32_t count = 1)
 	{
 		std::string result;
@@ -21,7 +21,7 @@ namespace OpenEngine {
 		return "\n";
 	}
 
-	static std::string GetJSONString(const std::string& label)
+	static std::string StartJSONObject(const std::string& label)
 	{
 		return Tab(3) + "\"" + label + "\": {" + NewLine() + Tab();
 	}
@@ -109,6 +109,28 @@ namespace OpenEngine {
 		if (type == "Perspective") return SceneCamera::ProjectionType::Perspective;
 
 		return SceneCamera::ProjectionType::Orthographic;
+	}
+
+	static std::string BodyTypeToString(BodyType type)
+	{
+		switch (type)
+		{
+		case BodyType::Static:
+			return "Static";
+			break;
+		case BodyType::Dynamic:
+			return "Dynamic";
+			break;
+		}
+
+		return "Static";
+	}
+
+	static BodyType BodyTypeFromString(const std::string& type)
+	{
+		if (type == "Static") return BodyType::Static;
+		if (type == "Dynamic") return BodyType::Dynamic;
+		return BodyType::Static;
 	}
 
 	static std::string Encode(glm::vec3& values)
@@ -209,7 +231,7 @@ namespace OpenEngine {
 				{
 					std::string tag = entity.GetComponent<TagComponent>().Tag.c_str();
 					text += Tab(3) + "\"ID\": " + std::to_string(entity.GetUUID()) + "," + NewLine();
-					text += GetJSONString("TagComponent");
+					text += StartJSONObject("TagComponent");
 					text += GetJSONString("Tag", tag, true);
 					text += Tab(2) + "}," + NewLine();
 				}
@@ -217,13 +239,20 @@ namespace OpenEngine {
 				if (entity.HasComponent<ParentComponent>())
 				{
 					auto& pc = entity.GetComponent<ParentComponent>();
-					
-					text += GetJSONString("ParentComponent");
+
+					text += StartJSONObject("ParentComponent");
 					text += GetJSONString("ParentName", pc.ParentName);
 					text += Tab(4) + "\"ParentID\": " + std::to_string(pc.ParentID) + "," + NewLine();
 					text += GetJSONString("Offset", Encode(pc.Offset), true);
-					
-					if (!entity.HasComponent<TransformComponent>() && !entity.HasComponent<SpriteRendererComponent>() && !entity.HasComponent<EditorRendererComponent>() && !entity.HasComponent<CircleRendererComponent>() && !entity.HasComponent<CameraComponent>())
+
+					if (!entity.HasComponent<TransformComponent>() &&
+						!entity.HasComponent<SpriteRendererComponent>() &&
+						!entity.HasComponent<EditorRendererComponent>() &&
+						!entity.HasComponent<CircleRendererComponent>() &&
+						!entity.HasComponent<MeshComponent>() &&
+						!entity.HasComponent<CameraComponent>() &&
+						!entity.HasComponent<RigidBody2DComponent>() &&
+						!entity.HasComponent<BoxColider2DComponent>())
 						text += Tab(2) + "}" + NewLine();
 					else
 						text += Tab(2) + "}," + NewLine();
@@ -233,11 +262,17 @@ namespace OpenEngine {
 				{
 					auto& tc = entity.GetComponent<TransformComponent>();
 
-					text += GetJSONString("TransformComponent");
+					text += StartJSONObject("TransformComponent");
 					text += GetJSONString("Translation", Encode(tc.Translation));
 					text += GetJSONString("Rotation", Encode(tc.Rotation));
 					text += GetJSONString("Scale", Encode(tc.Scale), true);
-					if (!entity.HasComponent<SpriteRendererComponent>() && !entity.HasComponent<EditorRendererComponent>() && !entity.HasComponent<CircleRendererComponent>() && !entity.HasComponent<CameraComponent>())
+					if (!entity.HasComponent<SpriteRendererComponent>() &&
+						!entity.HasComponent<EditorRendererComponent>() &&
+						!entity.HasComponent<CircleRendererComponent>() &&
+						!entity.HasComponent<MeshComponent>() &&
+						!entity.HasComponent<CameraComponent>() &&
+						!entity.HasComponent<RigidBody2DComponent>() &&
+						!entity.HasComponent<BoxColider2DComponent>())
 						text += Tab(2) + "}" + NewLine();
 					else
 						text += Tab(2) + "}," + NewLine();
@@ -246,7 +281,7 @@ namespace OpenEngine {
 				if (entity.HasComponent<SpriteRendererComponent>())
 				{
 					auto& src = entity.GetComponent<SpriteRendererComponent>();
-					text += GetJSONString("SpriteRendererComponent");
+					text += StartJSONObject("SpriteRendererComponent");
 
 					if (src.Texture)
 					{
@@ -278,7 +313,12 @@ namespace OpenEngine {
 					else
 						text += GetJSONString("Color", Encode(src.Color), true);
 
-					if (!entity.HasComponent<EditorRendererComponent>() && !entity.HasComponent<CircleRendererComponent>() && !entity.HasComponent<CameraComponent>())
+					if (!entity.HasComponent<EditorRendererComponent>() &&
+						!entity.HasComponent<CircleRendererComponent>() &&
+						!entity.HasComponent<MeshComponent>() &&
+						!entity.HasComponent<CameraComponent>() &&
+						!entity.HasComponent<RigidBody2DComponent>() &&
+						!entity.HasComponent<BoxColider2DComponent>())
 						text += Tab(2) + "}" + NewLine();
 					else
 						text += Tab(2) + "}," + NewLine();
@@ -287,7 +327,7 @@ namespace OpenEngine {
 				if (entity.HasComponent<EditorRendererComponent>())
 				{
 					auto& erc = entity.GetComponent<EditorRendererComponent>();
-					text += GetJSONString("EditorRendererComponent");
+					text += StartJSONObject("EditorRendererComponent");
 					if (erc.Texture)
 					{
 						std::string filepathOrginal = erc.Texture->GetFilePath();
@@ -317,7 +357,11 @@ namespace OpenEngine {
 					else
 						text += GetJSONString("Color", Encode(erc.Color), true);
 
-					if (!entity.HasComponent<CircleRendererComponent>() && !entity.HasComponent<CameraComponent>())
+					if (!entity.HasComponent<CircleRendererComponent>() &&
+						!entity.HasComponent<MeshComponent>() &&
+						!entity.HasComponent<CameraComponent>() &&
+						!entity.HasComponent<RigidBody2DComponent>() &&
+						!entity.HasComponent<BoxColider2DComponent>())
 						text += Tab(2) + "}" + NewLine();
 					else
 						text += Tab(2) + "}," + NewLine();
@@ -326,11 +370,28 @@ namespace OpenEngine {
 				if (entity.HasComponent<CircleRendererComponent>())
 				{
 					auto& crc = entity.GetComponent<CircleRendererComponent>();
-					text += GetJSONString("CircleRendererComponent");
+					text += StartJSONObject("CircleRendererComponent");
 					text += GetJSONString("Color", Encode(crc.Color));
 					text += GetJSONString("Thickness", crc.Thickness);
 					text += GetJSONString("Fade", crc.Fade, true);
-					if (!entity.HasComponent<CameraComponent>())
+					if (!entity.HasComponent<MeshComponent>() &&
+						!entity.HasComponent<CameraComponent>() &&
+						!entity.HasComponent<RigidBody2DComponent>() &&
+						!entity.HasComponent<BoxColider2DComponent>())
+						text += Tab(2) + "}" + NewLine();
+					else
+						text += Tab(2) + "}," + NewLine();
+				}
+
+				if (entity.HasComponent<MeshComponent>())
+				{
+					auto& mc = entity.GetComponent<MeshComponent>();
+					text += StartJSONObject("MeshComponent");
+					text += GetJSONString("Color", Encode(mc.Color), true);
+					
+					if (!entity.HasComponent<CameraComponent>() &&
+						!entity.HasComponent<RigidBody2DComponent>() &&
+						!entity.HasComponent<BoxColider2DComponent>())
 						text += Tab(2) + "}" + NewLine();
 					else
 						text += Tab(2) + "}," + NewLine();
@@ -342,7 +403,7 @@ namespace OpenEngine {
 					auto& camera = cc.Camera;
 					SceneCamera::ProjectionType projType = camera.GetProjectionType();
 
-					text += GetJSONString("CameraComponent");
+					text += StartJSONObject("CameraComponent");
 					text += GetJSONString("ProjectionType", ProjectionTypeToString(projType));
 					if (projType == SceneCamera::ProjectionType::Orthographic)
 					{
@@ -359,6 +420,35 @@ namespace OpenEngine {
 
 					text += GetJSONString("Primary", cc.Primary);
 					text += GetJSONString("FixedAspectRatio", cc.FixedAspectRatio, true);
+
+					if (!entity.HasComponent<RigidBody2DComponent>() &&
+						!entity.HasComponent<BoxColider2DComponent>())
+						text += Tab(2) + "}" + NewLine();
+					else
+						text += Tab(2) + "}," + NewLine();
+				}
+
+				if (entity.HasComponent<RigidBody2DComponent>())
+				{
+					auto& rgb2d = entity.GetComponent<RigidBody2DComponent>();
+					
+					text += StartJSONObject("RigidBody2DComponent");
+					text += GetJSONString("Type", BodyTypeToString(rgb2d.Type), true);
+
+					if (!entity.HasComponent<BoxColider2DComponent>())
+						text += Tab(2) + "}" + NewLine();
+					else
+						text += Tab(2) + "}," + NewLine();
+				}
+
+				if (entity.HasComponent<BoxColider2DComponent>())
+				{
+					auto& bc2d = entity.GetComponent<BoxColider2DComponent>();
+					
+					text += StartJSONObject("BoxColider2DComponent");
+					text += GetJSONString("Size", Encode(bc2d.Size));
+					text += GetJSONString("Offset", Encode(bc2d.Offset), true);
+
 					text += Tab(2) + "}" + NewLine();
 				}
 
@@ -450,6 +540,14 @@ namespace OpenEngine {
 					entity.GetComponent<CircleRendererComponent>().Fade = jsonCircleRenderer["Fade"].get<float>();
 				}
 
+				if (value.contains("MeshComponent"))
+				{
+					auto& jsonMeshComponent = value["MeshComponent"];
+					entity.AddComponent<MeshComponent>();
+
+					Decode(ConvertFloat4(jsonMeshComponent["Color"]), entity.GetComponent<MeshComponent>().Color);
+				}
+
 				if (value.contains("CameraComponent"))
 				{
 					auto& jsonCameraComponent = value["CameraComponent"];
@@ -475,6 +573,24 @@ namespace OpenEngine {
 					cameraComponent.Primary = jsonCameraComponent["Primary"].get<bool>();
 					cameraComponent.FixedAspectRatio = jsonCameraComponent["FixedAspectRatio"].get<bool>();
 				}
+			
+				if (value.contains("RigidBody2DComponent"))
+				{
+					auto& jsonRGBD2D = value["RigidBody2DComponent"];
+					auto& rgbd2DComponent = entity.AddComponent<RigidBody2DComponent>();
+
+					rgbd2DComponent.Type = BodyTypeFromString(jsonRGBD2D["Type"].get<std::string>());
+				}
+			
+				if (value.contains("BoxColider2DComponent"))
+				{
+					auto& jsonBC2D = value["BoxColider2DComponent"];
+					auto& bc2dComponent = entity.AddComponent<BoxColider2DComponent>();
+
+					Decode(ConvertFloat3(jsonBC2D["Size"]), bc2dComponent.Size);
+					Decode(ConvertFloat3(jsonBC2D["Offset"]), bc2dComponent.Offset);
+				}
+
 			}
 		}
 	}

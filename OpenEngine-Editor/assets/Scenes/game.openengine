@@ -1,69 +1,22 @@
 {
 	"Entities": [
 		{
-			"ID": 8135343853828962267,
+			"ID": 11802602010905154305,
 			"TagComponent": {
 				"Tag": "Quad"
 			},
 			"ParentComponent": {
 				"ParentName": "",
-				"ParentID": 0,
-				"Offset": [0.000000, 0.000000, 0.000000]
+					"ParentID": 0,
+			"Offset": [0.000000, 0.000000, 0.000000]
 			},
 			"TransformComponent": {
-				"Translation": [-1.700000, -1.900000, 0.000000],
+				"Translation": [-2.887960, 0.500000, 0.000000],
 				"Rotation": [0.000000, 0.000000, 0.000000],
-				"Scale": [0.500000, 0.500000, 1.000000]
+				"Scale": [1.000000, 1.000000, 1.000000]
 			},
-			"SpriteRendererComponent": {
-				"Color": [0.076369, 0.868726, 0.010062, 1.000000]
-			}
-		},
-		{
-			"ID": 7770029882925706037,
-			"TagComponent": {
-				"Tag": "Block"
-			},
-			"ParentComponent": {
-				"ParentName": "",
-				"ParentID": 0,
-				"Offset": [0.000000, 0.000000, 0.000000]
-			},
-			"TransformComponent": {
-				"Translation": [2.000000, 0.000000, 0.000000],
-				"Rotation": [0.000000, 0.000000, 0.000000],
-				"Scale": [1.500000, 4.000000, 1.000000]
-			},
-			"SpriteRendererComponent": {
-				"Color": [0.000000, 0.000000, 1.000000, 1.000000]
-			}
-		},
-		{
-			"ID": 18314600617434442609,
-			"TagComponent": {
-				"Tag": "Camera"
-			},
-			"ParentComponent": {
-				"ParentName": "Player",
-				"ParentID": 17768638948225150745,
-				"Offset": [0.000000, 0.000000, 0.100000]
-			},
-			"TransformComponent": {
-				"Translation": [0.000000, 0.000000, 0.100000],
-				"Rotation": [0.000000, 0.000000, 0.000000],
-				"Scale": [1.000000, 1.000000, 1.806148]
-			},
-			"EditorRendererComponent": {
-				"Color": [1.000000, 1.000000, 1.000000, 1.000000],
-				"Texture": "assets/textures/camera.png"
-			},
-			"CameraComponent": {
-				"ProjectionType": "Orthographic",
-				"Size": 10.000000,
-				"Near": -1.000000,
-				"Far": 1.000000,
-				"Primary": true,
-				"FixedAspectRatio": false
+			"MeshComponent": {
+				"Color": [1.000000, 1.000000, 1.000000]
 			}
 		},
 		{
@@ -73,16 +26,152 @@
 			},
 			"ParentComponent": {
 				"ParentName": "",
-				"ParentID": 0,
-				"Offset": [0.000000, 0.000000, 0.000000]
+					"ParentID": 0,
+			"Offset": [0.000000, 0.000000, 0.000000]
 			},
 			"TransformComponent": {
-				"Translation": [0.000000, 0.000000, 0.000000],
+				"Translation": [0.000000, 0.500000, 3.000000],
 				"Rotation": [0.000000, 0.000000, 0.000000],
 				"Scale": [1.000000, 1.000000, 1.000000]
 			},
+			"MeshComponent": {
+				"Color": [0.853282, 0.715611, 0.401932]
+			},
+			"RigidBody2DComponent": {
+				"Type": "Static"
+			},
+			"BoxColider2DComponent": {
+				"Size": [1.000000, 1.000000, 1.000000],
+				"Offset": [0.000000, 0.000000, 0.000000]
+			}
+		},
+		{
+			"ID": 18314600617434442609,
+			"TagComponent": {
+				"Tag": "Camera"
+			},
+			"ParentComponent": {
+				"ParentName": "Player",
+					"ParentID": 17768638948225150745,
+			"Offset": [0.000000, 0.000000, 0.000000]
+			},
+			"TransformComponent": {
+				"Translation": [0.000000, 0.500000, 2.000000],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [1.000000, 1.000000, 1.000000]
+			},
+			"EditorRendererComponent": {
+				"Color": [1.000000, 1.000000, 1.000000, 1.000000],
+				"Texture": "assets/textures/camera.png"
+			},
+			"CameraComponent": {
+				"ProjectionType": "Perspective",
+				"VerticalFOV": 1.553343,
+				"Near": 0.100000,
+				"Far": 1000.000000,
+				"Primary": true,
+				"FixedAspectRatio": false
+			}
+		},
+		{
+			"ID": 7770029882925706037,
+			"TagComponent": {
+				"Tag": "Block"
+			},
+			"ParentComponent": {
+				"ParentName": "",
+					"ParentID": 0,
+			"Offset": [0.000000, 0.000000, 0.000000]
+			},
+			"TransformComponent": {
+				"Translation": [2.000000, 1.998920, 0.000000],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [1.500000, 4.000000, 1.500000]
+			},
+			"MeshComponent": {
+				"Color": [0.000000, 0.000000, 1.000000]
+			},
+			"RigidBody2DComponent": {
+				"Type": "Static"
+			},
+			"BoxColider2DComponent": {
+				"Size": [1.000000, 1.000000, 1.000000],
+				"Offset": [0.000000, 0.000000, 0.000000]
+			}
+		},
+		{
+			"ID": 8135343853828962267,
+			"TagComponent": {
+				"Tag": "GreenSquare"
+			},
+			"ParentComponent": {
+				"ParentName": "",
+					"ParentID": 0,
+			"Offset": [0.000000, 0.000000, 0.000000]
+			},
+			"TransformComponent": {
+				"Translation": [-1.700000, 0.244743, 0.000000],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [0.500000, 0.500000, 0.500000]
+			},
+			"MeshComponent": {
+				"Color": [0.074510, 0.866667, 0.011765]
+			},
+			"RigidBody2DComponent": {
+				"Type": "Static"
+			},
+			"BoxColider2DComponent": {
+				"Size": [1.000000, 1.000000, 1.000000],
+				"Offset": [0.000000, 0.000000, 0.000000]
+			}
+		},
+		{
+			"ID": 16692152426916494734,
+			"TagComponent": {
+				"Tag": "Plane"
+			},
+			"ParentComponent": {
+				"ParentName": "",
+					"ParentID": 0,
+			"Offset": [0.000000, 0.000000, 0.000000]
+			},
+			"TransformComponent": {
+				"Translation": [0.000000, 0.000000, 0.000001],
+				"Rotation": [-1.570796, 0.000000, 0.000000],
+				"Scale": [17.639999, 17.639021, 17.639021]
+			},
 			"SpriteRendererComponent": {
-				"Color": [0.915058, 0.749250, 0.409833, 1.000000]
+				"Color": [1.000000, 1.000000, 1.000000, 1.000000],
+				"Texture": "assets/textures/Checkerboard.png",
+				"Scale": 2.000000
+			}
+		},
+		{
+			"ID": 1676304835269233832,
+			"TagComponent": {
+				"Tag": "Perspective Camera"
+			},
+			"ParentComponent": {
+				"ParentName": "",
+					"ParentID": 0,
+			"Offset": [0.000000, 0.000000, 0.000000]
+			},
+			"TransformComponent": {
+				"Translation": [0.000000, 0.836103, 9.017197],
+				"Rotation": [-0.167661, 0.000000, 0.000000],
+				"Scale": [1.000000, 1.000000, 1.000000]
+			},
+			"EditorRendererComponent": {
+				"Color": [1.000000, 1.000000, 1.000000, 1.000000],
+				"Texture": "assets/textures/camera.png"
+			},
+			"CameraComponent": {
+				"ProjectionType": "Perspective",
+				"VerticalFOV": 1.535890,
+				"Near": 0.010000,
+				"Far": 1000.000000,
+				"Primary": false,
+				"FixedAspectRatio": false
 			}
 		}
 	]

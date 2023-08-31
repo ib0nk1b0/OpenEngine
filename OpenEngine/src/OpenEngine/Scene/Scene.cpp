@@ -1,5 +1,6 @@
 #include "oepch.h"
 #include "Scene.h"
+
 #include "Entity.h"
 #include "Components.h"
 #include "ScriptableEntity.h"
@@ -7,8 +8,11 @@
 #include "OpenEngine/Physics/Physics.h"	
 #include "OpenEngine/Core/KeyCodes.h"
 #include "OpenEngine/Core/Input.h"
+#include "OpenEngine/Core/Application.h"
 
 #include <glm/glm.hpp>
+#include <GLFW/glfw3.h>
+#include <OpenEngine/Renderer/Renderer.cpp>
 
 namespace OpenEngine {
 
@@ -172,8 +176,18 @@ namespace OpenEngine {
 		return entity;
 	}
 
+	void Scene::OnEditorStart()
+	{
+		m_CursorEnabled = true;
+		glfwSetInputMode((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	}
+
 	void Scene::OnRuntimeStart()
 	{
+		m_CursorEnabled = false;
+		if (m_Filepath == "assets\\Scenes\\game.openengine")
+			glfwSetInputMode((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 #if Dungeon
 		auto player = GetEntityByName("Player");
 		player.AddComponent<NativeScriptComponent>().Bind<PlayerScript>();
@@ -185,61 +199,97 @@ namespace OpenEngine {
 	void Scene::OnUpdate(Timestep ts)
 	{
 		// Update parent entities
-		auto view = m_Registry.view<ParentComponent>();
-		for (auto e : view)
+
+		auto children = GetEntitiesWithParents();
+		for (auto childID : children)
 		{
-			Entity entity = { e, this };
-			auto& parentComponent = entity.GetComponent<ParentComponent>();
-			if (parentComponent.ParentName.empty())
-				continue;
-			auto& translation = entity.GetComponent<TransformComponent>().Translation;
-			Entity parentEntity = GetEntityByUUID(parentComponent.ParentID);
-			translation = parentEntity.GetTranslation() + parentComponent.Offset;
+			Entity child = { childID, this };
+			Entity parent = GetEntityByUUID(child.GetComponent<ParentComponent>().ParentID);
+			glm::vec3 forwardDirection = glm::rotate(glm::quat(glm::vec3(parent.GetComponent<TransformComponent>().Rotation.x, parent.GetComponent<TransformComponent>().Rotation.y, 0.0f)), glm::vec3(0.0f, 0.0f, -1.0f));
+			if (child.GetTranslation() != parent.GetTranslation() + child.GetComponent<ParentComponent>().Offset)
+			{
+				child.GetComponent<TransformComponent>().Translation = parent.GetTranslation() + forwardDirection;
+				OE_CORE_INFO("{0}, {1}, {2}", forwardDirection.x, forwardDirection.y, forwardDirection.z);
+			}
 		}
 	}
 
 	void Scene::OnUpdateEditor(Timestep ts, EditorCamera& camera)
 	{
 		OnUpdate(ts);
-		Renderer2D::BeginScene(camera);
 
 		{
-			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-			for (auto entity : group)
-			{
-				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+			Renderer::BeginScene(camera);
 
-				if (sprite.Texture)
-					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color, sprite.Scale, (int)entity);
-				else
-					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color, (int)entity);
+			{
+				auto view = m_Registry.view<TransformComponent, MeshComponent>();
+				for (auto entity : view)
+				{
+					auto [transform, mesh] = view.get<TransformComponent, MeshComponent>(entity);
+					Renderer::Cube cube;
+					cube.Transform = transform.GetTransform();
+					cube.Mat.Albedo = mesh.Color;
+					Renderer::Submit(cube, (int)entity);
+				}
 			}
+
+			Renderer::EndScene();
 		}
 
 		{
-			auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
-			for (auto entity : view)
+			Renderer2D::BeginScene(camera);
+
 			{
-				auto [transform, circle] = view.get<TransformComponent, CircleRendererComponent>(entity);
+				auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+				for (auto entity : group)
+				{
+					auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-				Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, (int)entity);
+					if (sprite.Texture)
+						Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color, sprite.Scale, (int)entity);
+					else
+						Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color, (int)entity);
+				}
 			}
-		}
 
-		{
-			auto view = m_Registry.view<TransformComponent, EditorRendererComponent>();
-			for (auto entity : view)
 			{
-				auto [transform, sprite] = view.get<TransformComponent, EditorRendererComponent>(entity);
+				auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
+				for (auto entity : view)
+				{
+					auto [transform, circle] = view.get<TransformComponent, CircleRendererComponent>(entity);
 
-				if (sprite.Texture)
-					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color, 1.0f, (int)entity);
-				else
-					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color, (int)entity);
+					Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, (int)entity);
+				}
 			}
-		}
 
-		Renderer2D::EndScene();
+			{
+				auto view = m_Registry.view<TransformComponent, EditorRendererComponent>();
+				for (auto entity : view)
+				{
+					auto [transform, sprite] = view.get<TransformComponent, EditorRendererComponent>(entity);
+
+					if (sprite.Texture)
+						Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color, 1.0f, (int)entity);
+					else
+						Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color, (int)entity);
+				}
+			}
+
+			// Grid
+			{
+				if (m_GridEnabled)
+				{
+					for (int i = 0; i <= m_GridSize * 2; i++)
+					{
+						Renderer2D::DrawLine({ -m_GridSize, 0, i - m_GridSize }, { m_GridSize, 0, i - m_GridSize }, { 0.8f, 0.8f, 0.9f, 1.0f });
+						Renderer2D::DrawLine({ i - m_GridSize, 0, -m_GridSize }, { i - m_GridSize, 0, m_GridSize }, { 0.8f, 0.8f, 0.9f, 1.0f });
+					}
+				}
+			}
+
+			Renderer2D::EndScene();
+
+		}
 	}
 
 	void Scene::OnUpdateRuntime(Timestep ts)
@@ -296,13 +346,29 @@ namespace OpenEngine {
 
 		if (mainCamera)
 		{
+			Renderer::BeginScene(mainCamera->GetProjection(), cameraTransform);
+
+			{
+				auto view = m_Registry.view<TransformComponent, MeshComponent>();
+				for (auto entity : view)
+				{
+					auto [transform, mesh] = view.get<TransformComponent, MeshComponent>(entity);
+					Renderer::Cube cube;
+					cube.Transform = transform.GetTransform();
+					cube.Mat.Albedo = mesh.Color;
+					Renderer::Submit(cube, (int)entity);
+				}
+			}
+
+			Renderer::EndScene();
+
 			Renderer2D::BeginScene(mainCamera->GetProjection(), cameraTransform);
 
 			{
-				auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-				for (auto entity : group)
+				auto view = m_Registry.view<TransformComponent, SpriteRendererComponent>();
+				for (auto entity : view)
 				{
-					auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+					auto [transform, sprite] = view.get<TransformComponent, SpriteRendererComponent>(entity);
 
 					if (sprite.Texture)
 						Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color, sprite.Scale, (int)entity);
@@ -371,6 +437,13 @@ namespace OpenEngine {
 					crc.Fade = entity.GetComponent<CircleRendererComponent>().Fade;
 				}
 
+				if (entity.HasComponent<MeshComponent>())
+				{
+					auto& mesh = newEntity.AddComponent<MeshComponent>();
+					mesh.Type = entity.GetComponent<MeshComponent>().Type;
+					mesh.Color = entity.GetComponent<MeshComponent>().Color;
+				}
+
 				if (entity.HasComponent<CameraComponent>())
 				{
 					auto& cc = newEntity.AddComponent<CameraComponent>();
@@ -386,6 +459,16 @@ namespace OpenEngine {
 					nsc = oldNsc;
 				}
 		});
+	}
+
+	void Scene::ToggleCursor()
+	{
+		if (m_CursorEnabled)
+			glfwSetInputMode((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		else
+			glfwSetInputMode((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+		m_CursorEnabled = !m_CursorEnabled;
 	}
 
 	std::vector<entt::entity> Scene::GetEntitiesWithParents()

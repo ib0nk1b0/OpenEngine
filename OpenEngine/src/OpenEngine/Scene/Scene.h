@@ -27,6 +27,7 @@ namespace OpenEngine {
 		Entity GetEntityByUUID(UUID uuid);
 		Entity GetEntityByName(const std::string& name);
 
+		void OnEditorStart();
 		void OnRuntimeStart();
 
 		void OnUpdate(Timestep ts);
@@ -39,6 +40,11 @@ namespace OpenEngine {
 
 		void CopyTo(Ref<Scene> other); 
 
+		void ToggleCursor();
+		void ToggleGrid() { m_GridEnabled = !m_GridEnabled; };
+		void SetGridSize(int gridSize) { m_GridSize = gridSize; }
+		int GetGridSize() { return m_GridSize; }
+
 		std::vector<entt::entity> GetEntitiesWithParents();
 
 	// TODO: Remove
@@ -49,6 +55,10 @@ namespace OpenEngine {
 		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 
 		std::string m_Filepath;
+
+		bool m_CursorEnabled = true;
+		bool m_GridEnabled = true;
+		int m_GridSize = 10;
 
 		friend class Entity;
 		friend class Serializer;

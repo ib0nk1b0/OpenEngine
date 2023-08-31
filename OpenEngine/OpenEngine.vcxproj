@@ -171,6 +171,7 @@
     <ClInclude Include="src\OpenEngine\Renderer\EditorCamera.h" />
     <ClInclude Include="src\OpenEngine\Renderer\Framebuffer.h" />
     <ClInclude Include="src\OpenEngine\Renderer\GraphicsContext.h" />
+    <ClInclude Include="src\OpenEngine\Renderer\Mesh.h" />
     <ClInclude Include="src\OpenEngine\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\OpenEngine\Renderer\OrthographicCameraController.h" />
     <ClInclude Include="src\OpenEngine\Renderer\RenderCommand.h" />
@@ -632,6 +633,7 @@
     <ClCompile Include="src\OpenEngine\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\GraphicsContext.cpp" />
+    <ClCompile Include="src\OpenEngine\Renderer\Mesh.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\OrthographicCameraController.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\RenderCommand.cpp" />
