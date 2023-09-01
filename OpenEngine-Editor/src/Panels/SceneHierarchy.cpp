@@ -291,7 +291,7 @@ namespace OpenEngine {
 
 		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [=](auto& component)
 		{
-			ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+			ImGui::OEColorEdit4("Color", glm::value_ptr(component.Color));
 
 			Ref<Texture2D> texturePreview;
 
@@ -329,7 +329,7 @@ namespace OpenEngine {
 
 		DrawComponent<EditorRendererComponent>("Editor Renderer", entity, [=](auto& component)
 			{
-				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+				ImGui::OEColorEdit4("Color", glm::value_ptr(component.Color));
 
 				Ref<Texture2D> texturePreview;
 
@@ -364,7 +364,7 @@ namespace OpenEngine {
 
 		DrawComponent<MeshComponent>("Mesh", entity, [=](auto& component)
 		{
-			ImGui::ColorEdit3("Color", glm::value_ptr(component.Color));
+			ImGui::OEColorEdit3("Color", glm::value_ptr(component.Color));
 		});
 
 		DrawComponent<CircleRendererComponent>("Circle Renderer", m_SelectionContext, [](auto& component)
