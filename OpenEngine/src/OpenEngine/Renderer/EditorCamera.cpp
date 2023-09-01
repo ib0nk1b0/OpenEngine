@@ -90,8 +90,9 @@ namespace OpenEngine {
 	{
 		m_Position = { 0.0f, 0.0f, 0.0f };
 		m_FocalPoint = { 0.0f, 0.0f, 0.0f };
-		m_Pitch = m_Yaw = 0.0f;
-		m_Distance = 10.0f;
+		m_Pitch = 0.45f;
+		m_Yaw = 0.67f;
+		m_Distance = 15.0f;
 		UpdateView();
 	}
 

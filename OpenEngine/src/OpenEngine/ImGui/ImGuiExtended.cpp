@@ -117,4 +117,20 @@ namespace ImGui {
 		PopID();
 	}
 
+	void ImGui::OEColorEdit3(const char* label, float* value)
+	{
+		PushID(label);
+
+		Columns(2);
+		SetColumnWidth(0, 100.0f);
+		Text(label);
+		NextColumn();
+
+		ColorEdit3("##", value);
+
+		Columns(1);
+
+		PopID();
+	}
+
 }
