@@ -5,6 +5,8 @@
 #include "OpenEngine/Scene/SceneCamera.h"
 #include "OpenEngine/Renderer/Renderer.h"
 
+#include <filesystem>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -107,15 +109,35 @@ namespace OpenEngine {
 			: Texture(texture) {}
 	};
 
-	enum class MeshType { Cube = 0 };
-
 	struct MeshComponent
 	{
-		MeshType Type = MeshType::Cube;
-		glm::vec3 Color = { 1.0f, 1.0f, 1.0f };
+		//std::filesystem::path Filepath;
+		std::string Filepath = "null";
+		int MaterialIndex = 0;
+		MeshInstance* Mesh;
 
 		MeshComponent() = default;
 		MeshComponent(const MeshComponent&) = default;
+	};
+
+	struct DirectionalLightComponent
+	{
+		glm::vec3 Color{ 1.0f };
+		float AmbientIntensity = 0.1f;
+		float SpecularStrength = 0.5f;
+
+		DirectionalLightComponent() = default;
+		DirectionalLightComponent(const DirectionalLightComponent&) = default;
+	};
+
+	struct PointLightComponent
+	{
+		glm::vec3 Color{ 1.0f };
+		float AmbientIntensity = 0.1f;
+		float SpecularStrength = 0.5f;
+
+		PointLightComponent() = default;
+		PointLightComponent(const PointLightComponent&) = default;
 	};
 
 	struct CameraComponent

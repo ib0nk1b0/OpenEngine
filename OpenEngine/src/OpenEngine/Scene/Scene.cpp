@@ -12,7 +12,7 @@
 
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
-#include <OpenEngine/Renderer/Renderer.cpp>
+#include <OpenEngine/Renderer/Mesh.h>
 
 namespace OpenEngine {
 
@@ -85,6 +85,7 @@ namespace OpenEngine {
 #endif
 	Scene::Scene()
 	{
+		Material& defaultMaterial = m_Materials.emplace_back();
 	}
 
 	Scene::~Scene()
@@ -128,6 +129,13 @@ namespace OpenEngine {
 			src.Scale = other.GetComponent<SpriteRendererComponent>().Scale;
 		}
 
+		if (other.HasComponent<EditorRendererComponent>())
+		{
+			auto& src = newEntity.AddComponent<EditorRendererComponent>();
+			src.Color = other.GetComponent<EditorRendererComponent>().Color;
+			src.Texture = other.GetComponent<EditorRendererComponent>().Texture;
+		}
+
 		if (other.HasComponent<CircleRendererComponent>())
 		{
 			auto& crc = newEntity.AddComponent<CircleRendererComponent>();
@@ -136,12 +144,32 @@ namespace OpenEngine {
 			crc.Fade = other.GetComponent<CircleRendererComponent>().Fade;
 		}
 
+		if (other.HasComponent<MeshComponent>())
+		{
+			auto& mc = newEntity.AddComponent<MeshComponent>();
+			mc.Filepath = other.GetComponent<MeshComponent>().Filepath;
+			mc.MaterialIndex = other.GetComponent<MeshComponent>().MaterialIndex;
+		}
+
 		if (other.HasComponent<CameraComponent>())
 		{
 			auto& cc = newEntity.AddComponent<CameraComponent>();
 			cc.Camera = other.GetComponent<CameraComponent>().Camera;
 			cc.FixedAspectRatio = other.GetComponent<CameraComponent>().FixedAspectRatio;
 			cc.Primary = other.GetComponent<CameraComponent>().Primary;
+		}
+
+		if (other.HasComponent<RigidBody2DComponent>())
+		{
+			auto& rb2d = newEntity.AddComponent<RigidBody2DComponent>();
+			rb2d.Type = other.GetComponent<RigidBody2DComponent>().Type;
+		}
+
+		if (other.HasComponent<BoxColider2DComponent>())
+		{
+			auto& bc2d = newEntity.AddComponent<BoxColider2DComponent>();
+			bc2d.Offset = other.GetComponent<BoxColider2DComponent>().Offset;
+			bc2d.Size = other.GetComponent<BoxColider2DComponent>().Size;
 		}
 
 		return newEntity;
@@ -221,19 +249,43 @@ namespace OpenEngine {
 		{
 			Renderer::BeginScene(camera);
 
+			auto view = m_Registry.view<TransformComponent, MeshComponent>();
+			auto directionalLightView = m_Registry.view<DirectionalLightComponent>();
+
+			for (auto entity : view)
 			{
-				auto view = m_Registry.view<TransformComponent, MeshComponent>();
-				for (auto entity : view)
+				auto [transform, meshComponent] = view.get<TransformComponent, MeshComponent>(entity);
+				Material material = m_Materials[meshComponent.MaterialIndex];
+				
+				if (meshComponent.Filepath != "null")
 				{
-					auto [transform, mesh] = view.get<TransformComponent, MeshComponent>(entity);
-					Renderer::Cube cube;
-					cube.Transform = transform.GetTransform();
-					cube.Mat.Albedo = mesh.Color;
-					Renderer::Submit(cube, (int)entity);
+					Ref<MeshInstance> mesh;
+					bool exists = false;
+					for (int i = 0; i < m_Meshes.size(); i++)
+					{
+						if (m_Meshes[i].GetFilePath() == meshComponent.Filepath)
+						{
+							mesh = CreateRef<MeshInstance>(CreateRef<Mesh>(m_Meshes[i]), material);
+							exists = true;
+						}
+					}
+					if (!exists)
+					{
+						m_Meshes.emplace_back(meshComponent.Filepath);
+						mesh = CreateRef<MeshInstance>(CreateRef<Mesh>(m_Meshes[m_Meshes.size() - 1]), material);
+					}
+
+					if (directionalLightView.empty())
+						Renderer::Submit(mesh, transform.GetTransform(), &camera, (int)entity);
+					else
+					{
+						Entity directionalLight = { directionalLightView.front(), this };
+						Renderer::Submit(mesh, transform.GetTransform(), &camera, (int)entity, directionalLight);
+					}
 				}
 			}
 
-			Renderer::EndScene();
+			Renderer::EndScene(m_Meshes);
 		}
 
 		{
@@ -288,7 +340,6 @@ namespace OpenEngine {
 			}
 
 			Renderer2D::EndScene();
-
 		}
 	}
 
@@ -353,10 +404,10 @@ namespace OpenEngine {
 				for (auto entity : view)
 				{
 					auto [transform, mesh] = view.get<TransformComponent, MeshComponent>(entity);
-					Renderer::Cube cube;
-					cube.Transform = transform.GetTransform();
-					cube.Mat.Albedo = mesh.Color;
-					Renderer::Submit(cube, (int)entity);
+					Material material = m_Materials[mesh.MaterialIndex];
+					/*Cube cube = Cube(material);
+
+					Renderer::Submit(cube, transform.GetTransform(), mainCamera, (int)entity);*/
 				}
 			}
 
@@ -408,6 +459,8 @@ namespace OpenEngine {
 
 	void Scene::CopyTo(Ref<Scene> other)
 	{
+		other->m_Materials = m_Materials;
+
 		m_Registry.each([&](auto entityID)
 		{
 				Entity entity{ entityID, this };
@@ -440,8 +493,8 @@ namespace OpenEngine {
 				if (entity.HasComponent<MeshComponent>())
 				{
 					auto& mesh = newEntity.AddComponent<MeshComponent>();
-					mesh.Type = entity.GetComponent<MeshComponent>().Type;
-					mesh.Color = entity.GetComponent<MeshComponent>().Color;
+					mesh.Filepath = entity.GetComponent<MeshComponent>().Filepath;
+					mesh.MaterialIndex = entity.GetComponent<MeshComponent>().MaterialIndex;
 				}
 
 				if (entity.HasComponent<CameraComponent>())

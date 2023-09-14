@@ -17,6 +17,7 @@ namespace OpenEngine {
 	{
 		std::string Name = "OpenEngine Application";
 		std::string WorkingDirectory;
+		bool VSyncEnabled = false;
 	};
 
 	class Application
@@ -39,6 +40,7 @@ namespace OpenEngine {
 		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
 
 		inline static Application& Get() { return *s_Instance; }
+		void PrintCurrentUsage();
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
@@ -52,6 +54,8 @@ namespace OpenEngine {
 		LayerStack m_LayerStack;
 
 		float m_LastFrameTime = 0.0f;
+
+		bool m_MemTracking = true;
 	private:
 		static Application* s_Instance;
 	};

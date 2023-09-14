@@ -43,6 +43,7 @@ namespace OpenEngine {
 		m_RuntimeScene = CreateRef<Scene>();
 
 		m_SceneHierarchyPanel.SetContext(m_EditorScene);
+		m_MaterialPanel.SetContext(m_EditorScene);
 
 		m_EditorCamera = EditorCamera(60.0f, 1.778f, 0.1f, 1000.0f);
 	}
@@ -63,7 +64,7 @@ namespace OpenEngine {
 
 		m_Framebuffer->Bind();
 
-		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+		RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1.0f });
 		RenderCommand::Clear();
 
 		m_Framebuffer->ClearColorAttachment(1, -1);
@@ -151,6 +152,7 @@ namespace OpenEngine {
 
 		m_SceneHierarchyPanel.OnImGuiRender();
 		m_ContentBrowserPanel.OnImGuiRender();
+		m_MaterialPanel.OnImGuiRender();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
@@ -314,6 +316,9 @@ namespace OpenEngine {
 
 				if (ImGui::MenuItem("Properties", NULL, &m_DisplayProperties))
 					m_SceneHierarchyPanel.DisplayProperties(m_DisplayProperties);
+
+				if (ImGui::MenuItem("Materials", NULL, &m_DisplayMaterials))
+					m_MaterialPanel.Display(m_DisplayMaterials);
 
 				ImGui::MenuItem("Renderer Stats", NULL, &m_DisplayStats);
 				ImGui::MenuItem("Editor Camera UI", NULL, &m_DisplayEditorCameraUI);
@@ -506,10 +511,13 @@ namespace OpenEngine {
 
 	void EditorLayer::NewScene(const std::string& filepath)
 	{
+		std::vector<Material> materials = m_EditorScene->GetMaterials();
 		m_EditorScene = CreateRef<Scene>();
 		m_EditorScene->SetFilepath(filepath);
 		m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_EditorScene->SetMaterials(materials);
 		m_SceneHierarchyPanel.SetContext(m_EditorScene);
+		m_MaterialPanel.SetContext(m_EditorScene);
 	}
 
 	void EditorLayer::OpenScene()

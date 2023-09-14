@@ -3,6 +3,7 @@
 #include "OpenEngine/Core/Timestep.h"
 #include "OpenEngine/Core/UUID.h"
 #include "OpenEngine/Renderer/EditorCamera.h"
+#include "OpenEngine/Renderer/Renderer.h"
 
 #include "entt.hpp"
 
@@ -46,7 +47,8 @@ namespace OpenEngine {
 		int GetGridSize() { return m_GridSize; }
 
 		std::vector<entt::entity> GetEntitiesWithParents();
-
+		std::vector<Material> GetMaterials() { return m_Materials; }
+		void SetMaterials(std::vector<Material> materials) { m_Materials = materials; }
 	// TODO: Remove
 	public:
 		bool m_RuntimeActive = false;
@@ -58,11 +60,15 @@ namespace OpenEngine {
 
 		bool m_CursorEnabled = true;
 		bool m_GridEnabled = true;
-		int m_GridSize = 10;
+		int m_GridSize = 8;
+
+		std::vector<Material> m_Materials;
+		std::vector<Mesh> m_Meshes;
 
 		friend class Entity;
 		friend class Serializer;
 		friend class SceneHierarchyPanel;
+		friend class MaterialPanel;
 	};
 
 }

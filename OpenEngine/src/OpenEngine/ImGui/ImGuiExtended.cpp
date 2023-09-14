@@ -34,6 +34,27 @@ namespace ImGui {
 		return dragFloatUsed;
 	}
 
+	bool ImGui::OEDragInt(const std::string& label, int* value, int speed, int min, int max, float columnWidth)
+	{
+		bool used = false;
+
+		PushID(label.c_str());
+
+		Columns(2);
+		SetColumnWidth(0, columnWidth);
+		Text(label.c_str());
+		NextColumn();
+
+		if (DragInt("##", value, speed, min, max))
+			used = true;
+
+		Columns(1);
+
+		PopID();
+
+		return used;
+	}
+
 	void ImGui::OEVec3Controls(const std::string& label, glm::vec3& values, float resetValue, float columnWidth)
 	{
 		ImGuiIO& io = GetIO();

@@ -16,7 +16,7 @@
 				"Scale": [1.000000, 1.000000, 1.000000]
 			},
 			"MeshComponent": {
-				"Color": [1.000000, 1.000000, 1.000000]
+				"MaterialIndex": 0
 			}
 		},
 		{
@@ -35,7 +35,7 @@
 				"Scale": [1.000000, 1.000000, 1.000000]
 			},
 			"MeshComponent": {
-				"Color": [0.853282, 0.715611, 0.401932]
+				"MaterialIndex": 0
 			},
 			"RigidBody2DComponent": {
 				"Type": "Static"
@@ -89,7 +89,7 @@
 				"Scale": [1.500000, 4.000000, 1.500000]
 			},
 			"MeshComponent": {
-				"Color": [0.000000, 0.000000, 1.000000]
+				"MaterialIndex": 0
 			},
 			"RigidBody2DComponent": {
 				"Type": "Static"
@@ -115,7 +115,7 @@
 				"Scale": [0.500000, 0.500000, 0.500000]
 			},
 			"MeshComponent": {
-				"Color": [0.074510, 0.866667, 0.011765]
+				"MaterialIndex": 0
 			},
 			"RigidBody2DComponent": {
 				"Type": "Static"

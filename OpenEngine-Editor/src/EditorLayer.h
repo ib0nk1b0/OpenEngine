@@ -4,6 +4,7 @@
 
 #include "Panels/SceneHierarchy.h"
 #include "Panels/ContentBrowserPanel.h"
+#include "Panels/MaterialPanel.h"
 
 #include "OpenEngine/Serialization/Serializer.h"
 #include "OpenEngine/Renderer/EditorCamera.h"
@@ -48,6 +49,7 @@ namespace OpenEngine {
 		bool m_DisplayEditorCameraUI = true;
 		bool m_DisplaySceneHierarchy = true;
 		bool m_DisplayProperties = true;
+		bool m_DisplayMaterials = true;
 
 		Ref<Scene> m_EditorScene;
 		Ref<Scene> m_RuntimeScene;
@@ -67,6 +69,7 @@ namespace OpenEngine {
 		// Panels
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		ContentBrowserPanel m_ContentBrowserPanel;
+		MaterialPanel m_MaterialPanel;
 
 		Ref<Texture2D> m_PlayIcon, m_StopIcon;
 		SceneState m_SceneState = SceneState::Edit;

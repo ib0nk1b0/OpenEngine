@@ -206,7 +206,7 @@ namespace OpenEngine {
 		UploadUniformIntArray(name, values, count);
 	}
 
-	void OpenGLShader::SetFloat(const std::string& name, int value)
+	void OpenGLShader::SetFloat(const std::string& name, float value)
 	{
 		OE_PROFILE_FUNCTION();
 

@@ -20,7 +20,7 @@ static AllocationMetrics s_AllocationMetrics;
 
 void* operator new(size_t size)
 {
-	s_AllocationMetrics.TotalAllocated += size;
+ 	s_AllocationMetrics.TotalAllocated += size;
 	return malloc(size);
 }
 
@@ -44,7 +44,7 @@ namespace OpenEngine {
 		s_Instance = this;
 
 		m_Window = Window::Create(WindowProps(m_Specification.Name));
-		//m_Window->SetVSync(false); // V-SYNC //
+		m_Window->SetVSync(specification.VSyncEnabled);
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
 		if (!m_Specification.WorkingDirectory.empty())
@@ -106,6 +106,8 @@ namespace OpenEngine {
 		{
 			OE_PROFILE_SCOPE("RunLoop");
 
+			OE_CORE_INFO("____________________________________________");
+			PrintCurrentUsage();
 			float time = (float)glfwGetTime(); // Platform::GetTime();
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
@@ -132,9 +134,16 @@ namespace OpenEngine {
 			m_Window->OnUpdate();
 
 			auto memAllocated = s_AllocationMetrics.TotalAllocated;
-
+			PrintCurrentUsage();
 			//std::cout << s_AllocationMetrics.CurrentUsage() << std::endl;
 		}
+	}
+
+	void OpenEngine::Application::PrintCurrentUsage()
+	{
+		if (!m_MemTracking) return;
+
+		std::cout << s_AllocationMetrics.CurrentUsage() << " bytes\n";
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)

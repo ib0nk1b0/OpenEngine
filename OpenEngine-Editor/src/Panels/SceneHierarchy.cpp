@@ -58,11 +58,41 @@ namespace OpenEngine {
 						quad.AddComponent<SpriteRendererComponent>();
 					}
 					ImGui::Separator();
-					if (ImGui::MenuItem("Cube"))
+					/*if (ImGui::BeginMenu("Mesh"))
 					{
-						Entity cube = m_Context->CreateEntity("Cube");
-						cube.AddComponent<MeshComponent>();
+						if (ImGui::MenuItem("Cube"))
+						{
+							Entity cube = m_Context->CreateEntity("Cube");
+							cube.AddComponent<MeshComponent>();
+						}
+
+						ImGui::EndMenu();
+					}*/
+					if (ImGui::MenuItem("Mesh"))
+					{
+						Entity mesh = m_Context->CreateEntity("Mesh");
+						mesh.AddComponent<MeshComponent>();
 					}
+					ImGui::Separator();
+					if (ImGui::BeginMenu("Lights"))
+					{
+						if (ImGui::MenuItem("Point Light"))
+						{
+							Entity pointLight = m_Context->CreateEntity("Point Light");
+							pointLight.AddComponent<PointLightComponent>();
+							pointLight.AddComponent<EditorRendererComponent>().Texture = Texture2D::Create("assets/textures/Lightbulb.png");
+						}
+						if (ImGui::MenuItem("Directional Light"))
+						{
+							Entity directionalLight = m_Context->CreateEntity("Directional Light");
+							directionalLight.AddComponent<DirectionalLightComponent>();
+							directionalLight.GetComponent<TransformComponent>().Translation = { -0.2f, 0.5f, 0.3f };
+						}
+
+						ImGui::EndMenu();
+					}
+					ImGui::Separator();
+					
 					ImGui::Separator();
 					if (ImGui::BeginMenu("Camera"))
 					{
@@ -364,7 +394,34 @@ namespace OpenEngine {
 
 		DrawComponent<MeshComponent>("Mesh", entity, [=](auto& component)
 		{
+			ImGui::Columns(2);
+			ImGui::SetColumnWidth(0, 100.0f);
+			ImGui::Text("Mesh");
+			ImGui::NextColumn();
+			ImGui::Text("%s", component.Filepath.c_str());
+			ImGui::Columns(1);
+			ImGui::SameLine();
+			if (ImGui::SmallButton("+"))
+			{
+				std::string filepath = FileDialogs::OpenFile("Model OBJ (*.obj)\0*.obj\0");
+				if (FileDialogs::IsValidFile(filepath, ".obj"))
+					component.Filepath = filepath;
+			}
+			ImGui::OEDragInt("Material Index", &component.MaterialIndex, 1, 0, m_Context->m_Materials.size() - 1);
+		});
+
+		DrawComponent<PointLightComponent>("Point Light", entity, [=](auto& component)
+		{
 			ImGui::OEColorEdit3("Color", glm::value_ptr(component.Color));
+			ImGui::OEDragFloat("Ambient Intensity", &component.AmbientIntensity, 0.05f, 0.0f, 1.0f, 150.0f);
+			ImGui::OEDragFloat("Specular Strength", &component.SpecularStrength, 0.05f, 0.0f, 1.0f, 150.0f);
+		});
+
+		DrawComponent<DirectionalLightComponent>("Directional Light", entity, [=](auto& component)
+		{
+			ImGui::OEColorEdit3("Color", glm::value_ptr(component.Color));
+			ImGui::OEDragFloat("Ambient Intensity", &component.AmbientIntensity, 0.05f, 0.0f, 1.0f, 150.0f);
+			ImGui::OEDragFloat("Specular Strength", &component.SpecularStrength, 0.05f, 0.0f, 1.0f, 150.0f);
 		});
 
 		DrawComponent<CircleRendererComponent>("Circle Renderer", m_SelectionContext, [](auto& component)

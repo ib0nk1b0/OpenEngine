@@ -140,6 +140,7 @@
     <ClInclude Include="src\FlappyBird\Player.h" />
     <ClInclude Include="src\FPSCameraController.h" />
     <ClInclude Include="src\Panels\ContentBrowserPanel.h" />
+    <ClInclude Include="src\Panels\MaterialPanel.h" />
     <ClInclude Include="src\Panels\SceneHierarchy.h" />
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +151,7 @@
     <ClCompile Include="src\FPSCameraController.cpp" />
     <ClCompile Include="src\OpenEngineEditorApp.cpp" />
     <ClCompile Include="src\Panels\ContentBrowserPanel.cpp" />
+    <ClCompile Include="src\Panels\MaterialPanel.cpp" />
     <ClCompile Include="src\Panels\SceneHierarchy.cpp" />
   </ItemGroup>
   <ItemGroup>

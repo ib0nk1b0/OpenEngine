@@ -20,14 +20,31 @@ namespace OpenEngine {
 	{
 		ImGui::Begin("Content Browser");
 
-		if (m_CurrentDirectory != std::filesystem::path(g_AssetPath))
+		ImGuiIO& io = ImGui::GetIO();
+		auto boldFont = io.Fonts->Fonts[0];
+		auto boldFont24 = io.Fonts->Fonts[1];
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 0));
+		ImGui::PushFont(boldFont24);
+		if (ImGui::Button("<") && m_CurrentDirectory != std::filesystem::path(g_AssetPath))
 		{
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 2));
-			if (ImGui::Button("<-"))
-				m_CurrentDirectory = m_CurrentDirectory.parent_path();
-			ImGui::PopStyleVar();
+			m_PreviousDirectory = m_CurrentDirectory;
+			m_CurrentDirectory = m_CurrentDirectory.parent_path();
 		}
+		ImGui::SameLine();
+		if (ImGui::Button(">") && !m_PreviousDirectory.empty())
+		{
+			m_CurrentDirectory = m_PreviousDirectory;
+			m_PreviousDirectory.clear();
+		}
+		ImGui::PopStyleVar();
 
+		ImGui::PopFont();
+		ImGui::SameLine();
+		ImGui::PushFont(boldFont);
+		ImGui::Text("Path: %s", m_CurrentDirectory.generic_string().c_str());
+		ImGui::PopFont();
+
+		//io.Fonts->Fonts.Size = 18;
 		float thumbnailSize = 72.0f;
 		float padding = 12.0f;
 		float cellSize = thumbnailSize + padding;

@@ -387,7 +387,7 @@ namespace OpenEngine {
 				{
 					auto& mc = entity.GetComponent<MeshComponent>();
 					text += StartJSONObject("MeshComponent");
-					text += GetJSONString("Color", Encode(mc.Color), true);
+					text += GetJSONString("MaterialIndex", mc.MaterialIndex, true);
 					
 					if (!entity.HasComponent<CameraComponent>() &&
 						!entity.HasComponent<RigidBody2DComponent>() &&
@@ -543,9 +543,11 @@ namespace OpenEngine {
 				if (value.contains("MeshComponent"))
 				{
 					auto& jsonMeshComponent = value["MeshComponent"];
-					entity.AddComponent<MeshComponent>();
+					auto& mc = entity.AddComponent<MeshComponent>();
 
-					Decode(ConvertFloat4(jsonMeshComponent["Color"]), entity.GetComponent<MeshComponent>().Color);
+					mc.MaterialIndex = jsonMeshComponent["MaterialIndex"].get<int>();
+
+
 				}
 
 				if (value.contains("CameraComponent"))
