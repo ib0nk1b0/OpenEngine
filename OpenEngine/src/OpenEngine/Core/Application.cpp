@@ -1,6 +1,7 @@
 #include "oepch.h"
 #include "Application.h"
 
+#include "OpenEngine/Core/Random.h"
 #include "OpenEngine/Renderer/Renderer.h"
 
 #include "Input.h"
@@ -39,6 +40,8 @@ namespace OpenEngine {
 		: m_Specification(specification)
 	{
 		OE_PROFILE_FUNCTION();
+
+		Random::Init();
 
 		OE_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
@@ -106,8 +109,6 @@ namespace OpenEngine {
 		{
 			OE_PROFILE_SCOPE("RunLoop");
 
-			OE_CORE_INFO("____________________________________________");
-			PrintCurrentUsage();
 			float time = (float)glfwGetTime(); // Platform::GetTime();
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
@@ -116,25 +117,28 @@ namespace OpenEngine {
 			{
 				{
 					OE_PROFILE_SCOPE("LayerStack OnUpdate");
-
+					Timer timer;
 					for (Layer* layer : m_LayerStack)
 						layer->OnUpdate(timestep);
+					timer.Stop();
+					m_ApplicationTimings.LayerOnUpdate = timer;
 				}
 			}
 
 			m_ImGuiLayer->Begin();
 			{
 				OE_PROFILE_SCOPE("LayerStack OnImGuiRender");
-
+				Timer timer;
 				for (Layer* layer : m_LayerStack)
 					layer->OnImGuiRender();
+				timer.Stop();
+				m_ApplicationTimings.OnImGuiRender = timer;
 			}
 			m_ImGuiLayer->End();
 
 			m_Window->OnUpdate();
 
 			auto memAllocated = s_AllocationMetrics.TotalAllocated;
-			PrintCurrentUsage();
 			//std::cout << s_AllocationMetrics.CurrentUsage() << std::endl;
 		}
 	}

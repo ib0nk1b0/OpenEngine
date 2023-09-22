@@ -25,12 +25,18 @@ namespace OpenEngine {
 		{
 			return m_Entity.FindEntityByName(name);
 		}
+
+		Entity CreateEntity(const std::string& name)
+		{
+			return m_Entity.m_Scene->CreateEntity(name);
+		}
 	protected:
 		virtual void OnCreate() {}
 		virtual void OnDestroy() {}
 		virtual void OnUpdate(Timestep ts) {}
 	private:
 		Entity m_Entity;
+
 		friend class Scene;
 	};
 

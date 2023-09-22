@@ -37,9 +37,9 @@ namespace OpenEngine {
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
-		io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/static/OpenSans/OpenSans-Bold.ttf", 18.0f);
+		io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/static/OpenSans/OpenSans-Bold.ttf", 16.0f);
 		io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/static/OpenSans/OpenSans-Bold.ttf", 24.0f);
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/static/OpenSans/OpenSans-Regular.ttf", 18.0f);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/static/OpenSans/OpenSans-Regular.ttf", 16.0f);
 
 		// Setup styles
 		//ImGui::StyleColorsClassic();
@@ -115,33 +115,33 @@ namespace OpenEngine {
 		auto& colors = ImGui::GetStyle().Colors;
 
 		// Window
-		colors[ImGuiCol_WindowBg] = ImVec4{ 0.1f, 0.1f, 0.12f, 1.0f };
+		colors[ImGuiCol_WindowBg] = ImVec4{ 0.094f, 0.094f, 0.105f, 1.0f };
 
 		// Header
-		colors[ImGuiCol_Header] = ImVec4{ 0.2f, 0.2f, 0.25f, 1.0f };
-		colors[ImGuiCol_HeaderHovered] = ImVec4{ 0.3f, 0.3f, 0.35f, 1.0f };
-		colors[ImGuiCol_HeaderActive] = ImVec4{ 0.15f, 0.15f, 0.2f, 1.0f };
+		colors[ImGuiCol_Header] = ImVec4{ 0.18f, 0.18f, 0.18f, 1.0f };
+		colors[ImGuiCol_HeaderHovered] = ImVec4{ 0.28f, 0.28f, 0.28f, 1.0f };
+		colors[ImGuiCol_HeaderActive] = ImVec4{ 0.15f, 0.15f, 0.15f, 1.0f };
 
 		// Buttons
-		colors[ImGuiCol_Button] = ImVec4{ 0.2f, 0.2f, 0.25f, 1.0f };
-		colors[ImGuiCol_ButtonHovered] = ImVec4{ 0.3f, 0.3f, 0.35f, 1.0f };
-		colors[ImGuiCol_ButtonActive] = ImVec4{ 0.15f, 0.15f, 0.2f, 1.0f };
+		colors[ImGuiCol_Button] = ImVec4{ 0.2f, 0.2f, 0.2f, 1.0f };
+		colors[ImGuiCol_ButtonHovered] = ImVec4{ 0.3f, 0.3f, 0.3f, 1.0f };
+		colors[ImGuiCol_ButtonActive] = ImVec4{ 0.15f, 0.15f, 0.15f, 1.0f };
 
 		// Frames
-		colors[ImGuiCol_FrameBg] = ImVec4{ 0.2f, 0.2f, 0.25f, 1.0f };
-		colors[ImGuiCol_FrameBgHovered] = ImVec4{ 0.3f, 0.3f, 0.35f, 1.0f };
-		colors[ImGuiCol_FrameBgActive] = ImVec4{ 0.15f, 0.15f, 0.2f, 1.0f };
+		colors[ImGuiCol_FrameBg] = ImVec4{ 0.2f, 0.2f, 0.2f, 1.0f };
+		colors[ImGuiCol_FrameBgHovered] = ImVec4{ 0.3f, 0.3f, 0.3f, 1.0f };
+		colors[ImGuiCol_FrameBgActive] = ImVec4{ 0.15f, 0.15f, 0.15f, 1.0f };
 
 		// Tabs
-		colors[ImGuiCol_Tab] = ImVec4{ 0.2f, 0.2f, 0.25f, 1.0f };
-		colors[ImGuiCol_TabHovered] = ImVec4{ 0.3f, 0.3f, 0.35f, 1.0f };
-		colors[ImGuiCol_TabActive] = ImVec4{ 0.1f, 0.1f, 0.15f, 1.0f };
-		colors[ImGuiCol_TabUnfocused] = ImVec4{ 0.1f, 0.1f, 0.15f, 1.0f };
-		colors[ImGuiCol_TabUnfocusedActive] = ImVec4{ 0.1f, 0.1f, 0.15f, 1.0f };
+		colors[ImGuiCol_Tab] = ImVec4{ 0.2f, 0.2f, 0.2f, 1.0f };
+		colors[ImGuiCol_TabHovered] = ImVec4{ 0.3f, 0.3f, 0.3f, 1.0f };
+		colors[ImGuiCol_TabActive] = ImVec4{ 0.1f, 0.1f, 0.1f, 1.0f };
+		colors[ImGuiCol_TabUnfocused] = ImVec4{ 0.1f, 0.1f, 0.1f, 1.0f };
+		colors[ImGuiCol_TabUnfocusedActive] = ImVec4{ 0.1f, 0.1f, 0.1f, 1.0f };
 
 		// Title
-		colors[ImGuiCol_TitleBg] = ImVec4{ 0.2f, 0.2f, 0.25f, 1.0f };
-		colors[ImGuiCol_TitleBgActive] = ImVec4{ 0.3f, 0.3f, 0.35f, 1.0f };
-		colors[ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.1f, 0.1f, 0.15f, 1.0f };
+		colors[ImGuiCol_TitleBg] = ImVec4{ 0.04f, 0.04f, 0.06f, 1.0f };
+		colors[ImGuiCol_TitleBgActive] = ImVec4{ 0.14f, 0.14f, 0.16f, 1.0f };
+		colors[ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.1f, 0.1f, 0.1f, 1.0f };
 	}
 }

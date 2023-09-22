@@ -16,6 +16,7 @@
 #include "FlappyBird/Player.h"
 #include "FlappyBird/Camera.h"
 #include "FlappyBird/Ground.h"
+#include "CubeSpawner.h"
 
 namespace OpenEngine {
 
@@ -61,6 +62,7 @@ namespace OpenEngine {
 		m_EditorCamera.OnUpdate(ts);
 
 		Renderer2D::ResetStats();
+		Renderer::ResetStats();
 
 		m_Framebuffer->Bind();
 
@@ -84,13 +86,14 @@ namespace OpenEngine {
 		my -= m_ViewportBounds[0].y;
 		glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
 		my = viewportSize.y - my;
-		int mouseX = (int)mx;
-		int mouseY = (int)my;
+		m_MouseX = (int)mx;
+		m_MouseY = (int)my;
 
-		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
+		if (m_MouseX >= 0 && m_MouseY >= 0 && m_MouseX < (int)m_ViewportSize.x && m_MouseY < (int)m_ViewportSize.y && Input::IsMouseButtonPressed(Mouse::ButtonLeft) && !ImGuizmo::IsOver() && !Input::IsKeyPressed(Key::LeftAlt))
 		{
-			int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
+			int pixelData = m_Framebuffer->ReadPixel(1, m_MouseX, m_MouseY);
 			m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_EditorScene.get());
+			m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
 		}
 
 		m_Framebuffer->UnBind();
@@ -235,6 +238,7 @@ namespace OpenEngine {
 		ImGui::PopStyleVar();
 
 		UI_Toolbar();
+		//UI_ColorScheme();
 
 		ImGui::End();
 	}
@@ -250,12 +254,14 @@ namespace OpenEngine {
 
 	void EditorLayer::ScenePlay()
 	{
-		if (m_EditorScene->GetFilepath() == "assets\\Scenes\\game.openengine")
+		if (m_EditorScene->GetFilepath() == "assets\\Scenes\\CubeGame.openengine")
 		{
 			if (!m_EditorScene->GetEntityByName("Player").HasComponent<NativeScriptComponent>())
 				m_EditorScene->GetEntityByName("Player").AddComponent<NativeScriptComponent>().Bind<Player>();
 			if (!m_EditorScene->GetEntityByName("Camera").HasComponent<NativeScriptComponent>())
 				m_EditorScene->GetEntityByName("Camera").AddComponent<NativeScriptComponent>().Bind<FPSCameraController>();
+			if (!m_EditorScene->GetEntityByName("CubeSpawner").HasComponent<NativeScriptComponent>())
+				m_EditorScene->GetEntityByName("CubeSpawner").AddComponent<NativeScriptComponent>().Bind<CubeSpawner>();
 		}
 
 		m_SceneState = SceneState::Play;
@@ -331,22 +337,38 @@ namespace OpenEngine {
 
 	void EditorLayer::UI_Stats()
 	{
-		ImGui::Begin("Stats");
+		{
+			ImGui::Begin("Renderer Stats");
 
-		auto stats = Renderer2D::GetStats();
-		ImGui::Text("Renderer2D Stats:");
-		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
-		ImGui::Text("Quad Count: %d", stats.QuadCount);
-		ImGui::Text("Verticies: %d", stats.GetTotalVertexCount());
-		ImGui::Text("Indicies: %d", stats.GetTotalIndexCount());
+			ImGui::Text("Renderer Stats:");
+			ImGui::Text("Draw Calls: %d", Renderer::GetStatistics().DrawCalls);
+			ImGui::Text("Meshes: %d", Renderer::GetStatistics().Meshes);
 
-		ImGui::Separator();
+			ImGui::Separator();
+			auto stats = Renderer2D::GetStats();
+			ImGui::Text("Renderer2D Stats:");
+			ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+			ImGui::Text("Quad Count: %d", stats.QuadCount);
+			ImGui::Text("Verticies: %d", stats.GetTotalVertexCount());
+			ImGui::Text("Indicies: %d", stats.GetTotalIndexCount());
+
+			ImGui::Separator();
+			float gridSize = m_EditorScene->GetGridSize();
+			if (ImGui::OEDragFloat("Grid size", &gridSize, 1))
+				m_EditorScene->SetGridSize(gridSize);
+
+			ImGui::End();
+		}
+
+		ImGui::Begin("Performance Stats");
 		ImGui::Text("Frame Time: %f", m_FrameTime.GetMilliseconds());
 		
-		ImGui::Separator();
-		float gridSize = m_EditorScene->GetGridSize();
-		if (ImGui::OEDragFloat("Grid size", &gridSize, 1))
-			m_EditorScene->SetGridSize(gridSize);
+		auto stats = Application::Get().GetApplicationTimings();
+
+		ImGui::Text("Application::Layer::OnUpdate: %f", stats.LayerOnUpdate);
+		ImGui::Text("Application::Layer::OnImGuiRender: %f", stats.OnImGuiRender);
+		ImGui::Text("Scene::OnUpdate: %f", stats.SceneOnUpdate);
+		ImGui::Text("Renderer::EndScene: %f", stats.RendererEndScene);
 
 		ImGui::End();
 	}
@@ -405,6 +427,35 @@ namespace OpenEngine {
 		ImGui::PopStyleVar(2);
 		ImGui::PopStyleColor(3);
 		ImGui::End();
+	}
+
+	void EditorLayer::UI_ColorScheme()
+	{
+		auto& colors = ImGui::GetStyle().Colors;
+
+		glm::vec3 WindowBg = { colors[ImGuiCol_WindowBg].x, colors[ImGuiCol_WindowBg].y, colors[ImGuiCol_WindowBg].z };
+		glm::vec3 Header = { colors[ImGuiCol_Header].x, colors[ImGuiCol_Header].y, colors[ImGuiCol_Header].z };
+		glm::vec3 Button = { colors[ImGuiCol_Button].x, colors[ImGuiCol_Button].y, colors[ImGuiCol_Button].z };
+		glm::vec3 FrameBg = { colors[ImGuiCol_FrameBg].x, colors[ImGuiCol_FrameBg].y, colors[ImGuiCol_FrameBg].z };
+		glm::vec3 Tab = { colors[ImGuiCol_Tab].x, colors[ImGuiCol_Tab].y, colors[ImGuiCol_Tab].z };
+		glm::vec3 TitleBg = { colors[ImGuiCol_TitleBg].x, colors[ImGuiCol_TitleBg].y, colors[ImGuiCol_TitleBg].z };
+
+		ImGui::Begin("UI colour scheme");
+		ImGui::ColorEdit3("Window Bg", glm::value_ptr(WindowBg));
+		ImGui::ColorEdit3("Header", glm::value_ptr(Header));
+		ImGui::ColorEdit3("Button", glm::value_ptr(Button));
+		ImGui::ColorEdit3("Frame Bg", glm::value_ptr(FrameBg));
+		ImGui::ColorEdit3("Tab", glm::value_ptr(Tab));
+		ImGui::ColorEdit3("Title Bg", glm::value_ptr(TitleBg));
+		ImGui::End();
+
+		colors[ImGuiCol_WindowBg] = ImVec4(WindowBg.x, WindowBg.y, WindowBg.z, 1.0);
+		colors[ImGuiCol_Header] = ImVec4(Header.x, Header.y, Header.z, 1.0);
+		colors[ImGuiCol_Button] = ImVec4(Button.x, Button.y, Button.z, 1.0);
+		colors[ImGuiCol_FrameBg] = ImVec4(FrameBg.x, FrameBg.y, FrameBg.z, 1.0);
+		colors[ImGuiCol_Tab] = ImVec4(Tab.x, Tab.y, Tab.z, 1.0);
+		colors[ImGuiCol_TitleBg] = ImVec4(TitleBg.x, TitleBg.y, TitleBg.z, 1.0);
+
 	}
 
 	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
@@ -498,10 +549,22 @@ namespace OpenEngine {
 
 	bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& e)
 	{
-		if (e.GetMouseButton() == Mouse::ButtonLeft && m_ViewportHovered && !ImGuizmo::IsOver() && !Input::IsKeyPressed(Key::LeftAlt))
-			m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
+		/*if (e.GetMouseButton() == Mouse::ButtonLeft && m_ViewportHovered && !ImGuizmo::IsOver() && !Input::IsKeyPressed(Key::LeftAlt))
+			m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);*/
 
 		return false;
+	}
+
+	Entity EditorLayer::GetHoveredEntity()
+	{
+		Entity hoveredEntity;
+		if (m_MouseX >= 0 && m_MouseY >= 0 && m_MouseX < (int)m_ViewportSize.x && m_MouseY < (int)m_ViewportSize.y)
+		{
+			int pixelData = m_Framebuffer->ReadPixel(1, m_MouseX, m_MouseY);
+			hoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_EditorScene.get());
+		}
+
+		return (int)hoveredEntity > -1 ? hoveredEntity : Entity();
 	}
 
 	void EditorLayer::NewProject()

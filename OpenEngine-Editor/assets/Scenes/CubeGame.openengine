@@ -1,0 +1,128 @@
+{
+	"Entities": [
+		{
+			"ID": 577603840236650991,
+			"TagComponent": {
+				"Tag": "CubeSpawner"
+			},
+			"ParentComponent": {
+				"ParentName": "",
+				"ParentID": 0,
+				"Offset": [0.000000, 0.000000, 0.000000]
+			},
+			"TransformComponent": {
+				"Translation": [0.000000, 0.000000, 0.000000],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [1.000000, 1.000000, 1.000000]
+			}
+		},
+		{
+			"ID": 15581466642147400463,
+			"TagComponent": {
+				"Tag": "Camera"
+			},
+			"ParentComponent": {
+				"ParentName": "Player",
+				"ParentID": 17490704383289910333,
+				"Offset": [0.000000, 0.000000, 0.000000]
+			},
+			"TransformComponent": {
+				"Translation": [0.000000, 0.942632, -1.000000],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [1.000000, 1.000000, 1.000000]
+			},
+			"CameraComponent": {
+				"ProjectionType": "Perspective",
+				"VerticalFOV": 1.553343,
+				"Near": 0.010000,
+				"Far": 1000.000000,
+				"Primary": true,
+				"FixedAspectRatio": false
+			}
+		},
+		{
+			"ID": 17490704383289910333,
+			"TagComponent": {
+				"Tag": "Player"
+			},
+			"ParentComponent": {
+				"ParentName": "",
+				"ParentID": 0,
+				"Offset": [0.000000, 0.000000, 0.000000]
+			},
+			"TransformComponent": {
+				"Translation": [0.000000, 0.942632, 0.000000],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [0.750000, 0.750000, 0.750000]
+			},
+			"MeshComponent": {
+				"Filepath": "C:/Dev/OpenEngine/OpenEngine-Editor/assets/Models/Capsule.obj",
+				"MaterialIndex": 0
+			}
+		},
+		{
+			"ID": 16476725359203467891,
+			"TagComponent": {
+				"Tag": "Ground"
+			},
+			"ParentComponent": {
+				"ParentName": "",
+				"ParentID": 0,
+				"Offset": [0.000000, 0.000000, 0.000000]
+			},
+			"TransformComponent": {
+				"Translation": [0.000000, -0.500000, 0.000000],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [14.879743, 1.000000, 15.594326]
+			},
+			"MeshComponent": {
+				"Filepath": "C:/Dev/OpenEngine/OpenEngine-Editor/assets/Models/Cube.obj",
+				"MaterialIndex": 0
+			}
+		},
+		{
+			"ID": 1391007323944367609,
+			"TagComponent": {
+				"Tag": "Point Light"
+			},
+			"ParentComponent": {
+				"ParentName": "",
+				"ParentID": 0,
+				"Offset": [0.000000, 0.000000, 0.000000]
+			},
+			"TransformComponent": {
+				"Translation": [-0.676377, 1.142951, 0.867138],
+				"Rotation": [0.000000, 0.000000, 0.000000],
+				"Scale": [1.000000, 1.000000, 1.000000]
+			},
+			"EditorRendererComponent": {
+				"Color": [1.000000, 1.000000, 1.000000, 1.000000],
+				"Texture": "assets/textures/Lightbulb.png"
+			},
+			"PointLightComponent": {
+				"Color": [1.000000, 1.000000, 1.000000],
+				"AmbientIntensity": 0.700000
+			}
+		},
+		{
+			"ID": 11695241883112889086,
+			"TagComponent": {
+				"Tag": "NorthContainer"
+			},
+			"ParentComponent": {
+				"ParentName": "",
+				"ParentID": 0,
+				"Offset": [0.000000, 0.000000, 0.000000]
+			},
+			"TransformComponent": {
+				"Translation": [-2.716764, 0.750000, -5.500000],
+				"Rotation": [0.000000, 1.570796, 0.000000],
+				"Scale": [1.499931, 1.500000, 1.499931]
+			},
+			"MeshComponent": {
+				"Filepath": "C:/Dev/OpenEngine/OpenEngine-Editor/assets/Models/ShipmentContainer.obj",
+				"MaterialIndex": 1
+			}
+		}
+	]
+}

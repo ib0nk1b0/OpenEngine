@@ -124,7 +124,6 @@ namespace OpenEngine {
 	{
 		glm::vec3 Color{ 1.0f };
 		float AmbientIntensity = 0.1f;
-		float SpecularStrength = 0.5f;
 
 		DirectionalLightComponent() = default;
 		DirectionalLightComponent(const DirectionalLightComponent&) = default;
@@ -134,7 +133,6 @@ namespace OpenEngine {
 	{
 		glm::vec3 Color{ 1.0f };
 		float AmbientIntensity = 0.1f;
-		float SpecularStrength = 0.5f;
 
 		PointLightComponent() = default;
 		PointLightComponent(const PointLightComponent&) = default;

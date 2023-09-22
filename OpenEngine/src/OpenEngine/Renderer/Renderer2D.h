@@ -34,15 +34,13 @@ namespace OpenEngine
 		static void Flush();
 
 		// Primitives
-		//static void DrawQuad(Quad quad);
 
-		// Transforms
+		// Quads
 		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, const glm::vec4& color, float scale = 1.0f, int entityID = -1);
 		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color, int entityID = -1);
 		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float scale = 1.0f);
 		static void DrawQuad(const glm::mat4& transform, const Ref<SubTexture2D>& subtexture, float scale = 1.0f);
 
-		//Quads
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float scale = 1.0f);
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<SubTexture2D>& subtexture, float scale = 1.0f);
@@ -54,7 +52,12 @@ namespace OpenEngine
 		
 		// Circles
 		static void DrawCircle(const glm::mat4& transform, const glm::vec4& color, float thickness = 1.0f, float fade = 0.005f, int entityID = -1);
+
+		// Lines
 		static void DrawLine(const glm::vec3& p0, const glm::vec3& p1, const glm::vec4& color, int entityID = -1);
+		static void DrawRect(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
+		static void DrawRectZ(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
+		static void DrawRect(const glm::mat4& transform, const glm::vec4& color, int entityID = -1);
 
 		struct Statistics
 		{

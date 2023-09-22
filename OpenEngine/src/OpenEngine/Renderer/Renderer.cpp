@@ -1,11 +1,12 @@
 #include "oepch.h"
 #include "Renderer.h"
 
-#include "Platform/OpenGL/OpenGLShader.h"
 #include "Renderer2D.h"
-#include "glad/glad.h"
-
 #include "OpenEngine/Scene/Entity.h"
+#include "OpenEngine/Core/Application.h"
+#include "Platform/OpenGL/OpenGLShader.h"
+
+#include "glad/glad.h"
 
 namespace OpenEngine {
 
@@ -44,6 +45,8 @@ namespace OpenEngine {
 		};
 
 		glm::mat4 ViewProjectionMatrix{ 1.0f };
+
+		Renderer::Statistics Stats;
 	};
 
 	static SceneData s_SceneData;
@@ -55,96 +58,7 @@ namespace OpenEngine {
 		RenderCommand::Init();
 		Renderer2D::Init();
 
-		//s_SceneData.CubeVertexArray = VertexArray::Create();
-
-		//s_SceneData.CubeVertexBuffer = VertexBuffer::Create(s_SceneData.MaxCubeVerticies * sizeof(CubeVertex));
-		//s_SceneData.CubeVertexBuffer->SetLayout({
-		//	{ ShaderDataType::Float3, "a_Position" },
-		//	{ ShaderDataType::Float4, "a_Color"    },
-		//	{ ShaderDataType::Int,    "a_EntityID" }
-		//});
-
-		//s_SceneData.CubeVertexArray->AddVertexBuffer(s_SceneData.CubeVertexBuffer);
-
-		//s_SceneData.CubeVertexBufferBase = new CubeVertex[s_SceneData.MaxCubeVerticies];
-
-		//uint32_t* cubeIndicies = new uint32_t[s_SceneData.MaxCubeIndicies];
-
-		//uint32_t offset = 0;
-		//for (uint32_t i = 0; i < s_SceneData.MaxCubeIndicies; i += 36)
-		//{
-		//	// front face
-		//	cubeIndicies[i + 0] = offset + 0;
-		//	cubeIndicies[i + 1] = offset + 1;
-		//	cubeIndicies[i + 2] = offset + 2;
-
-		//	cubeIndicies[i + 3] = offset + 2;
-		//	cubeIndicies[i + 4] = offset + 3;
-		//	cubeIndicies[i + 5] = offset + 0;
-
-		//	//right face
-		//	cubeIndicies[i + 6] = offset + 3;
-		//	cubeIndicies[i + 7] = offset + 2;
-		//	cubeIndicies[i + 8] = offset + 6;
-
-		//	cubeIndicies[i + 9] = offset + 6;
-		//	cubeIndicies[i + 10] = offset + 7;
-		//	cubeIndicies[i + 11] = offset + 3;
-
-		//	//back face
-		//	cubeIndicies[i + 12] = offset + 7;
-		//	cubeIndicies[i + 13] = offset + 6;
-		//	cubeIndicies[i + 14] = offset + 5;
-
-		//	cubeIndicies[i + 15] = offset + 5;
-		//	cubeIndicies[i + 16] = offset + 4;
-		//	cubeIndicies[i + 17] = offset + 7;
-		//	
-		//	//left face
-		//	cubeIndicies[i + 18] = offset + 4;
-		//	cubeIndicies[i + 19] = offset + 5;
-		//	cubeIndicies[i + 20] = offset + 1;
-
-		//	cubeIndicies[i + 21] = offset + 1;
-		//	cubeIndicies[i + 22] = offset + 0;
-		//	cubeIndicies[i + 23] = offset + 4;
-
-		//	//top face
-		//	cubeIndicies[i + 24] = offset + 1;
-		//	cubeIndicies[i + 25] = offset + 5;
-		//	cubeIndicies[i + 26] = offset + 6;
-
-		//	cubeIndicies[i + 27] = offset + 6;
-		//	cubeIndicies[i + 28] = offset + 2;
-		//	cubeIndicies[i + 29] = offset + 1;
-
-		//	//bottom face
-		//	cubeIndicies[i + 30] = offset + 0;
-		//	cubeIndicies[i + 31] = offset + 4;
-		//	cubeIndicies[i + 32] = offset + 7;
-
-		//	cubeIndicies[i + 33] = offset + 7;
-		//	cubeIndicies[i + 34] = offset + 3;
-		//	cubeIndicies[i + 35] = offset + 0;
-
-		//	offset += 8;
-		//}
-
-		//Ref<IndexBuffer> cubeIB = IndexBuffer::Create(cubeIndicies, s_SceneData.MaxCubeIndicies);
-		//s_SceneData.CubeVertexArray->SetIndexBuffer(cubeIB);
-		//delete[] cubeIndicies;
-
-		//s_SceneData.CubeVertexPositions[0] = { -0.5f, -0.5f, -0.5f, 1.0f };
-		//s_SceneData.CubeVertexPositions[1] = {  0.5f, -0.5f, -0.5f, 1.0f };
-		//s_SceneData.CubeVertexPositions[2] = {  0.5f,  0.5f, -0.5f, 1.0f };
-		//s_SceneData.CubeVertexPositions[3] = { -0.5f,  0.5f, -0.5f, 1.0f };
-
-		//s_SceneData.CubeVertexPositions[4] = { -0.5f, -0.5f, 0.5f, 1.0f };
-		//s_SceneData.CubeVertexPositions[5] = {  0.5f, -0.5f, 0.5f, 1.0f };
-		//s_SceneData.CubeVertexPositions[6] = {  0.5f,  0.5f, 0.5f, 1.0f };
-		//s_SceneData.CubeVertexPositions[7] = { -0.5f,  0.5f, 0.5f, 1.0f };
-
-		s_SceneData.CubeShader = Shader::Create("assets/shaders/CubeShader.glsl");
+		s_SceneData.CubeShader = Shader::Create("assets/shaders/PBR_Shader.glsl");
 
 		s_SceneData.CubeVertexBufferPtr = s_SceneData.CubeVertexBufferBase;
 	}
@@ -154,51 +68,84 @@ namespace OpenEngine {
 		RenderCommand::SetViewport(0, 0, width, height);
 	}
 
-	void Renderer::BeginScene(const EditorCamera& camera)
+	void Renderer::BeginScene(const EditorCamera& camera, std::vector<Entity> lights)
 	{
-		s_SceneData.ViewProjectionMatrix = camera.GetViewProjection();
+		s_SceneData.CubeShader->Bind();
+		s_SceneData.CubeShader->SetMat4("u_ViewProjection", camera.GetViewProjection());
+		auto& cameraPosition = camera.GetViewProjection()[0];
+		s_SceneData.CubeShader->SetFloat3("u_CameraPosition", glm::vec3(cameraPosition.x, cameraPosition.y, cameraPosition.z));
+
+		glm::vec3 lightPosition = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 lightColor = { 0.0f, 0.0f, 0.0f };
+		float ambientIntensity = 0.0f;
+
+		if (!lights.empty())
+		{
+			auto& tc = lights[0].GetComponent<TransformComponent>();
+			auto& pl = lights[0].GetComponent<PointLightComponent>();
+
+			lightPosition = tc.Translation;
+			lightColor = pl.Color;
+			ambientIntensity = pl.AmbientIntensity;
+		}
+
+		s_SceneData.CubeShader->SetFloat3("u_LightPosition", lightPosition);
+		s_SceneData.CubeShader->SetFloat3("u_LightColor", lightColor);
+		s_SceneData.CubeShader->SetFloat("u_AmbientIntensity", ambientIntensity);
 	}
 
-	void Renderer::BeginScene(const Camera& camera, const glm::mat4& transform)
+	void Renderer::BeginScene(const Camera& camera, const glm::mat4& transform, std::vector<Entity> lights)
 	{
-		s_SceneData.ViewProjectionMatrix = camera.GetProjection() * glm::inverse(transform);
+		s_SceneData.CubeShader->Bind();
+		s_SceneData.CubeShader->SetMat4("u_ViewProjection", camera.GetProjection() * glm::inverse(transform));
+		auto& cameraPosition = camera.GetProjection()[0];
+		s_SceneData.CubeShader->SetFloat3("u_CameraPosition", glm::vec3(cameraPosition.x, cameraPosition.y, cameraPosition.z));
+
+		glm::vec3 lightPosition = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 lightColor = { 0.0f, 0.0f, 0.0f };
+		float ambientIntensity = 0.0f;
+
+		if (!lights.empty())
+		{
+			auto& tc = lights[0].GetComponent<TransformComponent>();
+			auto& pl = lights[0].GetComponent<PointLightComponent>();
+
+			lightPosition = tc.Translation;
+			lightColor = pl.Color;
+			ambientIntensity = pl.AmbientIntensity;
+		}
+
+		s_SceneData.CubeShader->SetFloat3("u_LightPosition", lightPosition);
+		s_SceneData.CubeShader->SetFloat3("u_LightColor", lightColor);
+		s_SceneData.CubeShader->SetFloat("u_AmbientIntensity", ambientIntensity);
 	}
 
 	void Renderer::BeginScene(OrthographicCamera& camera)
 	{
-		s_SceneData.ViewProjectionMatrix = camera.GetViewProjectionMatrix();
 	}
 
 	void Renderer::EndScene()
 	{
-	}
-
-	void Renderer::EndScene(std::vector<Mesh> meshes)
-	{
 		s_SceneData.CubeIndexCount = 0;
 		s_SceneData.CubeVertexBufferPtr = s_SceneData.CubeVertexBufferBase;
-
-		for (auto& mesh : meshes)
-		{
-			mesh.ResetData();
-		}
 	}
 
-	void Renderer::DrawCube(const glm::mat4& transform)
+	void Renderer::EndScene(std::vector<Mesh>& meshes)
 	{
-		constexpr size_t cubeVertexCount = 8;
-
-		for (size_t i = 0; i < cubeVertexCount; i++)
+		Timer timer;
+		for (auto& mesh : meshes)
 		{
-			s_SceneData.CubeVertexBufferPtr->Position = transform * s_SceneData.CubeVertexPositions[i];
-			s_SceneData.CubeVertexBufferPtr->Color = { 0.2f, 0.3f, 1.0f, 1.0f, };
-			s_SceneData.CubeVertexBufferPtr->EntityID = -1;
-			s_SceneData.CubeVertexBufferPtr++;
+			if (!mesh.HasMeshes())
+				continue;
+			mesh.Flush();
+			auto count = mesh.GetIndexCount();
+			RenderCommand::DrawIndexed(mesh.GetVertexArray(), count);
+			s_SceneData.Stats.DrawCalls++;
+			mesh.ResetData();
 		}
+		timer.Stop();
 
-		s_SceneData.CubeIndexCount += 36;
-		
-		Submit(s_SceneData.CubeShader, s_SceneData.CubeVertexArray, transform);
+		Application::Get().SubmitRendererTime(timer);
 	}
 
 	void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform)
@@ -246,90 +193,21 @@ namespace OpenEngine {
 		RenderCommand::DrawIndexed(cube.GetVertexArray());
 	}*/
 
-	void Renderer::Submit(const Ref<MeshInstance>& mesh, const glm::mat4& transform, EditorCamera* camera, int entityID)
+
+	void Renderer::Submit(Mesh& mesh, const glm::mat4& transform, Material material, int entityID)
 	{
-		s_SceneData.CubeShader->Bind();
-		s_SceneData.CubeShader->SetMat4("u_ViewProjection", s_SceneData.ViewProjectionMatrix);
-
-		auto cameraPosition = camera->GetViewProjection()[0];
-		s_SceneData.CubeShader->SetFloat3("u_CameraPosition", glm::vec3(cameraPosition.x, cameraPosition.y, cameraPosition.z));
-
-		s_SceneData.CubeShader->SetMat4("u_Model", transform);
-
-		s_SceneData.CubeShader->SetFloat3("u_LightPosition", { 0.0f, 0.0f, 0.0f });
-		s_SceneData.CubeShader->SetFloat3("u_LightColor", { 0.0f, 0.0f, 0.0f });
-		s_SceneData.CubeShader->SetFloat("u_AmbientIntensity", 0.0f);
-		s_SceneData.CubeShader->SetFloat("u_SpecularStrength", 0.0f);
-
-		mesh->SetData(transform, entityID);
-
-		RenderCommand::DrawIndexed(mesh->GetVertexArray(), mesh->GetIndexCount());
-	}
-	
-	void OpenEngine::Renderer::Submit(const Ref<MeshInstance>& mesh, const glm::mat4& transform, EditorCamera* camera, int entityID, Entity pointLight)
-	{
-		s_SceneData.CubeShader->Bind();
-		s_SceneData.CubeShader->SetMat4("u_ViewProjection", s_SceneData.ViewProjectionMatrix);
-
-		auto cameraPosition = camera->GetViewProjection()[0];
-		s_SceneData.CubeShader->SetFloat3("u_CameraPosition", glm::vec3(cameraPosition.x, cameraPosition.y, cameraPosition.z));
-
-		s_SceneData.CubeShader->SetMat4("u_Model", transform);
-
-		auto& tc = pointLight.GetComponent<TransformComponent>();
-		auto& pl = pointLight.GetComponent<DirectionalLightComponent>();
-
-		s_SceneData.CubeShader->SetFloat3("u_LightPosition", tc.Translation);
-		s_SceneData.CubeShader->SetFloat3("u_LightColor", pl.Color);
-		s_SceneData.CubeShader->SetFloat("u_AmbientIntensity", pl.AmbientIntensity);
-		s_SceneData.CubeShader->SetFloat("u_SpecularStrength", pl.SpecularStrength);
-
-		mesh->SetData(transform, entityID);
-
-		RenderCommand::DrawIndexed(mesh->GetVertexArray(), mesh->GetIndexCount());
+		mesh.SetData(transform, material, entityID);
+		s_SceneData.Stats.Meshes++;
 	}
 
-	/*void Renderer::Submit(Cube cube, const glm::mat4& transform, EditorCamera* camera, int entityID)
+	void Renderer::ResetStats()
 	{
-		s_SceneData.CubeShader->Bind();
-		s_SceneData.CubeShader->SetMat4("u_ViewProjection", s_SceneData.ViewProjectionMatrix);
-
-		auto cameraPosition = camera->GetViewProjection()[0];
-		s_SceneData.CubeShader->SetFloat3("u_CameraPosition", glm::vec3(cameraPosition.x, cameraPosition.y, cameraPosition.z));
-
-		s_SceneData.CubeShader->SetMat4("u_Model", transform);
-		
-		s_SceneData.CubeShader->SetFloat3("u_LightPosition", { 0.0f, 0.0f, 0.0f });
-		s_SceneData.CubeShader->SetFloat3("u_LightColor", { 0.0f, 0.0f, 0.0f });
-		s_SceneData.CubeShader->SetFloat("u_AmbientIntensity", 0.0f);
-		s_SceneData.CubeShader->SetFloat("u_SpecularStrength", 0.0f);
-
-		cube.SetData(transform, entityID);
-
-		RenderCommand::DrawIndexed(cube.GetVertexArray());
+		memset(&s_SceneData.Stats, 0, sizeof(Statistics));
 	}
 
-	void Renderer::Submit(Cube cube, const glm::mat4& transform, EditorCamera* camera, int entityID, Entity pointLight)
+	Renderer::Statistics Renderer::GetStatistics()
 	{
-		s_SceneData.CubeShader->Bind();
-		s_SceneData.CubeShader->SetMat4("u_ViewProjection", s_SceneData.ViewProjectionMatrix);
-
-		auto cameraPosition = camera->GetViewProjection()[0];
-		s_SceneData.CubeShader->SetFloat3("u_CameraPosition", glm::vec3(cameraPosition.x, cameraPosition.y, cameraPosition.z));
-
-		s_SceneData.CubeShader->SetMat4("u_Model", transform);
-
-		auto& tc = pointLight.GetComponent<TransformComponent>();
-		auto& pl = pointLight.GetComponent<DirectionalLightComponent>();
-
-		s_SceneData.CubeShader->SetFloat3("u_LightPosition", tc.Translation);
-		s_SceneData.CubeShader->SetFloat3("u_LightColor", pl.Color);
-		s_SceneData.CubeShader->SetFloat("u_AmbientIntensity", pl.AmbientIntensity);
-		s_SceneData.CubeShader->SetFloat("u_SpecularStrength", pl.SpecularStrength);
-
-		cube.SetData(transform, entityID);
-
-		RenderCommand::DrawIndexed(cube.GetVertexArray());
-	}*/
+		return s_SceneData.Stats;
+	}
 
 }

@@ -44,7 +44,7 @@ namespace OpenEngine {
 
 	struct Renderer2DData
 	{
-		static const uint32_t MaxQuads = 500;
+		static const uint32_t MaxQuads = 1000;
 		static const uint32_t MaxQuadVerticies = MaxQuads * 4;
 		static const uint32_t MaxQuadIndicies = MaxQuads * 6;
 		static const uint32_t MaxTextureSlots = 32;
@@ -286,6 +286,7 @@ namespace OpenEngine {
 			s_Data.LineVertexBuffer->SetData(s_Data.LineVertexBufferBase, dataSize);
 
 			s_Data.LineShader->Bind();
+			RenderCommand::SetLineWidth(2.0f);
 			RenderCommand::DrawLines(s_Data.LineVertexArray, s_Data.LineVertexCount);
 			s_Data.Stats.DrawCalls++;
 		}
@@ -533,6 +534,45 @@ namespace OpenEngine {
 		
 		s_Data.LineVertexCount += 2;
 		s_Data.Stats.ExtraVerticies += 2;
+	}
+
+	void Renderer2D::DrawRect(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
+	{
+		glm::vec3 p0 = glm::vec3(position.x - size.x * 0.5f, position.y - size.y * 0.5f, position.z);
+		glm::vec3 p1 = glm::vec3(position.x + size.x * 0.5f, position.y - size.y * 0.5f, position.z);
+		glm::vec3 p2 = glm::vec3(position.x + size.x * 0.5f, position.y + size.y * 0.5f, position.z);
+		glm::vec3 p3 = glm::vec3(position.x - size.x * 0.5f, position.y + size.y * 0.5f, position.z);
+
+		DrawLine(p0, p1, color);
+		DrawLine(p1, p2, color);
+		DrawLine(p2, p3, color);
+		DrawLine(p3, p0, color);
+
+	}
+
+	void Renderer2D::DrawRectZ(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
+	{
+		glm::vec3 p0 = glm::vec3(position.x - size.x * 0.5f, position.y * 0.5f, position.z - size.y);
+		glm::vec3 p1 = glm::vec3(position.x + size.x * 0.5f, position.y * 0.5f, position.z - size.y);
+		glm::vec3 p2 = glm::vec3(position.x + size.x * 0.5f, position.y * 0.5f, position.z + size.y);
+		glm::vec3 p3 = glm::vec3(position.x - size.x * 0.5f, position.y * 0.5f, position.z + size.y);
+
+		DrawLine(p0, p1, color);
+		DrawLine(p1, p2, color);
+		DrawLine(p2, p3, color);
+		DrawLine(p3, p0, color);
+	}
+
+	void Renderer2D::DrawRect(const glm::mat4& transform, const glm::vec4& color, int entityID)
+	{
+		glm::vec3 lineVerticies[4];
+		for (size_t i = 0; i < 4; i++)
+			lineVerticies[i] = transform * s_Data.QuadVertexPositions[i];
+
+		DrawLine(lineVerticies[0], lineVerticies[1], color, entityID);
+		DrawLine(lineVerticies[1], lineVerticies[2], color, entityID);
+		DrawLine(lineVerticies[2], lineVerticies[3], color, entityID);
+		DrawLine(lineVerticies[3], lineVerticies[0], color, entityID);
 	}
 
 	//void Renderer2D::SetupSkybox()

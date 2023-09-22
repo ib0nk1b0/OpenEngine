@@ -1485,6 +1485,7 @@
     <ClInclude Include="src\OpenEngine\Physics\Physics.h" />
     <ClInclude Include="src\OpenEngine\Physics\World.h" />
     <ClInclude Include="src\OpenEngine\Renderer\Mesh.h" />
+    <ClInclude Include="src\OpenEngine\Core\Random.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenEngine\Core\Application.cpp">
@@ -1608,5 +1609,6 @@
     <ClCompile Include="src\OpenEngine\Physics\World.cpp" />
     <ClCompile Include="src\OpenEngine\Serialization\Serializer.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\Mesh.cpp" />
+    <ClCompile Include="src\OpenEngine\Core\Random.cpp" />
   </ItemGroup>
 </Project>

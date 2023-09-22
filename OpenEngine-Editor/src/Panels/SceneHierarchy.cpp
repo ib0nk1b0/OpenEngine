@@ -373,7 +373,7 @@ namespace OpenEngine {
 				}
 
 				ImGuiID id = 1;
-				ImGui::ImageButtonEx(id, (ImTextureID)texturePreview->GetRendererID(), { 32, 32 }, { 0, 1 }, { 1, 0 }, { 0, 0, 0, 0 }, { 1, 1, 1, 1 });
+				ImGui::ImageButtonEx(id, (ImTextureID)texturePreview->GetRendererID(), { 64, 64 }, { 0, 1 }, { 1, 0 }, { 0, 0, 0, 0 }, { 1, 1, 1, 1 });
 				if (ImGui::BeginDragDropTarget())
 				{
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
@@ -398,15 +398,25 @@ namespace OpenEngine {
 			ImGui::SetColumnWidth(0, 100.0f);
 			ImGui::Text("Mesh");
 			ImGui::NextColumn();
-			ImGui::Text("%s", component.Filepath.c_str());
-			ImGui::Columns(1);
-			ImGui::SameLine();
-			if (ImGui::SmallButton("+"))
+			std::string meshName;
+			std::string ext;
+			std::string path = component.Filepath;
+			if (path == "null")
+				meshName = path;
+			else
+			{
+				size_t extensionPos = path.find_last_of(".");
+				ext = path.substr(extensionPos);
+				size_t pos = path.find_last_of("\\/");
+				meshName = path.substr(pos + 1, path.size() - pos - ext.size() - 1);
+			}
+			if (ImGui::Button(meshName.c_str()))
 			{
 				std::string filepath = FileDialogs::OpenFile("Model OBJ (*.obj)\0*.obj\0");
-				if (FileDialogs::IsValidFile(filepath, ".obj"))
+				if (!filepath.empty() && FileDialogs::IsValidFile(filepath, ".obj"))
 					component.Filepath = filepath;
 			}
+			ImGui::Columns(1);
 			ImGui::OEDragInt("Material Index", &component.MaterialIndex, 1, 0, m_Context->m_Materials.size() - 1);
 		});
 
@@ -414,14 +424,12 @@ namespace OpenEngine {
 		{
 			ImGui::OEColorEdit3("Color", glm::value_ptr(component.Color));
 			ImGui::OEDragFloat("Ambient Intensity", &component.AmbientIntensity, 0.05f, 0.0f, 1.0f, 150.0f);
-			ImGui::OEDragFloat("Specular Strength", &component.SpecularStrength, 0.05f, 0.0f, 1.0f, 150.0f);
 		});
 
 		DrawComponent<DirectionalLightComponent>("Directional Light", entity, [=](auto& component)
 		{
 			ImGui::OEColorEdit3("Color", glm::value_ptr(component.Color));
 			ImGui::OEDragFloat("Ambient Intensity", &component.AmbientIntensity, 0.05f, 0.0f, 1.0f, 150.0f);
-			ImGui::OEDragFloat("Specular Strength", &component.SpecularStrength, 0.05f, 0.0f, 1.0f, 150.0f);
 		});
 
 		DrawComponent<CircleRendererComponent>("Circle Renderer", m_SelectionContext, [](auto& component)

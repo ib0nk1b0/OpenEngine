@@ -21,36 +21,44 @@ namespace OpenEngine {
 		float Roughness;
 		float Metalic;
 		int EntityID;
+		glm::vec4 Transform0;
+		glm::vec4 Transform1;
+		glm::vec4 Transform2;
+		glm::vec4 Transform3;
 	};
 
 	struct InstanceData
 	{
-		static const uint32_t MaxMeshes = 500;
+		static const uint32_t MaxMeshes = 100;
 		uint32_t MaxMeshVerticies;
 		uint32_t MaxMeshIndicies;
+
+		uint32_t IndexCount = 0;
+		uint32_t MeshCount = 0;
 
 		Vertex* VertexBufferBase = nullptr;
 		Vertex* VertexBufferPointer = nullptr;
 	};
-
 	
 	class Mesh
 	{
 	public:
 		Mesh(const std::string& filepath);
-		//Mesh(glm::vec4* vertexPositions, uint32_t* indicies, const glm::mat4& transform, Material material, int entityID, int indiciesSize);
 		~Mesh();
 
-		void SetData(const glm::mat4& transform, int entityID);
-
 		void LoadFromFile(const std::string& filepath);
+		void Flush();
 
 		void ResetData();
 
+		void AddIndexCount(uint32_t indexCount) { m_Data.IndexCount += indexCount; }
+
 		std::string GetFilePath() { return m_Filepath; }
 		Ref<VertexArray>& GetVertexArray() { return m_VertexArray; }
+		uint32_t GetIndexCount() { return m_Data.IndexCount; }
+		bool HasMeshes() { return m_Data.MeshCount > 0; }
 
-		//void SetData(const glm::mat4& transform, int entityID);
+		void SetData(const glm::mat4& transform, Material material, int entityID);
 	private:
 		//std::vector<Vertex> m_Vertecies;
 		//uint32_t* m_Indicies;
@@ -62,11 +70,13 @@ namespace OpenEngine {
 
 		Ref<VertexArray> m_VertexArray;
 		Ref<VertexBuffer> m_VertexBuffer;
+		Ref<VertexBuffer> m_TransformVertexBuffer;
 		Ref<IndexBuffer> m_IndexBuffer;
 
 		std::string m_Filepath;
 
 		InstanceData m_Data;
+		uint32_t m_Offset = 0;
 
 		friend class MeshInstance;
 	};
@@ -78,7 +88,7 @@ namespace OpenEngine {
 		void SetData(const glm::mat4& transform, int entityID);
 
 		Ref<VertexArray>& GetVertexArray() { return m_Mesh->m_VertexArray; }
-		uint32_t GetIndexCount() { return m_Mesh->m_IndiciesVec.size(); }
+		uint32_t GetIndexCount() { return m_Mesh->GetIndexCount(); }
 	private:
 		Material m_Material;
 

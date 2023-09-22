@@ -30,6 +30,8 @@ namespace OpenEngine {
 		bool OnKeyPressed(KeyPressedEvent& e);
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
 
+		Entity GetHoveredEntity();
+
 		void NewProject();
 		void NewScene(const std::string& filepath = "UntitledScene.openengine");
 		void OpenScene();
@@ -42,6 +44,7 @@ namespace OpenEngine {
 		void UI_Stats();
 		void UI_EditorCameraPanel();
 		void UI_Toolbar();
+		void UI_ColorScheme();
 	private:
 		Timestep m_FrameTime;
 
@@ -57,6 +60,7 @@ namespace OpenEngine {
 		EditorCamera m_EditorCamera;
 
 		Entity m_HoveredEntity;
+		int m_MouseX, m_MouseY;
 
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
 		glm::vec2 m_ViewportSize{ 1.0f };

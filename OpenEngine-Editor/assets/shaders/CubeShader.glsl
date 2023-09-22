@@ -7,9 +7,12 @@ layout(location = 2) in vec3 a_Albedo;
 layout(location = 3) in float a_Roughness;
 layout(location = 4) in float a_Metalic;
 layout(location = 5) in int a_EntityID;
+layout(location = 6) in vec4 a_Transform0;
+layout(location = 7) in vec4 a_Transform1;
+layout(location = 8) in vec4 a_Transform2;
+layout(location = 9) in vec4 a_Transform3;
 
 uniform mat4 u_ViewProjection;
-uniform mat4 u_Model;
 
 layout(location = 0) out vec4 v_Color;
 layout(location = 1) out vec3 v_Normal;
@@ -18,14 +21,15 @@ layout(location = 4) out flat int v_EntityID;
 
 void main()
 {
+    mat4 Transform = mat4(a_Transform0, a_Transform1, a_Transform2, a_Transform3);
     v_Color = vec4(a_Albedo, 1.0);
-    FragPos = vec3(u_Model * vec4(a_Position, 1.0));
-    v_Normal = mat3(transpose(inverse(u_Model))) * a_Normal;
+    FragPos = vec3(Transform * vec4(a_Position, 1.0));
+    v_Normal = mat3(transpose(inverse(Transform))) * a_Normal;
     //v_Normal = a_Normal;
     v_EntityID = a_EntityID;
-    vec4 Position = u_Model * vec4(a_Position, 1.0);
-    gl_Position = u_ViewProjection * Position;
-    //gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+    //vec4 Position = Transform * vec4(a_Position, 1.0);
+    //gl_Position = u_ViewProjection * Position;
+    gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 }
 
 #type fragment

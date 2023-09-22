@@ -212,6 +212,31 @@ namespace OpenEngine {
 		m_Scene = scene;
 	}
 
+	static std::string ReplaceBackSlashForwardSlash(std::string filepathOrginal)
+	{
+		std::string filepath;
+		char delimiter = '\\';
+		size_t pos = 0;
+		std::string token;
+
+		int no_of_backslash = (int)std::count(filepathOrginal.begin(), filepathOrginal.end(), '\\');
+		if (no_of_backslash > 0)
+		{
+			for (int i = 0; i < no_of_backslash + 1; i++)
+			{
+				pos = filepathOrginal.find(delimiter);
+				token = filepathOrginal.substr(0, pos);
+				filepath += token + "/";
+				filepathOrginal.erase(0, pos + 1);
+			}
+			filepath.erase(filepath.length() - 1, filepath.length());
+		}
+		else
+			filepath = filepathOrginal;
+
+		return filepath;
+	}
+
 	void Serializer::Serialize(const std::string& filepath)
 	{
 		std::string text;
@@ -242,7 +267,7 @@ namespace OpenEngine {
 
 					text += StartJSONObject("ParentComponent");
 					text += GetJSONString("ParentName", pc.ParentName);
-					text += Tab(4) + "\"ParentID\": " + std::to_string(pc.ParentID) + "," + NewLine();
+					text += Tab(3) + "\"ParentID\": " + std::to_string(pc.ParentID) + "," + NewLine() + Tab();
 					text += GetJSONString("Offset", Encode(pc.Offset), true);
 
 					if (!entity.HasComponent<TransformComponent>() &&
@@ -250,6 +275,7 @@ namespace OpenEngine {
 						!entity.HasComponent<EditorRendererComponent>() &&
 						!entity.HasComponent<CircleRendererComponent>() &&
 						!entity.HasComponent<MeshComponent>() &&
+						!entity.HasComponent<PointLightComponent>() &&
 						!entity.HasComponent<CameraComponent>() &&
 						!entity.HasComponent<RigidBody2DComponent>() &&
 						!entity.HasComponent<BoxColider2DComponent>())
@@ -270,6 +296,7 @@ namespace OpenEngine {
 						!entity.HasComponent<EditorRendererComponent>() &&
 						!entity.HasComponent<CircleRendererComponent>() &&
 						!entity.HasComponent<MeshComponent>() &&
+						!entity.HasComponent<PointLightComponent>() &&
 						!entity.HasComponent<CameraComponent>() &&
 						!entity.HasComponent<RigidBody2DComponent>() &&
 						!entity.HasComponent<BoxColider2DComponent>())
@@ -316,6 +343,7 @@ namespace OpenEngine {
 					if (!entity.HasComponent<EditorRendererComponent>() &&
 						!entity.HasComponent<CircleRendererComponent>() &&
 						!entity.HasComponent<MeshComponent>() &&
+						!entity.HasComponent<PointLightComponent>() &&
 						!entity.HasComponent<CameraComponent>() &&
 						!entity.HasComponent<RigidBody2DComponent>() &&
 						!entity.HasComponent<BoxColider2DComponent>())
@@ -359,6 +387,7 @@ namespace OpenEngine {
 
 					if (!entity.HasComponent<CircleRendererComponent>() &&
 						!entity.HasComponent<MeshComponent>() &&
+						!entity.HasComponent<PointLightComponent>() &&
 						!entity.HasComponent<CameraComponent>() &&
 						!entity.HasComponent<RigidBody2DComponent>() &&
 						!entity.HasComponent<BoxColider2DComponent>())
@@ -375,6 +404,7 @@ namespace OpenEngine {
 					text += GetJSONString("Thickness", crc.Thickness);
 					text += GetJSONString("Fade", crc.Fade, true);
 					if (!entity.HasComponent<MeshComponent>() &&
+						!entity.HasComponent<PointLightComponent>() &&
 						!entity.HasComponent<CameraComponent>() &&
 						!entity.HasComponent<RigidBody2DComponent>() &&
 						!entity.HasComponent<BoxColider2DComponent>())
@@ -387,8 +417,25 @@ namespace OpenEngine {
 				{
 					auto& mc = entity.GetComponent<MeshComponent>();
 					text += StartJSONObject("MeshComponent");
+					text += GetJSONString("Filepath", ReplaceBackSlashForwardSlash(mc.Filepath));
 					text += GetJSONString("MaterialIndex", mc.MaterialIndex, true);
 					
+					if (!entity.HasComponent<PointLightComponent>() &&
+						!entity.HasComponent<CameraComponent>() &&
+						!entity.HasComponent<RigidBody2DComponent>() &&
+						!entity.HasComponent<BoxColider2DComponent>())
+						text += Tab(2) + "}" + NewLine();
+					else
+						text += Tab(2) + "}," + NewLine();
+				}
+
+				if (entity.HasComponent<PointLightComponent>())
+				{
+					auto& pl = entity.GetComponent<PointLightComponent>();
+					text += StartJSONObject("PointLightComponent");
+					text += GetJSONString("Color", Encode(pl.Color));
+					text += GetJSONString("AmbientIntensity", pl.AmbientIntensity, true);
+
 					if (!entity.HasComponent<CameraComponent>() &&
 						!entity.HasComponent<RigidBody2DComponent>() &&
 						!entity.HasComponent<BoxColider2DComponent>())
@@ -545,9 +592,17 @@ namespace OpenEngine {
 					auto& jsonMeshComponent = value["MeshComponent"];
 					auto& mc = entity.AddComponent<MeshComponent>();
 
+					mc.Filepath = jsonMeshComponent["Filepath"].get<std::string>();
 					mc.MaterialIndex = jsonMeshComponent["MaterialIndex"].get<int>();
+				}
 
+				if (value.contains("PointLightComponent"))
+				{
+					auto& jsonPointlightComponent = value["PointLightComponent"];
+					auto& pl = entity.AddComponent<PointLightComponent>();
 
+					Decode(ConvertFloat3(jsonPointlightComponent["Color"]), pl.Color);
+					pl.AmbientIntensity = jsonPointlightComponent["AmbientIntensity"].get<float>();
 				}
 
 				if (value.contains("CameraComponent"))

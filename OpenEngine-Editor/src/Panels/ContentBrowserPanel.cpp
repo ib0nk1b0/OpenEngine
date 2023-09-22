@@ -45,7 +45,7 @@ namespace OpenEngine {
 		ImGui::PopFont();
 
 		//io.Fonts->Fonts.Size = 18;
-		float thumbnailSize = 72.0f;
+		float thumbnailSize = 64.0f;
 		float padding = 12.0f;
 		float cellSize = thumbnailSize + padding;
 

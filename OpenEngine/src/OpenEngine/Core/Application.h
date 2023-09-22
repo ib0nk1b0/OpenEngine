@@ -17,7 +17,15 @@ namespace OpenEngine {
 	{
 		std::string Name = "OpenEngine Application";
 		std::string WorkingDirectory;
-		bool VSyncEnabled = false;
+		bool VSyncEnabled = true;
+	};
+
+	struct ApplicationTimings
+	{
+		float LayerOnUpdate;
+		float OnImGuiRender;
+		float SceneOnUpdate;
+		float RendererEndScene;
 	};
 
 	class Application
@@ -41,6 +49,11 @@ namespace OpenEngine {
 
 		inline static Application& Get() { return *s_Instance; }
 		void PrintCurrentUsage();
+
+		void SubmitSceneTime(float time) { m_ApplicationTimings.SceneOnUpdate = time; }
+		void SubmitRendererTime(float time) { m_ApplicationTimings.RendererEndScene = time; }
+
+		ApplicationTimings GetApplicationTimings() { return m_ApplicationTimings; }
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
@@ -52,6 +65,8 @@ namespace OpenEngine {
 		bool m_Running = true;
 		bool m_Minimised = false;
 		LayerStack m_LayerStack;
+
+		ApplicationTimings m_ApplicationTimings;
 
 		float m_LastFrameTime = 0.0f;
 

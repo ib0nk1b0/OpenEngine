@@ -111,6 +111,13 @@ namespace OpenEngine {
 
 	void Scene::DestroyEntity(Entity entity)
 	{
+		auto view = m_Registry.view<ParentComponent>();
+		for (auto e : view)
+		{
+			Entity child = { e, this };
+			if (child.GetComponent<ParentComponent>().ParentID == entity.GetUUID())
+				m_Registry.destroy(child);
+		}
 		m_Registry.destroy(entity);
 	}
 
@@ -213,7 +220,7 @@ namespace OpenEngine {
 	void Scene::OnRuntimeStart()
 	{
 		m_CursorEnabled = false;
-		if (m_Filepath == "assets\\Scenes\\game.openengine")
+		if (m_Filepath == "assets\\Scenes\\CubeGame.openengine")
 			glfwSetInputMode((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 #if Dungeon
@@ -244,48 +251,60 @@ namespace OpenEngine {
 
 	void Scene::OnUpdateEditor(Timestep ts, EditorCamera& camera)
 	{
+		Timer timer;
 		OnUpdate(ts);
 
 		{
-			Renderer::BeginScene(camera);
+			auto directionalLightView = m_Registry.view<DirectionalLightComponent>();
+			auto pointLightView = m_Registry.view<PointLightComponent>();
+			std::vector<Entity> lights;
+			for (auto entity : pointLightView)
+			{
+				lights.push_back({ entity, this });
+			}
+
+			Renderer::BeginScene(camera, lights);
 
 			auto view = m_Registry.view<TransformComponent, MeshComponent>();
-			auto directionalLightView = m_Registry.view<DirectionalLightComponent>();
 
 			for (auto entity : view)
 			{
 				auto [transform, meshComponent] = view.get<TransformComponent, MeshComponent>(entity);
-				Material material = m_Materials[meshComponent.MaterialIndex];
+				int index = meshComponent.MaterialIndex > m_Materials.size() - 1 ? 0 : meshComponent.MaterialIndex;
+				Material material = m_Materials[index];
 				
 				if (meshComponent.Filepath != "null")
 				{
 					Ref<MeshInstance> mesh;
 					bool exists = false;
+					int index = 0;
+
 					for (int i = 0; i < m_Meshes.size(); i++)
 					{
 						if (m_Meshes[i].GetFilePath() == meshComponent.Filepath)
 						{
+							index = i;
 							mesh = CreateRef<MeshInstance>(CreateRef<Mesh>(m_Meshes[i]), material);
 							exists = true;
 						}
 					}
+
 					if (!exists)
 					{
 						m_Meshes.emplace_back(meshComponent.Filepath);
 						mesh = CreateRef<MeshInstance>(CreateRef<Mesh>(m_Meshes[m_Meshes.size() - 1]), material);
+						m_Meshes[m_Meshes.size() - 1].AddIndexCount(mesh->GetIndexCount());
+						index = m_Meshes.size() - 1;
 					}
 
-					if (directionalLightView.empty())
-						Renderer::Submit(mesh, transform.GetTransform(), &camera, (int)entity);
-					else
-					{
-						Entity directionalLight = { directionalLightView.front(), this };
-						Renderer::Submit(mesh, transform.GetTransform(), &camera, (int)entity, directionalLight);
-					}
+					Renderer::Submit(m_Meshes[index], transform.GetTransform(), material, (int)entity);
 				}
 			}
 
 			Renderer::EndScene(m_Meshes);
+			timer.Stop();
+
+			Application::Get().SubmitSceneTime(timer);
 		}
 
 		{
@@ -373,7 +392,6 @@ namespace OpenEngine {
 			for (auto entityID : view)
 			{
 				Entity entity = Entity{ entityID, this };
-
 			}
 		}
 
@@ -397,21 +415,53 @@ namespace OpenEngine {
 
 		if (mainCamera)
 		{
-			Renderer::BeginScene(mainCamera->GetProjection(), cameraTransform);
+			auto pointLightView = m_Registry.view<PointLightComponent>();
+			std::vector<Entity> lights;
+			for (auto entity : pointLightView)
+			{
+				lights.push_back({ entity, this });
+			}
+
+			Renderer::BeginScene(*mainCamera, cameraTransform, lights);
 
 			{
 				auto view = m_Registry.view<TransformComponent, MeshComponent>();
 				for (auto entity : view)
 				{
-					auto [transform, mesh] = view.get<TransformComponent, MeshComponent>(entity);
-					Material material = m_Materials[mesh.MaterialIndex];
-					/*Cube cube = Cube(material);
+					auto [transform, meshComponent] = view.get<TransformComponent, MeshComponent>(entity);
+					int index = meshComponent.MaterialIndex > m_Materials.size() - 1 ? 0 : meshComponent.MaterialIndex;
+					Material material = m_Materials[index];
 
-					Renderer::Submit(cube, transform.GetTransform(), mainCamera, (int)entity);*/
+					if (meshComponent.Filepath != "null")
+					{
+						Ref<MeshInstance> mesh;
+						bool exists = false;
+						int index = 0;
+
+						for (int i = 0; i < m_Meshes.size(); i++)
+						{
+							if (m_Meshes[i].GetFilePath() == meshComponent.Filepath)
+							{
+								index = i;
+								mesh = CreateRef<MeshInstance>(CreateRef<Mesh>(m_Meshes[i]), material);
+								exists = true;
+							}
+						}
+
+						if (!exists)
+						{
+							m_Meshes.emplace_back(meshComponent.Filepath);
+							mesh = CreateRef<MeshInstance>(CreateRef<Mesh>(m_Meshes[m_Meshes.size() - 1]), material);
+							m_Meshes[m_Meshes.size() - 1].AddIndexCount(mesh->GetIndexCount());
+							index = m_Meshes.size() - 1;
+						}
+
+						Renderer::Submit(m_Meshes[index], transform.GetTransform(), material, (int)entity);
+					}
 				}
 			}
 
-			Renderer::EndScene();
+			Renderer::EndScene(m_Meshes);
 
 			Renderer2D::BeginScene(mainCamera->GetProjection(), cameraTransform);
 
@@ -495,6 +545,20 @@ namespace OpenEngine {
 					auto& mesh = newEntity.AddComponent<MeshComponent>();
 					mesh.Filepath = entity.GetComponent<MeshComponent>().Filepath;
 					mesh.MaterialIndex = entity.GetComponent<MeshComponent>().MaterialIndex;
+				}
+
+				if (entity.HasComponent<PointLightComponent>())
+				{
+					auto& pl = newEntity.AddComponent<PointLightComponent>();
+					pl.Color = entity.GetComponent<PointLightComponent>().Color;
+					pl.AmbientIntensity = entity.GetComponent<PointLightComponent>().AmbientIntensity;
+				}
+				
+				if (entity.HasComponent<DirectionalLightComponent>())
+				{
+					auto& drl = newEntity.AddComponent<DirectionalLightComponent>();
+					drl.Color = entity.GetComponent<DirectionalLightComponent>().Color;
+					drl.AmbientIntensity = entity.GetComponent<DirectionalLightComponent>().AmbientIntensity;
 				}
 
 				if (entity.HasComponent<CameraComponent>())
