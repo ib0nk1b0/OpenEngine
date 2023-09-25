@@ -53,4 +53,29 @@ namespace OpenEngine {
 		return true;
 	}
 
+	std::string Utils::FormatFilepath(std::string filepathOriginal)
+	{
+		std::string filepath;
+		char delimiter = '\\';
+		size_t pos = 0;
+		std::string token;
+
+		int no_of_backslash = (int)std::count(filepathOriginal.begin(), filepathOriginal.end(), '\\');
+		if (no_of_backslash > 0)
+		{
+			for (int i = 0; i < no_of_backslash + 1; i++)
+			{
+				pos = filepathOriginal.find(delimiter);
+				token = filepathOriginal.substr(0, pos);
+				filepath += token + "/";
+				filepathOriginal.erase(0, pos + 1);
+			}
+			filepath.erase(filepath.length() - 1, filepath.length());
+		}
+		else
+			filepath = filepathOriginal;
+
+		return filepath;
+	}
+
 }

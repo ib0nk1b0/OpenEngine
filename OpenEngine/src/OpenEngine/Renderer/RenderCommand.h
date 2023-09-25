@@ -32,6 +32,11 @@ namespace OpenEngine {
 			s_RendererAPI->DrawIndexed(vertexArray, indexCount);
 		}
 
+		inline static void DrawInstanced(const Ref<VertexArray>& vertexArray, uint32_t indexCount, uint32_t instanceCount)
+		{
+			s_RendererAPI->DrawInstanced(vertexArray, indexCount, instanceCount);
+		}
+
 		inline static void SetLineWidth(float width)
 		{
 			s_RendererAPI->SetLineWidth(width);

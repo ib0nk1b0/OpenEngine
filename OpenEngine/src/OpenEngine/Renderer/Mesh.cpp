@@ -34,6 +34,9 @@ namespace OpenEngine {
 		m_Data.VertexBufferBase = new Vertex[m_Data.MaxMeshVerticies];
 		m_Data.VertexBufferPointer = m_Data.VertexBufferBase;
 
+		m_Data.InstanceBufferBase = new InstanceVertex[m_Data.MaxMeshes];
+		m_Data.InstanceBufferPointer = m_Data.InstanceBufferBase;
+
 		uint32_t* indicies = new uint32_t[m_Data.MaxMeshIndicies];
 
 		uint32_t offset = 0;
@@ -48,17 +51,23 @@ namespace OpenEngine {
 		m_VertexBuffer = VertexBuffer::Create(vertexBufferSize);
 		m_VertexBuffer->SetLayout({
 			{ ShaderDataType::Float3, "a_Position"   },
-			{ ShaderDataType::Float3, "a_Normal"     },
-			{ ShaderDataType::Float3, "a_Albedo"     },
-			{ ShaderDataType::Float,  "a_Roughness"  },
-			{ ShaderDataType::Float,  "a_Metalic"    },
-			{ ShaderDataType::Int,    "a_EntityID"   },
-			{ ShaderDataType::Float4, "a_Transform0" },
-			{ ShaderDataType::Float4, "a_Transform1" },
-			{ ShaderDataType::Float4, "a_Transform2" },
-			{ ShaderDataType::Float4, "a_Transform3" }
+			{ ShaderDataType::Float3, "a_Normal"     }
 		});
 		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
+
+		uint32_t instanceBufferSize = (uint32_t)(m_Data.MaxMeshes * sizeof(InstanceVertex));
+		m_InstanceBuffer = VertexBuffer::Create(instanceBufferSize);
+		m_InstanceBuffer->SetLayout({
+			{ ShaderDataType::Float3, "a_Albedo",     true },
+			{ ShaderDataType::Float,  "a_Roughness",  true },
+			{ ShaderDataType::Float,  "a_Metalic",    true },
+			{ ShaderDataType::Int,    "a_EntityID",   true },
+			{ ShaderDataType::Float4, "a_Transform0", true },
+			{ ShaderDataType::Float4, "a_Transform1", true },
+			{ ShaderDataType::Float4, "a_Transform2", true },
+			{ ShaderDataType::Float4, "a_Transform3", true }
+		});
+		m_VertexArray->AddVertexBuffer(m_InstanceBuffer, 2);
 
 		m_IndexBuffer = IndexBuffer::Create(indicies, m_Data.MaxMeshIndicies);
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
@@ -117,6 +126,7 @@ namespace OpenEngine {
 	void Mesh::ResetData()
 	{
 		m_Data.VertexBufferPointer = m_Data.VertexBufferBase;
+		m_Data.InstanceBufferPointer = m_Data.InstanceBufferBase;
 		m_Data.IndexCount = 0;
 		m_Data.MeshCount = 0;
 	}
@@ -128,18 +138,21 @@ namespace OpenEngine {
 			uint32_t vertexIndex = m_IndiciesVec[i];
 			uint32_t normalsIndex = m_NormalsVec[i];
 
-			m_Data.VertexBufferPointer->Position = transform * m_VertexPositions[vertexIndex];
+			//m_Data.VertexBufferPointer->Position = transform * m_VertexPositions[vertexIndex];
+			m_Data.VertexBufferPointer->Position = m_VertexPositions[vertexIndex];
 			m_Data.VertexBufferPointer->Normal = m_VertexNormals[normalsIndex];
-			m_Data.VertexBufferPointer->Albedo = material.Albedo;
-			m_Data.VertexBufferPointer->Roughness = material.Roughness;
-			m_Data.VertexBufferPointer->Metalic = material.Metalic;
-			m_Data.VertexBufferPointer->EntityID = entityID;
-			m_Data.VertexBufferPointer->Transform0 = transform[0];
-			m_Data.VertexBufferPointer->Transform1 = transform[1];
-			m_Data.VertexBufferPointer->Transform2 = transform[2];
-			m_Data.VertexBufferPointer->Transform3 = transform[3];
 			m_Data.VertexBufferPointer++;
 		}
+		
+		m_Data.InstanceBufferPointer->Albedo = material.Albedo;
+		m_Data.InstanceBufferPointer->Roughness = material.Roughness;
+		m_Data.InstanceBufferPointer->Metalic = material.Metalic;
+		m_Data.InstanceBufferPointer->EntityID = entityID;
+		m_Data.InstanceBufferPointer->Transform0 = transform[0];
+		m_Data.InstanceBufferPointer->Transform1 = transform[1];
+		m_Data.InstanceBufferPointer->Transform2 = transform[2];
+		m_Data.InstanceBufferPointer->Transform3 = transform[3];
+		m_Data.InstanceBufferPointer++;
 
 		m_Data.IndexCount += m_IndiciesVec.size();
 		m_Data.MeshCount++;
@@ -149,175 +162,9 @@ namespace OpenEngine {
 	{
 		uint32_t dataSize = (uint32_t)((uint8_t*)m_Data.VertexBufferPointer - (uint8_t*)m_Data.VertexBufferBase);
 		m_VertexBuffer->SetData(m_Data.VertexBufferBase, dataSize);
+
+		dataSize = (uint32_t)((uint8_t*)m_Data.InstanceBufferPointer - (uint8_t*)m_Data.InstanceBufferBase);
+		m_InstanceBuffer->SetData(m_Data.InstanceBufferBase, dataSize);
 	}
-
-	MeshInstance::MeshInstance(const Ref<Mesh>& mesh, Material material)
-		: m_Mesh(mesh), m_Material(material)
-	{
-	}
-
-	void MeshInstance::SetData(const glm::mat4& transform, int entityID)
-	{
-		for (int i = 0; i < m_Mesh->m_IndiciesVec.size(); i++)
-		{
-			uint32_t vertexIndex = m_Mesh->m_IndiciesVec[i];
-			uint32_t normalsIndex = m_Mesh->m_NormalsVec[i];
-
-			//m_Mesh->m_Data.VertexBufferPointer->Position = transform * m_Mesh->m_VertexPositions[vertexIndex];
-			m_Mesh->m_Data.VertexBufferPointer->Position = { m_Mesh->m_VertexPositions[vertexIndex].x, m_Mesh->m_VertexPositions[vertexIndex].y, m_Mesh->m_VertexPositions[vertexIndex].z };
-			m_Mesh->m_Data.VertexBufferPointer->Normal = m_Mesh->m_VertexNormals[normalsIndex];
-			m_Mesh->m_Data.VertexBufferPointer->Albedo = m_Material.Albedo;
-			m_Mesh->m_Data.VertexBufferPointer->Roughness = m_Material.Roughness;
-			m_Mesh->m_Data.VertexBufferPointer->Metalic = m_Material.Metalic;
-			m_Mesh->m_Data.VertexBufferPointer->EntityID = entityID;
-			m_Mesh->m_Data.VertexBufferPointer++;
-		}
-
-		m_Mesh->m_Data.IndexCount += m_Mesh->m_IndiciesVec.size();
-		OE_CORE_INFO("IndexCount: {0}", m_Mesh->m_Data.IndexCount);
-	}
-
-	//Cube::Cube(Material material)
-	//	: Mesh(8, 36, material, m_Indicies)
-	//{
-	//	glm::vec3 Normals[] = {
-	//		{ 0.0f,  0.0f, -1.0f },
-	//		{ 0.0f,  0.0f, -1.0f },
-	//		{ 0.0f,  0.0f, -1.0f },
-	//		{ 0.0f,  0.0f, -1.0f },
-	//		{ 0.0f,  0.0f, -1.0f },
-	//		{ 0.0f,  0.0f, -1.0f },
-
-	//		{ 0.0f,  0.0f, 1.0f },
-	//		{ 0.0f,  0.0f, 1.0f },
-	//		{ 0.0f,  0.0f, 1.0f },
-	//		{ 0.0f,  0.0f, 1.0f },
-	//		{ 0.0f,  0.0f, 1.0f },
-	//		{ 0.0f,  0.0f, 1.0f },
-
-	//		{ -1.0f,  0.0f,  0.0f },
-	//		{ -1.0f,  0.0f,  0.0f },
-	//		{ -1.0f,  0.0f,  0.0f },
-	//		{ -1.0f,  0.0f,  0.0f },
-	//		{ -1.0f,  0.0f,  0.0f },
-	//		{ -1.0f,  0.0f,  0.0f },
-
-	//		{ 1.0f,  0.0f,  0.0f },
-	//		{ 1.0f,  0.0f,  0.0f },
-	//		{ 1.0f,  0.0f,  0.0f },
-	//		{ 1.0f,  0.0f,  0.0f },
-	//		{ 1.0f,  0.0f,  0.0f },
-	//		{ 1.0f,  0.0f,  0.0f },
-
-	//		{ 0.0f, -1.0f,  0.0f },
-	//		{ 0.0f, -1.0f,  0.0f },
-	//		{ 0.0f, -1.0f,  0.0f },
-	//		{ 0.0f, -1.0f,  0.0f },
-	//		{ 0.0f, -1.0f,  0.0f },
-	//		{ 0.0f, -1.0f,  0.0f },
-
-	//		{ 0.0f,  1.0f,  0.0f },
-	//		{ 0.0f,  1.0f,  0.0f },
-	//		{ 0.0f,  1.0f,  0.0f },
-	//		{ 0.0f,  1.0f,  0.0f },
-	//		{ 0.0f,  1.0f,  0.0f },
-	//		{ 0.0f,  1.0f,  0.0f }
-	//	};
-
-	//	glm::vec4 Vertices[] = {
-	//		{ -0.5f, -0.5f, -0.5f, 1.0f },
-	//		{  0.5f, -0.5f, -0.5f, 1.0f },
-	//		{  0.5f,  0.5f, -0.5f, 1.0f },
-	//		{  0.5f,  0.5f, -0.5f, 1.0f },
-	//		{ -0.5f,  0.5f, -0.5f, 1.0f },
-	//		{ -0.5f, -0.5f, -0.5f, 1.0f },
-
-	//		{ -0.5f, -0.5f,  0.5f, 1.0f },
-	//		{  0.5f, -0.5f,  0.5f, 1.0f },
-	//		{  0.5f,  0.5f,  0.5f, 1.0f },
-	//		{  0.5f,  0.5f,  0.5f, 1.0f },
-	//		{ -0.5f,  0.5f,  0.5f, 1.0f },
-	//		{ -0.5f, -0.5f,  0.5f, 1.0f },
-
-	//		{ -0.5f,  0.5f,  0.5f, 1.0f },
-	//		{ -0.5f,  0.5f, -0.5f, 1.0f },
-	//		{ -0.5f, -0.5f, -0.5f, 1.0f },
-	//		{ -0.5f, -0.5f, -0.5f, 1.0f },
-	//		{ -0.5f, -0.5f,  0.5f, 1.0f },
-	//		{ -0.5f,  0.5f,  0.5f, 1.0f },
-
-	//		{ 0.5f,  0.5f,  0.5f, 1.0f },
-	//		{ 0.5f,  0.5f, -0.5f, 1.0f },
-	//		{ 0.5f, -0.5f, -0.5f, 1.0f },
-	//		{ 0.5f, -0.5f, -0.5f, 1.0f },
-	//		{ 0.5f, -0.5f,  0.5f, 1.0f },
-	//		{ 0.5f,  0.5f,  0.5f, 1.0f },
-
-	//		{ -0.5f, -0.5f, -0.5f, 1.0f },
-	//		{  0.5f, -0.5f, -0.5f, 1.0f },
-	//		{  0.5f, -0.5f,  0.5f, 1.0f },
-	//		{  0.5f, -0.5f,  0.5f, 1.0f },
-	//		{ -0.5f, -0.5f,  0.5f, 1.0f },
-	//		{ -0.5f, -0.5f, -0.5f, 1.0f },
-
-	//		{ -0.5f,  0.5f, -0.5f, 1.0f },
-	//		{  0.5f,  0.5f, -0.5f, 1.0f },
-	//		{  0.5f,  0.5f,  0.5f, 1.0f },
-	//		{  0.5f,  0.5f,  0.5f, 1.0f },
-	//		{ -0.5f,  0.5f,  0.5f, 1.0f },
-	//		{ -0.5f,  0.5f, -0.5f, 1.0f }
-	//	};
-
-	//	uint32_t indicies[36];
-	//	// front face
-	//	for (int i = 0; i < 36; i++)
-	//	{
-	//		indicies[i] = i;
-	//		m_VertexPositions[i] = Vertices[i];
-	//		m_Normals[i] = Normals[i];
-	//	}
-
-	//	m_VertexArray = VertexArray::Create();
-
-	//	uint32_t vertexBufferSize = (uint32_t)(36 * sizeof(Vertex));
-	//	m_VertexBuffer = VertexBuffer::Create(vertexBufferSize);
-	//	m_VertexBuffer->SetLayout({
-	//		{ ShaderDataType::Float3, "a_Position"  },
-	//		{ ShaderDataType::Float3, "a_Normal"    },
-	//		{ ShaderDataType::Float3, "a_Albedo"    },
-	//		{ ShaderDataType::Float,  "a_Roughness" },
-	//		{ ShaderDataType::Float,  "a_Metalic"   },
-	//		{ ShaderDataType::Int,    "a_EntityID"  }
-	//	});
-	//	m_VertexArray->AddVertexBuffer(m_VertexBuffer);
-
-	//	m_IndexBuffer = IndexBuffer::Create(indicies, 36);
-	//	m_VertexArray->SetIndexBuffer(m_IndexBuffer);
-	//}
-
-	//Cube::Cube(const glm::mat4& transform, Material material, int entityID)
-	//	: Mesh(m_VertexPositions, m_Indices, transform, material, entityID, 36) {}
-
-	//void Cube::SetData(const glm::mat4& transform, int entityID)
-	//{
-	//	Vertex* vertexBase = nullptr;
-	//	Vertex* vertexPointer = nullptr;
-	//	vertexBase = new Vertex[36];
-	//	vertexPointer = vertexBase;
-
-	//	for (int i = 0; i < 36; i++)
-	//	{
-	//		vertexPointer->Position = transform * m_VertexPositions[i];
-	//		vertexPointer->Normal = m_Normals[i];
-	//		vertexPointer->Albedo = m_Material.Albedo;
-	//		vertexPointer->Roughness = m_Material.Roughness;
-	//		vertexPointer->Metalic = m_Material.Metalic;
-	//		vertexPointer->EntityID = entityID;
-	//		vertexPointer++;
-	//	}
-
-	//	uint32_t dataSize = (uint32_t)((uint8_t*)vertexPointer - (uint8_t*)vertexBase);
-	//	m_VertexBuffer->SetData(vertexBase, dataSize);
-	//}
 
 }

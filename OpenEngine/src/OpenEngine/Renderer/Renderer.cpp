@@ -139,7 +139,8 @@ namespace OpenEngine {
 				continue;
 			mesh.Flush();
 			auto count = mesh.GetIndexCount();
-			RenderCommand::DrawIndexed(mesh.GetVertexArray(), count);
+			//RenderCommand::DrawIndexed(mesh.GetVertexArray(), count);
+			RenderCommand::DrawInstanced(mesh.GetVertexArray(), count, mesh.InstanceCount());
 			s_SceneData.Stats.DrawCalls++;
 			mesh.ResetData();
 		}

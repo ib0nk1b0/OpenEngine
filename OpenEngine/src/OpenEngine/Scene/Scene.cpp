@@ -266,7 +266,6 @@ namespace OpenEngine {
 			Renderer::BeginScene(camera, lights);
 
 			auto view = m_Registry.view<TransformComponent, MeshComponent>();
-
 			for (auto entity : view)
 			{
 				auto [transform, meshComponent] = view.get<TransformComponent, MeshComponent>(entity);
@@ -275,7 +274,6 @@ namespace OpenEngine {
 				
 				if (meshComponent.Filepath != "null")
 				{
-					Ref<MeshInstance> mesh;
 					bool exists = false;
 					int index = 0;
 
@@ -284,7 +282,6 @@ namespace OpenEngine {
 						if (m_Meshes[i].GetFilePath() == meshComponent.Filepath)
 						{
 							index = i;
-							mesh = CreateRef<MeshInstance>(CreateRef<Mesh>(m_Meshes[i]), material);
 							exists = true;
 						}
 					}
@@ -292,8 +289,6 @@ namespace OpenEngine {
 					if (!exists)
 					{
 						m_Meshes.emplace_back(meshComponent.Filepath);
-						mesh = CreateRef<MeshInstance>(CreateRef<Mesh>(m_Meshes[m_Meshes.size() - 1]), material);
-						m_Meshes[m_Meshes.size() - 1].AddIndexCount(mesh->GetIndexCount());
 						index = m_Meshes.size() - 1;
 					}
 
@@ -434,7 +429,6 @@ namespace OpenEngine {
 
 					if (meshComponent.Filepath != "null")
 					{
-						Ref<MeshInstance> mesh;
 						bool exists = false;
 						int index = 0;
 
@@ -443,7 +437,6 @@ namespace OpenEngine {
 							if (m_Meshes[i].GetFilePath() == meshComponent.Filepath)
 							{
 								index = i;
-								mesh = CreateRef<MeshInstance>(CreateRef<Mesh>(m_Meshes[i]), material);
 								exists = true;
 							}
 						}
@@ -451,8 +444,6 @@ namespace OpenEngine {
 						if (!exists)
 						{
 							m_Meshes.emplace_back(meshComponent.Filepath);
-							mesh = CreateRef<MeshInstance>(CreateRef<Mesh>(m_Meshes[m_Meshes.size() - 1]), material);
-							m_Meshes[m_Meshes.size() - 1].AddIndexCount(mesh->GetIndexCount());
 							index = m_Meshes.size() - 1;
 						}
 

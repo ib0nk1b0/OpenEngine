@@ -414,7 +414,7 @@ namespace OpenEngine {
 			{
 				std::string filepath = FileDialogs::OpenFile("Model OBJ (*.obj)\0*.obj\0");
 				if (!filepath.empty() && FileDialogs::IsValidFile(filepath, ".obj"))
-					component.Filepath = filepath;
+					component.Filepath = Utils::FormatFilepath(filepath);
 			}
 			ImGui::Columns(1);
 			ImGui::OEDragInt("Material Index", &component.MaterialIndex, 1, 0, m_Context->m_Materials.size() - 1);

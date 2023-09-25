@@ -12,4 +12,10 @@ namespace OpenEngine {
 		static bool IsValidFile(const std::filesystem::path& filepath, const std::string& extension);
 	};
 
+	class Utils
+	{
+	public:
+		static std::string FormatFilepath(std::string filepathOriginal);
+	};
+
 }

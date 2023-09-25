@@ -2,6 +2,7 @@
 #include "Serializer.h"
 
 #include "OpenEngine/Scene/Entity.h"
+#include "OpenEngine/Utils/PlatformUtils.h"
 
 namespace OpenEngine {
 
@@ -312,29 +313,8 @@ namespace OpenEngine {
 
 					if (src.Texture)
 					{
-						std::string filepathOrginal = src.Texture->GetFilePath();
-						std::string filepath;
-						char delimiter = '\\';
-						size_t pos = 0;
-						std::string token;
-
-						int no_of_backslash = (int)std::count(filepathOrginal.begin(), filepathOrginal.end(), '\\');
-						if (no_of_backslash > 0)
-						{
-							for (int i = 0; i < no_of_backslash + 1; i++)
-							{
-								pos = filepathOrginal.find(delimiter);
-								token = filepathOrginal.substr(0, pos);
-								filepath += token + "/";
-								filepathOrginal.erase(0, pos + 1);
-							}
-							filepath.erase(filepath.length() - 1, filepath.length());
-						}
-						else
-							filepath = filepathOrginal;
-
 						text += GetJSONString("Color", Encode(src.Color));
-						text += GetJSONString("Texture", filepath);
+						text += GetJSONString("Texture", Utils::FormatFilepath(src.Texture->GetFilePath()));
 						text += GetJSONString("Scale", src.Scale, true);
 					}
 					else
@@ -417,7 +397,7 @@ namespace OpenEngine {
 				{
 					auto& mc = entity.GetComponent<MeshComponent>();
 					text += StartJSONObject("MeshComponent");
-					text += GetJSONString("Filepath", ReplaceBackSlashForwardSlash(mc.Filepath));
+					text += GetJSONString("Filepath", Utils::FormatFilepath(mc.Filepath));
 					text += GetJSONString("MaterialIndex", mc.MaterialIndex, true);
 					
 					if (!entity.HasComponent<PointLightComponent>() &&

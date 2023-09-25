@@ -35,11 +35,12 @@ namespace OpenEngine {
 		uint32_t Size = 0;
 		uint32_t Offset = 0;
 		bool Normalized = false;
+		bool PerInstance = false;
 
 		BufferElement() {}
 
-		BufferElement(ShaderDataType type, const std::string& name, uint32_t offset = 0, bool normalized = false)
-			: Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(offset), Normalized(normalized)
+		BufferElement(ShaderDataType type, const std::string& name, bool perInstance = false, uint32_t offset = 0, bool normalized = false)
+			: Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(offset), Normalized(normalized), PerInstance(perInstance)
 		{
 		}
 

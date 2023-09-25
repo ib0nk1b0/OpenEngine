@@ -73,7 +73,7 @@
 			"TransformComponent": {
 				"Translation": [0.000000, -0.500000, 0.000000],
 				"Rotation": [0.000000, 0.000000, 0.000000],
-				"Scale": [14.879743, 1.000000, 15.594326]
+				"Scale": [18.250000, 1.000000, 19.010000]
 			},
 			"MeshComponent": {
 				"Filepath": "C:/Dev/OpenEngine/OpenEngine-Editor/assets/Models/Cube.obj",

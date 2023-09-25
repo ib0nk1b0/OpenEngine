@@ -114,7 +114,6 @@ namespace OpenEngine {
 		//std::filesystem::path Filepath;
 		std::string Filepath = "null";
 		int MaterialIndex = 0;
-		MeshInstance* Mesh;
 
 		MeshComponent() = default;
 		MeshComponent(const MeshComponent&) = default;
