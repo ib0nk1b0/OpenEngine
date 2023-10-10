@@ -29,7 +29,7 @@ void main()
     v_EntityID = a_EntityID;
     //vec4 Position = Transform * vec4(a_Position, 1.0);
     //gl_Position = u_ViewProjection * Position;
-    gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+    gl_Position = u_ViewProjection * Transform * vec4(a_Position, 1.0);
 }
 
 #type fragment

@@ -26,7 +26,20 @@ namespace OpenEngine {
 	Mesh::Mesh(const std::string& filepath)
 		: m_Filepath(filepath)
 	{
+		OE_PROFILE_FUNCTION();
+
 		LoadFromFile(filepath);
+
+		/*if (m_VertexPositions.size() < 50)
+			m_Data.MaxMeshes = 1000;
+		else if (m_VertexPositions.size() < 200)
+			m_Data.MaxMeshes = 500;
+		else if (m_VertexPositions.size() < 500)
+			m_Data.MaxMeshes = 100;
+		else if (m_VertexPositions.size() < 1000)
+			m_Data.MaxMeshes = 50;
+		else
+			m_Data.MaxMeshes = 10;*/
 
 		m_Data.MaxMeshVerticies = m_Data.MaxMeshes * m_IndiciesVec.size();
 		m_Data.MaxMeshIndicies = m_Data.MaxMeshes * m_IndiciesVec.size();
@@ -39,15 +52,16 @@ namespace OpenEngine {
 
 		uint32_t* indicies = new uint32_t[m_Data.MaxMeshIndicies];
 
-		uint32_t offset = 0;
 		for (uint32_t i = 0; i < m_Data.MaxMeshIndicies; i++)
 		{
+			int index = i % (m_IndiciesVec.size() - 1);
 			indicies[i] = i;
+			//indicies[i] = m_IndiciesVec[index];
 		}
 
 		m_VertexArray = VertexArray::Create();
 
-		uint32_t vertexBufferSize = (uint32_t)(m_Data.MaxMeshVerticies * sizeof(Vertex));
+		uint32_t vertexBufferSize = (uint32_t)(m_IndiciesVec.size() * sizeof(Vertex));
 		m_VertexBuffer = VertexBuffer::Create(vertexBufferSize);
 		m_VertexBuffer->SetLayout({
 			{ ShaderDataType::Float3, "a_Position"   },
@@ -72,6 +86,26 @@ namespace OpenEngine {
 		m_IndexBuffer = IndexBuffer::Create(indicies, m_Data.MaxMeshIndicies);
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
+		for (int i = 0; i < m_IndiciesVec.size(); i++)
+		{
+			uint32_t vertexIndex = m_IndiciesVec[i];
+			uint32_t normalsIndex = m_NormalsVec[i];
+
+			UniqueVertex vertex;
+			vertex.Index = vertexIndex;
+			vertex.Normal = normalsIndex;
+			if (VertexExists(vertex))
+				continue;
+
+			m_Data.VertexBufferPointer->Position = m_VertexPositions[vertexIndex];
+			m_Data.VertexBufferPointer->Normal = m_VertexNormals[normalsIndex];
+			m_Data.VertexBufferPointer++;
+
+			m_UniqueVerticies.push_back(vertex);
+		}
+
+		uint32_t dataSize = (uint32_t)((uint8_t*)m_Data.VertexBufferPointer - (uint8_t*)m_Data.VertexBufferBase);
+		m_VertexBuffer->SetData(m_Data.VertexBufferBase, dataSize);
 		delete[] indicies;
 	}
 
@@ -79,9 +113,17 @@ namespace OpenEngine {
 	{
 	}
 
+	bool Mesh::VertexExists(UniqueVertex vertex)
+	{
+		
+		
+		return false;
+	}
+
 	void Mesh::LoadFromFile(const std::string& filepath)
 	{
 		OE_PROFILE_FUNCTION();
+
 		std::ifstream file(filepath);
 		if (file)
 		{
@@ -92,8 +134,8 @@ namespace OpenEngine {
 				{
 					glm::vec3 Position;
 					sscanf_s(line.c_str(), "v %f %f %f", &Position.x, &Position.y, &Position.z);
-					m_VertexPositions.push_back({ Position, 1.0 });
-					
+					//m_VertexPositions.push_back({ Position, 1.0 });
+					m_VertexPositions.push_back(Position);
 				}
 				if (StartWith(line, "vn "))
 				{
@@ -125,7 +167,9 @@ namespace OpenEngine {
 
 	void Mesh::ResetData()
 	{
-		m_Data.VertexBufferPointer = m_Data.VertexBufferBase;
+		OE_PROFILE_FUNCTION();
+
+		//m_Data.VertexBufferPointer = m_Data.VertexBufferBase;
 		m_Data.InstanceBufferPointer = m_Data.InstanceBufferBase;
 		m_Data.IndexCount = 0;
 		m_Data.MeshCount = 0;
@@ -133,16 +177,7 @@ namespace OpenEngine {
 
 	void Mesh::SetData(const glm::mat4& transform, Material material, int entityID)
 	{
-		for (int i = 0; i < m_IndiciesVec.size(); i++)
-		{
-			uint32_t vertexIndex = m_IndiciesVec[i];
-			uint32_t normalsIndex = m_NormalsVec[i];
-
-			//m_Data.VertexBufferPointer->Position = transform * m_VertexPositions[vertexIndex];
-			m_Data.VertexBufferPointer->Position = m_VertexPositions[vertexIndex];
-			m_Data.VertexBufferPointer->Normal = m_VertexNormals[normalsIndex];
-			m_Data.VertexBufferPointer++;
-		}
+		OE_PROFILE_FUNCTION();
 		
 		m_Data.InstanceBufferPointer->Albedo = material.Albedo;
 		m_Data.InstanceBufferPointer->Roughness = material.Roughness;
@@ -160,10 +195,8 @@ namespace OpenEngine {
 
 	void Mesh::Flush()
 	{
-		uint32_t dataSize = (uint32_t)((uint8_t*)m_Data.VertexBufferPointer - (uint8_t*)m_Data.VertexBufferBase);
-		m_VertexBuffer->SetData(m_Data.VertexBufferBase, dataSize);
 
-		dataSize = (uint32_t)((uint8_t*)m_Data.InstanceBufferPointer - (uint8_t*)m_Data.InstanceBufferBase);
+		uint32_t dataSize = (uint32_t)((uint8_t*)m_Data.InstanceBufferPointer - (uint8_t*)m_Data.InstanceBufferBase);
 		m_InstanceBuffer->SetData(m_Data.InstanceBufferBase, dataSize);
 	}
 

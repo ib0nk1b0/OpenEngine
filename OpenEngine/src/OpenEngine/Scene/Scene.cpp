@@ -235,6 +235,8 @@ namespace OpenEngine {
 	{
 		// Update parent entities
 
+		OE_PROFILE_FUNCTION();
+
 		auto children = GetEntitiesWithParents();
 		for (auto childID : children)
 		{
@@ -243,7 +245,10 @@ namespace OpenEngine {
 			glm::vec3 forwardDirection = glm::rotate(glm::quat(glm::vec3(parent.GetComponent<TransformComponent>().Rotation.x, parent.GetComponent<TransformComponent>().Rotation.y, 0.0f)), glm::vec3(0.0f, 0.0f, -1.0f));
 			if (child.GetTranslation() != parent.GetTranslation() + child.GetComponent<ParentComponent>().Offset)
 			{
-				child.GetComponent<TransformComponent>().Translation = parent.GetTranslation() + forwardDirection;
+				glm::vec3 parentPosition = parent.GetTranslation();
+				glm::vec3 offset = child.GetComponent<ParentComponent>().Offset; 
+				glm::vec3 position = parentPosition + forwardDirection;
+				child.GetComponent<TransformComponent>().Translation = position;
 				OE_CORE_INFO("{0}, {1}, {2}", forwardDirection.x, forwardDirection.y, forwardDirection.z);
 			}
 		}
@@ -251,6 +256,8 @@ namespace OpenEngine {
 
 	void Scene::OnUpdateEditor(Timestep ts, EditorCamera& camera)
 	{
+		OE_PROFILE_FUNCTION();
+
 		Timer timer;
 		OnUpdate(ts);
 

@@ -21,7 +21,7 @@ namespace OpenEngine {
 		m_InitialMousePosition = mouse;
 		MouseRotate(delta);
 		float pitchInDegrees = glm::degrees(m_Pitch);
-		float rotationX = glm::clamp(pitchInDegrees, -30.0f, 30.0f);
+		float rotationX = glm::clamp(pitchInDegrees, -45.0f, 60.0f);
 		
 		transform.Rotation.x = glm::radians(rotationX);
 		transform.Rotation.y = m_Yaw;

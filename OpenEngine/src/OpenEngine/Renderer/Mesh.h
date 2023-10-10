@@ -19,6 +19,12 @@ namespace OpenEngine {
 		glm::vec3 Normal;
 	};
 
+	struct UniqueVertex
+	{
+		uint32_t Index;
+		uint32_t Normal;
+	};
+
 	struct InstanceVertex
 	{
 		glm::vec3 Albedo;
@@ -33,7 +39,7 @@ namespace OpenEngine {
 
 	struct InstanceData
 	{
-		static const uint32_t MaxMeshes = 1000;
+		uint32_t MaxMeshes = 1000;
 		uint32_t MaxMeshVerticies;
 		uint32_t MaxMeshIndicies;
 
@@ -63,15 +69,18 @@ namespace OpenEngine {
 		std::string GetFilePath() { return m_Filepath; }
 		Ref<VertexArray>& GetVertexArray() { return m_VertexArray; }
 		uint32_t GetIndexCount() { return m_Data.IndexCount; }
+		std::vector<glm::vec3> GetVerticies() { return m_VertexPositions; }
 		bool HasMeshes() { return m_Data.MeshCount > 0; }
+		bool VertexExists(UniqueVertex vertex);
 		uint32_t InstanceCount() { return m_Data.MeshCount; }
 
 		void SetData(const glm::mat4& transform, Material material, int entityID);
 	private:
-		std::vector<glm::vec4> m_VertexPositions;
+		std::vector<glm::vec3> m_VertexPositions;
 		std::vector<glm::vec3> m_VertexNormals;
 		std::vector<uint32_t> m_IndiciesVec;
 		std::vector<uint32_t> m_NormalsVec;
+		std::vector<UniqueVertex> m_UniqueVerticies;
 
 		Ref<VertexArray> m_VertexArray;
 		Ref<VertexBuffer> m_VertexBuffer;

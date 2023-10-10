@@ -47,6 +47,29 @@ namespace OpenEngine {
 		m_MaterialPanel.SetContext(m_EditorScene);
 
 		m_EditorCamera = EditorCamera(60.0f, 1.778f, 0.1f, 1000.0f);
+
+		/*
+		* 
+		* 1000 cubes 2-3ms frame time in release mode
+		* most of the time spent in Scene Update, probably due to mesh->SetData()
+		* *//*
+		m_EditorScene->CreateEntity("Light").AddComponent<PointLightComponent>();
+		m_EditorScene->GetEntityByName("Light").GetComponent<TransformComponent>().Translation = { -0.2f, 0.5f, 0.3f };
+
+		for (float x = -2.5; x < 2.5; x++)
+		{
+			for (int y = 1; y < 11; y++)
+			{
+				for (int z = -2.5; z < 2.5; z++)
+				{
+					Entity cube = m_EditorScene->CreateEntity("Cube");
+					cube.AddComponent<MeshComponent>();
+					cube.GetComponent<MeshComponent>().Filepath = Utils::FormatFilepath("assets\\Models\\Cube.obj");
+					cube.GetComponent<TransformComponent>().Translation = { x, y, z };
+					cube.GetComponent<TransformComponent>().Scale = { 0.8f, 0.8f, 0.8f };
+				}
+			}
+		}/**/
 	}
 
 	void EditorLayer::OnDetach()
