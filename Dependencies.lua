@@ -9,6 +9,7 @@ IncludeDir["stb_image"] = "%{wks.location}/OpenEngine/vendor/stb_image"
 IncludeDir["entt"] = "%{wks.location}/OpenEngine/vendor/EnTT/include"
 IncludeDir["json"] = "%{wks.location}/OpenEngine/vendor/Json/"
 IncludeDir["ImGuizmo"] = "%{wks.location}/OpenEngine/vendor/ImGuizmo/"
+IncludeDir["Assimp"] = "%{wks.location}/OpenEngine/vendor/Assimp/include"
 --IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
 
 --LibraryDir = {}

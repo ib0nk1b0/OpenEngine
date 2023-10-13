@@ -39,6 +39,7 @@ project "OpenEngine"
     "%{IncludeDir.entt}",
     "%{IncludeDir.ImGuizmo}",
     "%{IncludeDir.json}",
+    "%{IncludeDir.Assimp}"
     --"%{IncludeDir.VulkanSDK}"
   }
 
