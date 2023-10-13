@@ -39,7 +39,7 @@ project "OpenEngine"
     "%{IncludeDir.entt}",
     "%{IncludeDir.ImGuizmo}",
     "%{IncludeDir.json}",
-    "%{IncludeDir.VulkanSDK}"
+    --"%{IncludeDir.VulkanSDK}"
   }
 
   links
@@ -47,7 +47,7 @@ project "OpenEngine"
     "GLFW",
     "Glad",
     "ImGui",
-    "%{Library.Vulkan}",
+    --"%{Library.Vulkan}",
     "opengl32.lib"
   }
 

@@ -22,6 +22,9 @@
     <Filter Include="src\OpenEngine\Math">
       <UniqueIdentifier>{BDD3F8D1-2935-D6DF-B2A2-1C921E030D9F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\OpenEngine\Physics">
+      <UniqueIdentifier>{D6B7B89A-C2B1-E1EC-AB1E-78FD97B74759}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\OpenEngine\Renderer">
       <UniqueIdentifier>{8A84AAC8-F6BB-F25F-FFC5-56836B7C1959}</UniqueIdentifier>
     </Filter>
@@ -102,6 +105,9 @@
     <ClInclude Include="src\OpenEngine\Core\MouseButtonCodes.h">
       <Filter>src\OpenEngine\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenEngine\Core\Random.h">
+      <Filter>src\OpenEngine\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\OpenEngine\Core\Timestep.h">
       <Filter>src\OpenEngine\Core</Filter>
     </ClInclude>
@@ -135,6 +141,12 @@
     <ClInclude Include="src\OpenEngine\Math\Math.h">
       <Filter>src\OpenEngine\Math</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenEngine\Physics\Physics.h">
+      <Filter>src\OpenEngine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Physics\World.h">
+      <Filter>src\OpenEngine\Physics</Filter>
+    </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\Buffer.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
@@ -148,6 +160,9 @@
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\GraphicsContext.h">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Renderer\Mesh.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\OrthographicCamera.h">
@@ -1482,10 +1497,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\Physics\Physics.h" />
-    <ClInclude Include="src\OpenEngine\Physics\World.h" />
-    <ClInclude Include="src\OpenEngine\Renderer\Mesh.h" />
-    <ClInclude Include="src\OpenEngine\Core\Random.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenEngine\Core\Application.cpp">
@@ -1498,6 +1509,9 @@
       <Filter>src\OpenEngine\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Core\Log.cpp">
+      <Filter>src\OpenEngine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Core\Random.cpp">
       <Filter>src\OpenEngine\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Core\UUID.cpp">
@@ -1515,6 +1529,12 @@
     <ClCompile Include="src\OpenEngine\Math\Math.cpp">
       <Filter>src\OpenEngine\Math</Filter>
     </ClCompile>
+    <ClCompile Include="src\OpenEngine\Physics\Physics.cpp">
+      <Filter>src\OpenEngine\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Physics\World.cpp">
+      <Filter>src\OpenEngine\Physics</Filter>
+    </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\Buffer.cpp">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClCompile>
@@ -1525,6 +1545,9 @@
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\GraphicsContext.cpp">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Renderer\Mesh.cpp">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\OrthographicCamera.cpp">
@@ -1566,6 +1589,9 @@
     <ClCompile Include="src\OpenEngine\Scene\SceneCamera.cpp">
       <Filter>src\OpenEngine\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\OpenEngine\Serialization\Serializer.cpp">
+      <Filter>src\OpenEngine\Serialization</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
@@ -1605,10 +1631,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\OpenEngine\Physics\Physics.cpp" />
-    <ClCompile Include="src\OpenEngine\Physics\World.cpp" />
-    <ClCompile Include="src\OpenEngine\Serialization\Serializer.cpp" />
-    <ClCompile Include="src\OpenEngine\Renderer\Mesh.cpp" />
-    <ClCompile Include="src\OpenEngine\Core\Random.cpp" />
   </ItemGroup>
 </Project>

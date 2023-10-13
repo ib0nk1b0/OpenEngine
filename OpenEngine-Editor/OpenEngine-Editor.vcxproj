@@ -135,22 +135,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\CubeSpawner.h" />
-    <ClInclude Include="src\FlappyBird\Ground.h" />
-    <ClInclude Include="src\FlappyBird\Camera.h" />
     <ClInclude Include="src\EditorLayer.h" />
-    <ClInclude Include="src\FlappyBird\Player.h" />
     <ClInclude Include="src\FPSCameraController.h" />
+    <ClInclude Include="src\FlappyBird\Camera.h" />
+    <ClInclude Include="src\FlappyBird\Ground.h" />
+    <ClInclude Include="src\FlappyBird\Player.h" />
     <ClInclude Include="src\Panels\ContentBrowserPanel.h" />
     <ClInclude Include="src\Panels\MaterialPanel.h" />
     <ClInclude Include="src\Panels\SceneHierarchy.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CubeSpawner.cpp" />
-    <ClCompile Include="src\FlappyBird\Ground.cpp" />
-    <ClCompile Include="src\FlappyBird\Camera.cpp" />
     <ClCompile Include="src\EditorLayer.cpp" />
-    <ClCompile Include="src\FlappyBird\Player.cpp" />
     <ClCompile Include="src\FPSCameraController.cpp" />
+    <ClCompile Include="src\FlappyBird\Camera.cpp" />
+    <ClCompile Include="src\FlappyBird\Ground.cpp" />
+    <ClCompile Include="src\FlappyBird\Player.cpp" />
     <ClCompile Include="src\OpenEngineEditorApp.cpp" />
     <ClCompile Include="src\Panels\ContentBrowserPanel.cpp" />
     <ClCompile Include="src\Panels\MaterialPanel.cpp" />

@@ -1,5 +1,4 @@
-
-VULKAN_SDK = os.getenv("VULKAN_SDK")
+--VULKAN_SDK = os.getenv("VULKAN_SDK")
 
 IncludeDir = {}
 IncludeDir["GLFW"] = "%{wks.location}/OpenEngine/vendor/GLFW/include"
@@ -10,10 +9,10 @@ IncludeDir["stb_image"] = "%{wks.location}/OpenEngine/vendor/stb_image"
 IncludeDir["entt"] = "%{wks.location}/OpenEngine/vendor/EnTT/include"
 IncludeDir["json"] = "%{wks.location}/OpenEngine/vendor/Json/"
 IncludeDir["ImGuizmo"] = "%{wks.location}/OpenEngine/vendor/ImGuizmo/"
-IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
+--IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
 
-LibraryDir = {}
-LibraryDir["VulkanSDK"] = "%{VULKAN_SDK}/Lib"
+--LibraryDir = {}
+--LibraryDir["VulkanSDK"] = "%{VULKAN_SDK}/Lib"
 
-Library = {}
-Library["Vulkan"] = "%{LibraryDir.VulkanSDK}/vulkan-1.lib"
+--Library = {}
+--Library["Vulkan"] = "%{LibraryDir.VulkanSDK}/vulkan-1.lib"
