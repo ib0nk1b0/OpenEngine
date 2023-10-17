@@ -81,6 +81,7 @@ namespace OpenEngine {
 	{
 		OE_PROFILE_FUNCTION();
 
+		Timer timer("EditorLayer::OnUpdate");
 		m_FrameTime = ts;
 		m_EditorCamera.OnUpdate(ts);
 
@@ -386,13 +387,12 @@ namespace OpenEngine {
 		ImGui::Begin("Performance Stats");
 		ImGui::Text("Frame Time: %f", m_FrameTime.GetMilliseconds());
 		
-		auto stats = Application::Get().GetApplicationTimings();
+		auto timings = Application::Get().GetApplicationTimings();
 
-		ImGui::Text("Application::Layer::OnUpdate: %f", stats.LayerOnUpdate);
-		ImGui::Text("Application::Layer::OnImGuiRender: %f", stats.OnImGuiRender);
-		ImGui::Text("Scene::OnUpdate: %f", stats.SceneOnUpdate);
-		ImGui::Text("Renderer::EndScene: %f", stats.RendererEndScene);
+		for (Timing& timing : timings)
+			ImGui::Text("%s: %f", timing.Name.c_str(), timing.Time);
 
+		Application::Get().ClearTimings();
 		ImGui::End();
 	}
 

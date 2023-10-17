@@ -138,7 +138,7 @@ namespace OpenEngine {
 	{
 		OE_PROFILE_FUNCTION();
 
-		Timer timer;
+		Timer timer("Renderer::EndScene");
 		if (wireframe)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		else
@@ -155,10 +155,8 @@ namespace OpenEngine {
 			
 			s_SceneData.Stats.DrawCalls++;
 		}
-		timer.Stop();
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		Application::Get().SubmitRendererTime(timer);
 	}
 
 	void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform)

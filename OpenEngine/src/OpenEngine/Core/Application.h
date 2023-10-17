@@ -28,6 +28,8 @@ namespace OpenEngine {
 		float RendererEndScene;
 	};
 
+	struct Timing;
+
 	class Application
 	{
 	public:
@@ -53,7 +55,12 @@ namespace OpenEngine {
 		void SubmitSceneTime(float time) { m_ApplicationTimings.SceneOnUpdate = time; }
 		void SubmitRendererTime(float time) { m_ApplicationTimings.RendererEndScene = time; }
 
-		ApplicationTimings GetApplicationTimings() { return m_ApplicationTimings; }
+		//ApplicationTimings GetApplicationTimings() { return m_ApplicationTimings; }
+		std::vector<Timing> GetApplicationTimings() { return m_Timings; }
+
+		void AddTiming(const Timing& timing);
+
+		void ClearTimings() { m_Timings.clear(); }
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
@@ -71,6 +78,8 @@ namespace OpenEngine {
 		float m_LastFrameTime = 0.0f;
 
 		bool m_MemTracking = true;
+
+		std::vector<Timing> m_Timings;
 	private:
 		static Application* s_Instance;
 	};

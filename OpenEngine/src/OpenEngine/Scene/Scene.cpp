@@ -258,7 +258,7 @@ namespace OpenEngine {
 	{
 		OE_PROFILE_FUNCTION();
 
-		Timer timer;
+		Timer timer("Scene::OnUpdate");
 		OnUpdate(ts);
 
 		{
@@ -283,7 +283,7 @@ namespace OpenEngine {
 				{
 					bool exists = false;
 					int index = 0;
-
+					
 					for (int i = 0; i < m_Meshes.size(); i++)
 					{
 						if (m_Meshes[i].GetFilePath() == meshComponent.Filepath)
@@ -304,9 +304,6 @@ namespace OpenEngine {
 			}
 
 			Renderer::EndScene(m_Meshes);
-			timer.Stop();
-
-			Application::Get().SubmitSceneTime(timer);
 		}
 
 		{

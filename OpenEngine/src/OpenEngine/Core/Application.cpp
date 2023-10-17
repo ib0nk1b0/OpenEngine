@@ -3,6 +3,7 @@
 
 #include "OpenEngine/Core/Random.h"
 #include "OpenEngine/Renderer/Renderer.h"
+#include "OpenEngine/Debug/Instrumentor.h"
 
 #include "Input.h"
 
@@ -115,31 +116,28 @@ namespace OpenEngine {
 
 			if (!m_Minimised)
 			{
-				{
-					OE_PROFILE_SCOPE("LayerStack OnUpdate");
-					Timer timer;
-					for (Layer* layer : m_LayerStack)
-						layer->OnUpdate(timestep);
-					timer.Stop();
-					m_ApplicationTimings.LayerOnUpdate = timer;
-				}
+				OE_PROFILE_SCOPE("LayerStack OnUpdate");
+				Timer timer("Application::LayerStack::OnUpdates");
+				for (Layer* layer : m_LayerStack)
+					layer->OnUpdate(timestep);
 			}
 
 			m_ImGuiLayer->Begin();
 			{
 				OE_PROFILE_SCOPE("LayerStack OnImGuiRender");
-				Timer timer;
+				Timer timer("Application::LayerStack::OnImGuiRender");
 				for (Layer* layer : m_LayerStack)
 					layer->OnImGuiRender();
-				timer.Stop();
-				m_ApplicationTimings.OnImGuiRender = timer;
 			}
 			m_ImGuiLayer->End();
 
-			m_Window->OnUpdate();
-
+			{
+				Timer timer("Timer");
+				m_Window->OnUpdate();
+			}
 			auto memAllocated = s_AllocationMetrics.TotalAllocated;
 			//std::cout << s_AllocationMetrics.CurrentUsage() << std::endl;
+			//m_Timings.clear();
 		}
 	}
 
@@ -148,6 +146,11 @@ namespace OpenEngine {
 		if (!m_MemTracking) return;
 
 		std::cout << s_AllocationMetrics.CurrentUsage() << " bytes\n";
+	}
+
+	void Application::AddTiming(const Timing& timing)
+	{
+		m_Timings.push_back(timing);
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)

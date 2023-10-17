@@ -625,6 +625,7 @@
     <ClCompile Include="src\OpenEngine\Core\Log.cpp" />
     <ClCompile Include="src\OpenEngine\Core\Random.cpp" />
     <ClCompile Include="src\OpenEngine\Core\UUID.cpp" />
+    <ClCompile Include="src\OpenEngine\Debug\Instrumentor.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiExtended.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiLayer.cpp" />
