@@ -222,13 +222,6 @@ namespace OpenEngine {
 		m_CursorEnabled = false;
 		if (m_Filepath == "assets\\Scenes\\CubeGame.openengine")
 			glfwSetInputMode((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-#if Dungeon
-		auto player = GetEntityByName("Player");
-		player.AddComponent<NativeScriptComponent>().Bind<PlayerScript>();
-		auto camera = GetEntityByName("Orthographic Camera");
-		camera.AddComponent<NativeScriptComponent>().Bind<CameraScript>();
-#endif
 	}
 
 	void Scene::OnUpdate(Timestep ts)
@@ -257,8 +250,8 @@ namespace OpenEngine {
 	void Scene::OnUpdateEditor(Timestep ts, EditorCamera& camera)
 	{
 		OE_PROFILE_FUNCTION();
+		OE_PERF_FUNC();
 
-		Timer timer("Scene::OnUpdate");
 		OnUpdate(ts);
 
 		{

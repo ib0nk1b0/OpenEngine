@@ -137,8 +137,8 @@ namespace OpenEngine {
 	void Renderer::EndScene(std::vector<Mesh>& meshes, bool wireframe)
 	{
 		OE_PROFILE_FUNCTION();
+		OE_PERF_FUNC();
 
-		Timer timer("Renderer::EndScene");
 		if (wireframe)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		else

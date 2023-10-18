@@ -109,6 +109,7 @@ namespace OpenEngine {
 		while (m_Running)
 		{
 			OE_PROFILE_SCOPE("RunLoop");
+			//OE_PERF_SCOPE("RunLoop");
 
 			float time = (float)glfwGetTime(); // Platform::GetTime();
 			Timestep timestep = time - m_LastFrameTime;
@@ -117,7 +118,7 @@ namespace OpenEngine {
 			if (!m_Minimised)
 			{
 				OE_PROFILE_SCOPE("LayerStack OnUpdate");
-				Timer timer("Application::LayerStack::OnUpdates");
+				OE_PERF_SCOPE("LayerStack::OnUpdates");
 				for (Layer* layer : m_LayerStack)
 					layer->OnUpdate(timestep);
 			}
@@ -125,16 +126,14 @@ namespace OpenEngine {
 			m_ImGuiLayer->Begin();
 			{
 				OE_PROFILE_SCOPE("LayerStack OnImGuiRender");
-				Timer timer("Application::LayerStack::OnImGuiRender");
+				OE_PERF_SCOPE("LayerStack::OnImGuiRender");
 				for (Layer* layer : m_LayerStack)
 					layer->OnImGuiRender();
 			}
 			m_ImGuiLayer->End();
 
-			{
-				Timer timer("Timer");
-				m_Window->OnUpdate();
-			}
+			m_Window->OnUpdate();
+
 			auto memAllocated = s_AllocationMetrics.TotalAllocated;
 			//std::cout << s_AllocationMetrics.CurrentUsage() << std::endl;
 			//m_Timings.clear();

@@ -80,8 +80,8 @@ namespace OpenEngine {
 	void EditorLayer::OnUpdate(Timestep ts)
 	{
 		OE_PROFILE_FUNCTION();
+		OE_PERF_SCOPE("EditorLayer::OnUpdate");
 
-		Timer timer("EditorLayer::OnUpdate");
 		m_FrameTime = ts;
 		m_EditorCamera.OnUpdate(ts);
 

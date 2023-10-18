@@ -164,3 +164,6 @@ namespace OpenEngine {
 	#define OE_PROFILE_SCOPE(...)
 	#define OE_PROFILE_FUNCTION()
 #endif
+
+#define OE_PERF_SCOPE(name) ::OpenEngine::Timer timer##__LINE__(name);
+#define OE_PERF_FUNC() OE_PERF_SCOPE(__FUNCSIG__)
