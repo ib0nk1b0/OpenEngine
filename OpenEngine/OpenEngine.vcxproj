@@ -163,6 +163,7 @@
     <ClInclude Include="src\OpenEngine\Events\KeyEvent.h" />
     <ClInclude Include="src\OpenEngine\Events\MouseEvent.h" />
     <ClInclude Include="src\OpenEngine\ImGui\ImGuiExtended.h" />
+    <ClInclude Include="src\OpenEngine\ImGui\ImGuiFonts.h" />
     <ClInclude Include="src\OpenEngine\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\OpenEngine\Math\Math.h" />
     <ClInclude Include="src\OpenEngine\Physics\Physics.h" />
@@ -628,7 +629,9 @@
     <ClCompile Include="src\OpenEngine\Debug\Instrumentor.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiExtended.cpp" />
+    <ClCompile Include="src\OpenEngine\ImGui\ImGuiFonts.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="src\OpenEngine\ImGui\ImGuiFonts.cpp" />
     <ClCompile Include="src\OpenEngine\Math\Math.cpp" />
     <ClCompile Include="src\OpenEngine\Physics\Physics.cpp" />
     <ClCompile Include="src\OpenEngine\Physics\World.cpp" />

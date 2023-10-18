@@ -1497,6 +1497,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenEngine\ImGui\ImGuiFonts.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenEngine\Core\Application.cpp">
@@ -1632,5 +1633,7 @@
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Debug\Instrumentor.cpp" />
+    <ClCompile Include="src\OpenEngine\ImGui\ImGuiFonts.cpp" />
+    <ClCompile Include="src\OpenEngine\ImGui\ImGuiFonts.cpp" />
   </ItemGroup>
 </Project>

@@ -160,14 +160,15 @@ namespace OpenEngine {
 			ImGui::PopStyleVar(2);
 
 		ImGuiIO& io = ImGui::GetIO();
+		ImGuiStyle& style = ImGui::GetStyle();
+		float windowMinSizeX = style.WindowMinSize.x;
+		style.WindowMinSize.x = 370.0f;
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
-
-		ImGuiStyle& style = ImGui::GetStyle();
-		style.WindowMinSize.x = 370.0f;
+		style.WindowMinSize.x = windowMinSizeX;
 
 		UI_MenuBar();
 
@@ -390,7 +391,7 @@ namespace OpenEngine {
 		auto timings = Application::Get().GetApplicationTimings();
 
 		for (Timing& timing : timings)
-			ImGui::Text("%s: %f", timing.Name.c_str(), timing.Time);
+			ImGui::Text("%s: %f ms", timing.Name.c_str(), timing.Time);
 
 		Application::Get().ClearTimings();
 		ImGui::End();

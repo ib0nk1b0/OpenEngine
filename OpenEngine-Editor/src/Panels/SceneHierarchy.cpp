@@ -5,6 +5,7 @@
 #include "ContentBrowserPanel.h"
 #include "OpenEngine/Utils/PlatformUtils.h"
 #include "OpenEngine/ImGui/ImGuiExtended.h"
+#include "OpenEngine/ImGui/ImGuiFonts.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
@@ -267,8 +268,13 @@ namespace OpenEngine {
 		ImGui::SameLine();
 		ImGui::PushItemWidth(-1);
 
-		if (ImGui::Button("+"))
-			ImGui::OpenPopup("AddComponent");
+		//UI::Fonts::PushFont("BoldLarge");
+		{
+			UI::ScopedFont boldLarge(UI::Fonts::Get("BoldLarge"));
+			if (ImGui::Button("+"))
+				ImGui::OpenPopup("AddComponent");
+		}
+		//UI::Fonts::PopFont();
 
 		if (ImGui::BeginPopup("AddComponent"))
 		{

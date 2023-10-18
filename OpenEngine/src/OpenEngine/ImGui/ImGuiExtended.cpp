@@ -1,6 +1,8 @@
 #include "oepch.h"
 #include "ImGuiExtended.h"
 
+#include "OpenEngine/ImGui/ImGuiFonts.h"
+
 #include <imgui.h>
 #include <imgui_internal.h>
 
@@ -77,10 +79,10 @@ namespace ImGui {
 		PushStyleColor(ImGuiCol_Button, ImVec4{ 0.4f, 0.1f, 0.15f, 1.0f });
 		PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.65f, 0.2f, 0.2f, 1.0f });
 		PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.4f, 0.1f, 0.15f, 1.0f });
-		PushFont(boldFont);
+		OpenEngine::UI::Fonts::PushFont("Bold");
 		if (Button("X", buttonSize))
 			values.x = resetValue;
-		PopFont();
+		OpenEngine::UI::Fonts::PopFont();
 		PopStyleColor(3);
 
 		SameLine();
@@ -91,10 +93,10 @@ namespace ImGui {
 		PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.35f, 0.2f, 1.0f });
 		PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.3f, 0.55f, 0.3f, 1.0f });
 		PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.35f, 0.2f, 1.0f });
-		PushFont(boldFont);
+		OpenEngine::UI::Fonts::PushFont("Bold");
 		if (Button("Y", buttonSize))
 			values.y = resetValue;
-		PopFont();
+		OpenEngine::UI::Fonts::PopFont();
 		PopStyleColor(3);
 
 		SameLine();
@@ -105,10 +107,10 @@ namespace ImGui {
 		PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.25f, 0.4f, 1.0f });
 		PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f });
 		PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.25f, 0.4f, 1.0f });
-		PushFont(boldFont);
+		OpenEngine::UI::Fonts::PushFont("Bold");
 		if (Button("Z", buttonSize))
 			values.z = resetValue;
-		PopFont();
+		OpenEngine::UI::Fonts::PopFont();
 		PopStyleColor(3);
 
 		SameLine();
