@@ -27,6 +27,10 @@ namespace OpenEngine {
 		auto duration = end - start;
 		m_Time = duration * 0.001;
 
+		std::string str = "OpenEngine::";
+		if (m_Name.substr(0, str.length()) == str)
+			m_Name = m_Name.substr(str.length(), m_Name.length() - 1);
+
 		Timing timing(m_Name, m_Time);
 		OpenEngine::Application::Get().AddTiming(timing);
 		m_Stopped = true;

@@ -134,9 +134,8 @@ namespace OpenEngine {
 
 			m_Window->OnUpdate();
 
-			auto memAllocated = s_AllocationMetrics.TotalAllocated;
+			//auto memAllocated = s_AllocationMetrics.TotalAllocated;
 			//std::cout << s_AllocationMetrics.CurrentUsage() << std::endl;
-			//m_Timings.clear();
 		}
 	}
 
