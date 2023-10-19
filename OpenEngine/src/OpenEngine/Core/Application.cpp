@@ -22,13 +22,13 @@ static AllocationMetrics s_AllocationMetrics;
 
 void* operator new(size_t size)
 {
- 	s_AllocationMetrics.TotalAllocated += size;
+ 	s_AllocationMetrics.TotalAllocated += (uint32_t)size;
 	return malloc(size);
 }
 
 void operator delete(void* memory, size_t size)
 {
-	s_AllocationMetrics.TotalFreed += size;
+	s_AllocationMetrics.TotalFreed += (uint32_t)size;
 	free(memory);
 }
 
