@@ -2,15 +2,15 @@
 
 #include <glm/glm.hpp>
 
-namespace ImGui {
+namespace OpenEngine::UI {
 
 	float GetLineHeight();
 
-	bool OEDragFloat(const std::string& label, float* value, float speed = 1.0f, float min = 0.0f, float max = 100.0f, float columnWidth = 100.0f, const char* format = "%.2f");
-	bool OEDragInt(const std::string& label, int* value, int speed = 1, int min = 0, int max = 100, float columnWidth = 100.0f);
+	bool DragFloat(const std::string& label, float* value, float speed = 1.0f, float min = 0.0f, float max = 100.0f, float columnWidth = 100.0f, const char* format = "%.2f");
+	bool DragInt(const std::string& label, int* value, int speed = 1, int min = 0, int max = 100, float columnWidth = 100.0f);
 
-	void OEVec3Controls(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f);
-	void OEColorEdit4(const char* label, float* value);
-	void OEColorEdit3(const char* label, float* value);
+	void Vec3Controls(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f);
+	void ColorEdit4(const char* label, float* value);
+	void ColorEdit3(const char* label, float* value);
 
 }

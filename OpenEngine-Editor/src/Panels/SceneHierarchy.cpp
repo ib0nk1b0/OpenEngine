@@ -204,7 +204,7 @@ namespace OpenEngine {
 
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
 
-		float lineHeight = ImGui::GetLineHeight();
+		float lineHeight = UI::GetLineHeight();
 		ImGui::Separator();
 		bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, label.c_str());
 		ImGui::PopStyleVar();
@@ -313,21 +313,21 @@ namespace OpenEngine {
 
 				ImGui::EndCombo();
 			}
-			ImGui::OEVec3Controls("Offset", component.Offset);
+			UI::Vec3Controls("Offset", component.Offset);
 		});
 
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
 		{
-			ImGui::OEVec3Controls("Translation", component.Translation);
+			UI::Vec3Controls("Translation", component.Translation);
 			glm::vec3 rotation = glm::degrees(component.Rotation);
-			ImGui::OEVec3Controls("Rotation", rotation);
+			UI::Vec3Controls("Rotation", rotation);
 			component.Rotation = glm::radians(rotation);
-			ImGui::OEVec3Controls("Scale", component.Scale, 1.0f);
+			UI::Vec3Controls("Scale", component.Scale, 1.0f);
 		});
 
 		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [=](auto& component)
 		{
-			ImGui::OEColorEdit4("Color", glm::value_ptr(component.Color));
+			UI::ColorEdit4("Color", glm::value_ptr(component.Color));
 
 			Ref<Texture2D> texturePreview;
 
@@ -359,13 +359,13 @@ namespace OpenEngine {
 			if (ImGui::Button("Clear"))
 				component.Texture = nullptr;
 
-			ImGui::OEDragFloat("Scale", &component.Scale, 0.1f, 1.0f, 50.0f, 150.0f);
+			UI::DragFloat("Scale", &component.Scale, 0.1f, 1.0f, 50.0f, 150.0f);
 
 		});
 
 		DrawComponent<EditorRendererComponent>("Editor Renderer", entity, [=](auto& component)
 			{
-				ImGui::OEColorEdit4("Color", glm::value_ptr(component.Color));
+				UI::ColorEdit4("Color", glm::value_ptr(component.Color));
 
 				Ref<Texture2D> texturePreview;
 
@@ -423,26 +423,26 @@ namespace OpenEngine {
 					component.Filepath = Utils::FormatFilepath(filepath);
 			}
 			ImGui::Columns(1);
-			ImGui::OEDragInt("Material Index", &component.MaterialIndex, 1, 0, m_Context->m_Materials.size() - 1);
+			UI::DragInt("Material Index", &component.MaterialIndex, 1, 0, m_Context->m_Materials.size() - 1);
 		});
 
 		DrawComponent<PointLightComponent>("Point Light", entity, [=](auto& component)
 		{
-			ImGui::OEColorEdit3("Color", glm::value_ptr(component.Color));
-			ImGui::OEDragFloat("Ambient Intensity", &component.AmbientIntensity, 0.05f, 0.0f, 1.0f, 150.0f);
+			UI::ColorEdit3("Color", glm::value_ptr(component.Color));
+			UI::DragFloat("Ambient Intensity", &component.AmbientIntensity, 0.05f, 0.0f, 1.0f, 150.0f);
 		});
 
 		DrawComponent<DirectionalLightComponent>("Directional Light", entity, [=](auto& component)
 		{
-			ImGui::OEColorEdit3("Color", glm::value_ptr(component.Color));
-			ImGui::OEDragFloat("Ambient Intensity", &component.AmbientIntensity, 0.05f, 0.0f, 1.0f, 150.0f);
+			UI::ColorEdit3("Color", glm::value_ptr(component.Color));
+			UI::DragFloat("Ambient Intensity", &component.AmbientIntensity, 0.05f, 0.0f, 1.0f, 150.0f);
 		});
 
 		DrawComponent<CircleRendererComponent>("Circle Renderer", m_SelectionContext, [](auto& component)
 		{
-			ImGui::OEColorEdit4("Color", glm::value_ptr(component.Color));
-			ImGui::OEDragFloat("Thickness", &component.Thickness, 0.01f, 0.0f, 1.0f);
-			ImGui::OEDragFloat("Fade", &component.Fade, 0.005f, 0.0f, 1.0f, 100.0f, "%.3f");
+			UI::ColorEdit4("Color", glm::value_ptr(component.Color));
+			UI::DragFloat("Thickness", &component.Thickness, 0.01f, 0.0f, 1.0f);
+			UI::DragFloat("Fade", &component.Fade, 0.005f, 0.0f, 1.0f, 100.0f, "%.3f");
 		});
 
 		DrawComponent<CameraComponent>("Camera", entity, [](auto& component)
@@ -475,30 +475,30 @@ namespace OpenEngine {
 			if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
 			{
 				float verticalFOV = glm::degrees(camera.GetPerspectiveVertivalFOV());
-				if (ImGui::OEDragFloat("VFOV", &verticalFOV))
+				if (UI::DragFloat("VFOV", &verticalFOV))
 					camera.SetPerspectiveVertivalFOV(glm::radians(verticalFOV));
 
 				float nearClip = camera.GetPerspectiveNearClip();
-				if (ImGui::OEDragFloat("Near", &nearClip, 0.1f))
+				if (UI::DragFloat("Near", &nearClip, 0.1f))
 					camera.SetPerspectiveNearClip(nearClip);
 
 				float farClip = camera.GetPerspectiveFarClip();
-				if (ImGui::OEDragFloat("Far", &farClip, 0.1f))
+				if (UI::DragFloat("Far", &farClip, 0.1f))
 					camera.SetPerspectiveFarClip(farClip);
 			}
 
 			if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
 			{
 				float orthoSize = camera.GetOrthographicSize();
-				if (ImGui::OEDragFloat("Size", &orthoSize, 0.1f, 0.25f, 50.0f))
+				if (UI::DragFloat("Size", &orthoSize, 0.1f, 0.25f, 50.0f))
 					camera.SetOrthographicSize(orthoSize);
 
 				float nearClip = camera.GetOrthographicNearClip();
-				if (ImGui::OEDragFloat("Near", &nearClip, 0.1f))
+				if (UI::DragFloat("Near", &nearClip, 0.1f))
 					camera.SetOrthographicNearClip(nearClip);
 
 				float farClip = camera.GetOrthographicFarClip();
-				if (ImGui::OEDragFloat("Far", &farClip, 0.1f))
+				if (UI::DragFloat("Far", &farClip, 0.1f))
 					camera.SetOrthographicFarClip(farClip);
 			}
 
@@ -534,8 +534,8 @@ namespace OpenEngine {
 
 		DrawComponent<BoxColider2DComponent>("BoxColider2D", entity, [](auto& component)
 		{
-			ImGui::OEVec3Controls("Size", component.Size);
-			ImGui::OEVec3Controls("Offset", component.Offset);
+			UI::Vec3Controls("Size", component.Size);
+			UI::Vec3Controls("Offset", component.Offset);
 		});
 	}
 
