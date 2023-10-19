@@ -170,6 +170,20 @@ namespace OpenEngine {
 		}
 		style.WindowMinSize.x = windowMinSizeX;
 
+		/*ImGui::Begin("Popups");
+		
+		if (ImGui::Button("Popup"))
+			ImGui::OpenPopup("popup1");
+
+		bool open = true;
+		if (ImGui::BeginPopupModal("popup1", &open))
+		{
+			ImGui::Text("This is a popup!");
+			ImGui::EndPopup();
+		}
+
+		ImGui::End();*/
+
 		UI_MenuBar();
 
 		if (m_DisplayStats)
@@ -378,8 +392,8 @@ namespace OpenEngine {
 			ImGui::Text("Indicies: %d", stats.GetTotalIndexCount());
 
 			ImGui::Separator();
-			float gridSize = m_EditorScene->GetGridSize();
-			if (ImGui::OEDragFloat("Grid size", &gridSize, 1))
+			int gridSize = m_EditorScene->GetGridSize();
+			if (UI::DragInt("Grid size", &gridSize))
 				m_EditorScene->SetGridSize(gridSize);
 
 			ImGui::End();
@@ -402,23 +416,23 @@ namespace OpenEngine {
 		ImGui::Begin("Editor Camera");
 
 		float fov = m_EditorCamera.GetFOV();
-		if (ImGui::OEDragFloat("FOV", &fov, 0.5f, 0.0f, 120.0f))
+		if (UI::DragFloat("FOV", &fov, 0.5f, 0.0f, 120.0f))
 			m_EditorCamera.SetFOV(fov);
 
 		float nearClip = m_EditorCamera.GetNearClip();
-		if (ImGui::OEDragFloat("Near Clip", &nearClip))
+		if (UI::DragFloat("Near Clip", &nearClip))
 			m_EditorCamera.SetNearClip(nearClip);
 
 		float farClip = m_EditorCamera.GetFarClip();
-		if (ImGui::OEDragFloat("Far Clip", &farClip))
+		if (UI::DragFloat("Far Clip", &farClip))
 			m_EditorCamera.SetFarClip(farClip);
 
 		float pitch = m_EditorCamera.GetPitch();
-		if (ImGui::OEDragFloat("Pitch", &pitch, 0.1f))
+		if (UI::DragFloat("Pitch", &pitch, 0.1f))
 			m_EditorCamera.SetPitch(pitch);
 
 		float yaw = m_EditorCamera.GetYaw();
-		if (ImGui::OEDragFloat("Yaw", &yaw, 0.1f))
+		if (UI::DragFloat("Yaw", &yaw, 0.1f))
 			m_EditorCamera.SetYaw(yaw);
 
 		ImGui::Checkbox("Rotation enabled", &m_EditorCamera.m_Rotate);
@@ -620,7 +634,7 @@ namespace OpenEngine {
 		{
 			NewScene(filepath.string());
 
-			Serializer serializer(m_EditorScene);
+			SceneSerializer serializer(m_EditorScene);
 			serializer.Deserialize(filepath.string());
 		}
 	}
@@ -632,7 +646,7 @@ namespace OpenEngine {
 			SaveSceneAs();
 		else
 		{
-			Serializer serializer(m_EditorScene);
+			SceneSerializer serializer(m_EditorScene);
 			serializer.Serialize(filepath);
 		}
 	}
@@ -642,7 +656,7 @@ namespace OpenEngine {
 		std::string filepath = FileDialogs::SaveFile("OpenEngine Scene (*.openengine)\0*.openengine\0");
 		if (!filepath.empty())
 		{
-			Serializer serializer(m_EditorScene);
+			SceneSerializer serializer(m_EditorScene);
 			serializer.Serialize(filepath);
 			m_EditorScene->SetFilepath(filepath);
 		}

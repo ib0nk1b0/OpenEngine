@@ -66,7 +66,7 @@ namespace OpenEngine {
 		std::vector<Mesh> m_Meshes;
 
 		friend class Entity;
-		friend class Serializer;
+		friend class SceneSerializer;
 		friend class SceneHierarchyPanel;
 		friend class MaterialPanel;
 	};

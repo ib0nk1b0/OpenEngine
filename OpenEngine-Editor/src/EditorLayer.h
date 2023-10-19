@@ -6,7 +6,7 @@
 #include "Panels/ContentBrowserPanel.h"
 #include "Panels/MaterialPanel.h"
 
-#include "OpenEngine/Serialization/Serializer.h"
+#include "OpenEngine/Scene/SceneSerializer.h"
 #include "OpenEngine/Renderer/EditorCamera.h"
 
 namespace OpenEngine {

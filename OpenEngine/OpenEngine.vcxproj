@@ -188,6 +188,7 @@
     <ClInclude Include="src\OpenEngine\Scene\Entity.h" />
     <ClInclude Include="src\OpenEngine\Scene\Scene.h" />
     <ClInclude Include="src\OpenEngine\Scene\SceneCamera.h" />
+    <ClInclude Include="src\OpenEngine\Scene\SceneSerializer.h" />
     <ClInclude Include="src\OpenEngine\Scene\ScriptableEntity.h" />
     <ClInclude Include="src\OpenEngine\Serialization\Serializer.h" />
     <ClInclude Include="src\OpenEngine\Utils\PlatformUtils.h" />
@@ -652,7 +653,7 @@
     <ClCompile Include="src\OpenEngine\Scene\Entity.cpp" />
     <ClCompile Include="src\OpenEngine\Scene\Scene.cpp" />
     <ClCompile Include="src\OpenEngine\Scene\SceneCamera.cpp" />
-    <ClCompile Include="src\OpenEngine\Serialization\Serializer.cpp" />
+    <ClCompile Include="src\OpenEngine\Scene\SceneSerializer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp" />
