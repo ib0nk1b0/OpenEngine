@@ -2,6 +2,7 @@
 #include "ContentBrowserPanel.h"
 
 #include "OpenEngine/Utils/PlatformUtils.h";
+#include "OpenEngine/ImGui/ImGuiFonts.h"
 
 #include <imgui/imgui.h>
 
@@ -21,30 +22,34 @@ namespace OpenEngine {
 		ImGui::Begin("Content Browser");
 
 		ImGuiIO& io = ImGui::GetIO();
-		auto boldFont = io.Fonts->Fonts[0];
-		auto boldFont24 = io.Fonts->Fonts[1];
+
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 0));
-		ImGui::PushFont(boldFont24);
-		if (ImGui::Button("<") && m_CurrentDirectory != std::filesystem::path(g_AssetPath))
+		
 		{
-			m_PreviousDirectory = m_CurrentDirectory;
-			m_CurrentDirectory = m_CurrentDirectory.parent_path();
+			UI::ScopedFont boldLarge(UI::Fonts::Get("BoldLarge"));
+			if (ImGui::Button("<") && m_CurrentDirectory != std::filesystem::path(g_AssetPath))
+			{
+				m_PreviousDirectory = m_CurrentDirectory;
+				m_CurrentDirectory = m_CurrentDirectory.parent_path();
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button(">") && !m_PreviousDirectory.empty())
+			{
+				m_CurrentDirectory = m_PreviousDirectory;
+				m_PreviousDirectory.clear();
+			}
+
+			ImGui::PopStyleVar();
 		}
+
 		ImGui::SameLine();
-		if (ImGui::Button(">") && !m_PreviousDirectory.empty())
 		{
-			m_CurrentDirectory = m_PreviousDirectory;
-			m_PreviousDirectory.clear();
+			UI::ScopedFont bold(UI::Fonts::Get("Bold"));
+			ImGui::Text("Path: %s", m_CurrentDirectory.generic_string().c_str());
 		}
-		ImGui::PopStyleVar();
 
-		ImGui::PopFont();
-		ImGui::SameLine();
-		ImGui::PushFont(boldFont);
-		ImGui::Text("Path: %s", m_CurrentDirectory.generic_string().c_str());
-		ImGui::PopFont();
-
-		//io.Fonts->Fonts.Size = 18;
 		float thumbnailSize = 64.0f;
 		float padding = 12.0f;
 		float cellSize = thumbnailSize + padding;

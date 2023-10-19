@@ -631,7 +631,6 @@
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiExtended.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiFonts.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiLayer.cpp" />
-    <ClCompile Include="src\OpenEngine\ImGui\ImGuiFonts.cpp" />
     <ClCompile Include="src\OpenEngine\Math\Math.cpp" />
     <ClCompile Include="src\OpenEngine\Physics\Physics.cpp" />
     <ClCompile Include="src\OpenEngine\Physics\World.cpp" />

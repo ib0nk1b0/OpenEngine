@@ -135,6 +135,9 @@
     <ClInclude Include="src\OpenEngine\ImGui\ImGuiExtended.h">
       <Filter>src\OpenEngine\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenEngine\ImGui\ImGuiFonts.h">
+      <Filter>src\OpenEngine\ImGui</Filter>
+    </ClInclude>
     <ClInclude Include="src\OpenEngine\ImGui\ImGuiLayer.h">
       <Filter>src\OpenEngine\ImGui</Filter>
     </ClInclude>
@@ -1497,7 +1500,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\ImGui\ImGuiFonts.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenEngine\Core\Application.cpp">
@@ -1518,10 +1520,16 @@
     <ClCompile Include="src\OpenEngine\Core\UUID.cpp">
       <Filter>src\OpenEngine\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\OpenEngine\Debug\Instrumentor.cpp">
+      <Filter>src\OpenEngine\Debug</Filter>
+    </ClCompile>
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiBuild.cpp">
       <Filter>src\OpenEngine\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiExtended.cpp">
+      <Filter>src\OpenEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\ImGui\ImGuiFonts.cpp">
       <Filter>src\OpenEngine\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiLayer.cpp">
@@ -1632,8 +1640,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\OpenEngine\Debug\Instrumentor.cpp" />
-    <ClCompile Include="src\OpenEngine\ImGui\ImGuiFonts.cpp" />
-    <ClCompile Include="src\OpenEngine\ImGui\ImGuiFonts.cpp" />
   </ItemGroup>
 </Project>
