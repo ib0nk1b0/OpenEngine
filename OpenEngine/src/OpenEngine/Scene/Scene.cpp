@@ -16,76 +16,10 @@
 
 namespace OpenEngine {
 
-#if Dungeon
-	struct Keybinds
-	{
-		int UP = Key::W;
-		int DOWN = Key::S;
-		int LEFT = Key::A;
-		int RIGHT = Key::D;
-	};
-
-	class PlayerScript : public ScriptableEntity
-	{
-	public:
-		void OnCreate()
-		{
-
-		}
-
-		void OnUpdate(Timestep ts)
-		{
-			UpdateMovement(ts);
-		}
-
-		void UpdateMovement(Timestep ts)
-		{
-			auto& translation = GetComponent<TransformComponent>().Translation;
-			if (Input::IsKeyPressed(m_Keybinds.UP))
-				translation.y += m_Speed * ts;
-			if (Input::IsKeyPressed(m_Keybinds.DOWN))
-				translation.y -= m_Speed * ts;
-			if (Input::IsKeyPressed(m_Keybinds.LEFT))
-				translation.x -= m_Speed * ts;
-			if (Input::IsKeyPressed(m_Keybinds.RIGHT))
-				translation.x += m_Speed * ts;
-		}
-
-		void OnDestroy()
-		{
-
-		}
-	private:
-		float m_Speed = 2.0f;
-
-		Keybinds m_Keybinds;
-	};
-
-	class CameraScript : public ScriptableEntity
-	{
-	public:
-		void OnUpdate(Timestep ts)
-		{
-			auto& translation = GetComponent<TransformComponent>().Translation;
-			if (Input::IsKeyPressed(m_Keybinds.UP))
-				translation.y += m_Speed * ts;
-			if (Input::IsKeyPressed(m_Keybinds.DOWN))
-				translation.y -= m_Speed * ts;
-			if (Input::IsKeyPressed(m_Keybinds.LEFT))
-				translation.x -= m_Speed * ts;
-			if (Input::IsKeyPressed(m_Keybinds.RIGHT))
-				translation.x += m_Speed * ts;
-		}
-
-	private:
-		float m_Speed = 2.0f;
-
-		Keybinds m_Keybinds;
-	};
-#endif
 	Scene::Scene()
 	{
 		Material& defaultMaterial = m_Materials.emplace_back();
+		m_Filepath = "UntitledScene.openengine";
 	}
 
 	Scene::~Scene()

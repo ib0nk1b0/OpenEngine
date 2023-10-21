@@ -5,6 +5,8 @@
 #include "OpenEngine/Utils/PlatformUtils.h"
 #include "OpenEngine/Math/Math.h"
 
+#include "OpenEngine/ImGui/ImGuiFonts.h"
+
 #include <imgui/imgui.h>
 #include <ImGuizmo/ImGuizmo.h>
 
@@ -453,6 +455,13 @@ namespace OpenEngine {
 
 		ImGui::Begin("##Toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 		float size = ImGui::GetWindowHeight() - 4;
+
+		{
+			UI::ScopedFont bold(UI::Fonts::Get("Bold"));
+			ImGui::Text("%s", m_EditorScene->GetFilepath().c_str());
+			ImGui::SameLine();
+		}
+
 		Ref<Texture2D> icon = m_SceneState == SceneState::Edit ? m_PlayIcon : m_StopIcon;
 		ImGui::SetCursorPosX(ImGui::GetWindowContentRegionMax().x * 0.5f - size * 0.5f);
 		if (ImGui::ImageButton((ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
