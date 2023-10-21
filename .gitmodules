@@ -3,7 +3,7 @@
 	url = https://github.com/gabime/spdlog
 [submodule "GLFW"]
 	path = OpenEngine/vendor/GLFW
-	url = https://github.com/ib0nk1b0/glfw_latest
+	url = https://github.com/ib0nk1b0/glfw
 [submodule "OpenEngine/vendor/imgui"]
 	path = OpenEngine/vendor/imgui
 	url = https://github.com/ib0nk1b0/imgui

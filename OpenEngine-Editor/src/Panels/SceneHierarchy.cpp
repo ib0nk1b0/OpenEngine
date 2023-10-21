@@ -364,39 +364,39 @@ namespace OpenEngine {
 		});
 
 		DrawComponent<EditorRendererComponent>("Editor Renderer", entity, [=](auto& component)
+		{
+			UI::ColorEdit4("Color", glm::value_ptr(component.Color));
+
+			Ref<Texture2D> texturePreview;
+
+			if (!component.Texture)
+				texturePreview = Texture2D::Create("assets/icons/BlankTexture.png");
+			else
 			{
-				UI::ColorEdit4("Color", glm::value_ptr(component.Color));
-
-				Ref<Texture2D> texturePreview;
-
-				if (!component.Texture)
-					texturePreview = Texture2D::Create("assets/icons/BlankTexture.png");
-				else
-				{
-					texturePreview = component.Texture;
-					ImGui::Text("%s", component.Texture->GetFilePath().c_str());
-					ImGui::SameLine();
-				}
-
-				ImGuiID id = 1;
-				ImGui::ImageButtonEx(id, (ImTextureID)texturePreview->GetRendererID(), { 64, 64 }, { 0, 1 }, { 1, 0 }, { 0, 0, 0, 0 }, { 1, 1, 1, 1 });
-				if (ImGui::BeginDragDropTarget())
-				{
-					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
-					{
-						const wchar_t* path = (const wchar_t*)payload->Data;
-						std::filesystem::path fullPath = std::filesystem::path(g_AssetPath) / path;
-						if (FileDialogs::IsValidFile(fullPath, ".png"))
-							component.Texture = Texture2D::Create(fullPath.string());
-					}
-					ImGui::EndDragDropTarget();
-				}
-
+				texturePreview = component.Texture;
+				ImGui::Text("%s", component.Texture->GetFilePath().c_str());
 				ImGui::SameLine();
+			}
 
-				if (ImGui::Button("Clear"))
-					component.Texture = nullptr;
-			});
+			ImGuiID id = 1;
+			ImGui::ImageButtonEx(id, (ImTextureID)texturePreview->GetRendererID(), { 64, 64 }, { 0, 1 }, { 1, 0 }, { 0, 0, 0, 0 }, { 1, 1, 1, 1 });
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+				{
+					const wchar_t* path = (const wchar_t*)payload->Data;
+					std::filesystem::path fullPath = std::filesystem::path(g_AssetPath) / path;
+					if (FileDialogs::IsValidFile(fullPath, ".png"))
+						component.Texture = Texture2D::Create(fullPath.string());
+				}
+				ImGui::EndDragDropTarget();
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Clear"))
+				component.Texture = nullptr;
+		});
 
 		DrawComponent<MeshComponent>("Mesh", entity, [=](auto& component)
 		{
@@ -417,13 +417,7 @@ namespace OpenEngine {
 				}
 				ImGui::EndDragDropTarget();
 			}
-			/*
-			if (ImGui::Button(meshName.c_str()))
-			{
-				std::string filepath = FileDialogs::OpenFile("Model OBJ (*.obj)\0*.obj\0");
-				if (!filepath.empty() && FileDialogs::IsValidFile(filepath, ".obj"))
-					component.Filepath = Utils::FormatFilepath(filepath);
-			}*/
+			
 			ImGui::Columns(1);
 			UI::DragInt("Material Index", &component.MaterialIndex, 1, 0, m_Context->m_Materials.size() - 1);
 		});
