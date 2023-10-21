@@ -404,20 +404,8 @@ namespace OpenEngine {
 			ImGui::SetColumnWidth(0, 100.0f);
 			ImGui::Text("Mesh");
 			ImGui::NextColumn();
-			std::string meshName;
-			std::string ext;
-			std::string path = component.Filepath;
-			if (path == "null")
-				meshName = path;
-			else
-			{
-				size_t extensionPos = path.find_last_of(".");
-				ext = path.substr(extensionPos);
-				size_t pos = path.find_last_of("\\/");
-				meshName = path.substr(pos + 1, path.size() - pos - ext.size() - 1);
-			}
-
-			ImGui::Button(meshName.c_str());
+			
+			ImGui::Button(Utils::GetFileNameFromPath(component.Filepath).c_str());
 			if (ImGui::BeginDragDropTarget())
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))

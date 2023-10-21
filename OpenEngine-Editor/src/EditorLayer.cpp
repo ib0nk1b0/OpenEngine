@@ -458,7 +458,7 @@ namespace OpenEngine {
 
 		{
 			UI::ScopedFont bold(UI::Fonts::Get("Bold"));
-			ImGui::Text("%s", m_EditorScene->GetFilepath().c_str());
+			ImGui::Text("%s", Utils::GetFileNameFromPath(m_EditorScene->GetFilepath()).c_str());
 			ImGui::SameLine();
 		}
 

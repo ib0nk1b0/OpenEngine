@@ -78,4 +78,18 @@ namespace OpenEngine {
 		return filepath;
 	}
 
+	std::string Utils::GetFileNameFromPath(std::string filepath)
+	{
+		if (filepath.find(".") != std::string::npos && filepath.find("\\") != std::string::npos || filepath.find("/") != std::string::npos)
+		{
+			size_t extensionPos = filepath.find_last_of(".");
+			size_t slashPos = filepath.find_last_of("\\/");
+			std::string ext = filepath.substr(extensionPos);
+			std::string result = filepath.substr(slashPos + 1, filepath.size() - slashPos - ext.size() - 1);
+			return result;
+		}
+
+		return filepath;
+	}
+
 }

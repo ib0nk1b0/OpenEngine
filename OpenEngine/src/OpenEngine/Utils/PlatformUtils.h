@@ -16,6 +16,7 @@ namespace OpenEngine {
 	{
 	public:
 		static std::string FormatFilepath(std::string filepathOriginal);
+		static std::string GetFileNameFromPath(std::string filepath);
 	};
 
 }
