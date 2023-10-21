@@ -42,8 +42,6 @@ namespace OpenEngine {
 	{
 		OE_PROFILE_FUNCTION();
 
-		Random::Init();
-
 		OE_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
@@ -55,6 +53,7 @@ namespace OpenEngine {
 			std::filesystem::current_path(m_Specification.WorkingDirectory);
 
 		Renderer::Init();
+		Random::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);

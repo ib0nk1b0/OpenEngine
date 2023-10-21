@@ -1501,6 +1501,7 @@
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Scene\SceneSerializer.h" />
+    <ClInclude Include="src\OpenEngine\Project\ProjectSerializer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenEngine\Core\Application.cpp">

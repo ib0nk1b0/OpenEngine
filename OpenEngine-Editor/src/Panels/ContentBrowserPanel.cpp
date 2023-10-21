@@ -1,7 +1,7 @@
 #include "oepch.h"
 #include "ContentBrowserPanel.h"
 
-#include "OpenEngine/Utils/PlatformUtils.h";
+#include "OpenEngine/Utils/PlatformUtils.h"
 #include "OpenEngine/ImGui/ImGuiFonts.h"
 
 #include <imgui/imgui.h>

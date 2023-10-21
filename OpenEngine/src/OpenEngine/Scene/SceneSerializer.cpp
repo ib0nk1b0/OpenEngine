@@ -62,186 +62,111 @@ namespace OpenEngine {
 		using namespace Serializer;
 		std::string text;
 
-		size_t numberOfEntities = m_Scene->m_Registry.size();
-		int count = 0;
 
-		text += "{" + Serializer::NewLine() + Serializer::Tab();
-		text += "\"Entities\": [" + Serializer::NewLine();
+		nlohmann::ordered_json jsonData;
+		jsonData["Entities"] = {};
+		std::vector<nlohmann::ordered_json> jsonEntities;
 		m_Scene->m_Registry.each([&](auto entityID)
-		{
-			Entity entity = { entityID, m_Scene.get() };
-
-			text += Tab(2) + "{" + NewLine(); // Tab(2)
-
-			if (entity.HasComponent<TagComponent>())
 			{
-				std::string tag = entity.GetComponent<TagComponent>().Tag.c_str();
-				text += Tab(3) + "\"ID\": " + std::to_string(entity.GetUUID()) + "," + NewLine();
-				text += StartJSONObject("TagComponent");
-				text += GetJSONString("Tag", tag, true);
-				text += Tab(2) + "}," + NewLine();
-			}
+				Entity entity = { entityID, m_Scene.get() };
+				auto& tag = entity.GetComponent<TagComponent>().Tag;
+
+			nlohmann::ordered_json e;
+			e["ID"] = (uint64_t)entity.GetUUID();
+			e["Tag"] = tag;
 
 			if (entity.HasComponent<ParentComponent>())
 			{
 				auto& pc = entity.GetComponent<ParentComponent>();
-
-				text += StartJSONObject("ParentComponent");
-				text += GetJSONString("ParentName", pc.ParentName);
-				text += Tab(3) + "\"ParentID\": " + std::to_string(pc.ParentID) + "," + NewLine() + Tab();
-				text += GetJSONString("Offset", Encode(pc.Offset), true);
-
-				if (!entity.HasComponent<TransformComponent>() &&
-					!entity.HasComponent<SpriteRendererComponent>() &&
-					!entity.HasComponent<EditorRendererComponent>() &&
-					!entity.HasComponent<CircleRendererComponent>() &&
-					!entity.HasComponent<MeshComponent>() &&
-					!entity.HasComponent<PointLightComponent>() &&
-					!entity.HasComponent<CameraComponent>() &&
-					!entity.HasComponent<RigidBody2DComponent>() &&
-					!entity.HasComponent<BoxColider2DComponent>())
-					text += Tab(2) + "}" + NewLine();
-				else
-					text += Tab(2) + "}," + NewLine();
+				e["ParentComponent"] = {
+					{ "ParentName", pc.ParentName },
+					{ "ParentID", pc.ParentID },
+					{ "Offset", { pc.Offset.x, pc.Offset.y, pc.Offset.z } }
+				};
 			}
 
 			if (entity.HasComponent<TransformComponent>())
 			{
 				auto& tc = entity.GetComponent<TransformComponent>();
-
-				text += StartJSONObject("TransformComponent");
-				text += GetJSONString("Translation", Encode(tc.Translation));
-				text += GetJSONString("Rotation", Encode(tc.Rotation));
-				text += GetJSONString("Scale", Encode(tc.Scale), true);
-				if (!entity.HasComponent<SpriteRendererComponent>() &&
-					!entity.HasComponent<EditorRendererComponent>() &&
-					!entity.HasComponent<CircleRendererComponent>() &&
-					!entity.HasComponent<MeshComponent>() &&
-					!entity.HasComponent<PointLightComponent>() &&
-					!entity.HasComponent<CameraComponent>() &&
-					!entity.HasComponent<RigidBody2DComponent>() &&
-					!entity.HasComponent<BoxColider2DComponent>())
-					text += Tab(2) + "}" + NewLine();
-				else
-					text += Tab(2) + "}," + NewLine();
+				e["TransformComponent"] = {
+					{ "Translation", { tc.Translation.x, tc.Translation.y, tc.Translation.z } },
+					{ "Rotation", { tc.Rotation.x, tc.Rotation.y, tc.Rotation.z } },
+					{ "Scale", { tc.Scale.x, tc.Scale.y, tc.Scale.z } },
+				};
 			}
 
 			if (entity.HasComponent<SpriteRendererComponent>())
 			{
 				auto& src = entity.GetComponent<SpriteRendererComponent>();
-				text += StartJSONObject("SpriteRendererComponent");
-
 				if (src.Texture)
 				{
-					text += GetJSONString("Color", Encode(src.Color));
-					text += GetJSONString("Texture", Utils::FormatFilepath(src.Texture->GetFilePath()));
-					text += GetJSONString("Scale", src.Scale, true);
+					e["SpriteRendererComponent"] = {
+						{ "Color", Encode(src.Color) },
+						{ "Texture", Utils::FormatFilepath(src.Texture->GetFilePath()) },
+						{ "Scale", src.Scale }
+					};
 				}
 				else
-					text += GetJSONString("Color", Encode(src.Color), true);
-
-				if (!entity.HasComponent<EditorRendererComponent>() &&
-					!entity.HasComponent<CircleRendererComponent>() &&
-					!entity.HasComponent<MeshComponent>() &&
-					!entity.HasComponent<PointLightComponent>() &&
-					!entity.HasComponent<CameraComponent>() &&
-					!entity.HasComponent<RigidBody2DComponent>() &&
-					!entity.HasComponent<BoxColider2DComponent>())
-					text += Tab(2) + "}" + NewLine();
-				else
-					text += Tab(2) + "}," + NewLine();
+				{
+					e["SpriteRendererComponent"] = {
+						{ "Color", { src.Color.r, src.Color.g, src.Color.b, src.Color.a } }
+					};
+				}
 			}
 
 			if (entity.HasComponent<EditorRendererComponent>())
 			{
 				auto& erc = entity.GetComponent<EditorRendererComponent>();
-				text += StartJSONObject("EditorRendererComponent");
 				if (erc.Texture)
 				{
-					std::string filepathOrginal = erc.Texture->GetFilePath();
-					std::string filepath;
-					char delimiter = '\\';
-					size_t pos = 0;
-					std::string token;
-
-					int no_of_backslash = (int)std::count(filepathOrginal.begin(), filepathOrginal.end(), '\\');
-					if (no_of_backslash > 0)
-					{
-						for (int i = 0; i < no_of_backslash + 1; i++)
-						{
-							pos = filepathOrginal.find(delimiter);
-							token = filepathOrginal.substr(0, pos);
-							filepath += token + "/";
-							filepathOrginal.erase(0, pos + 1);
-						}
-						filepath.erase(filepath.length() - 1, filepath.length());
-					}
-					else
-						filepath = filepathOrginal;
-
-					text += GetJSONString("Color", Encode(erc.Color));
-					text += GetJSONString("Texture", filepath, true);
+					e["EditorRendererComponent"] = {
+						{ "Color", { erc.Color.r, erc.Color.g, erc.Color.b, erc.Color.a } },
+						{ "Texture", Utils::FormatFilepath(erc.Texture->GetFilePath()) },
+					};
 				}
 				else
-					text += GetJSONString("Color", Encode(erc.Color), true);
-
-				if (!entity.HasComponent<CircleRendererComponent>() &&
-					!entity.HasComponent<MeshComponent>() &&
-					!entity.HasComponent<PointLightComponent>() &&
-					!entity.HasComponent<CameraComponent>() &&
-					!entity.HasComponent<RigidBody2DComponent>() &&
-					!entity.HasComponent<BoxColider2DComponent>())
-					text += Tab(2) + "}" + NewLine();
-				else
-					text += Tab(2) + "}," + NewLine();
+				{
+					e["EditorRendererComponent"] = {
+						{ "Color", { erc.Color.r, erc.Color.g, erc.Color.b, erc.Color.a } }
+					};
+				}
 			}
 
 			if (entity.HasComponent<CircleRendererComponent>())
 			{
 				auto& crc = entity.GetComponent<CircleRendererComponent>();
-				text += StartJSONObject("CircleRendererComponent");
-				text += GetJSONString("Color", Encode(crc.Color));
-				text += GetJSONString("Thickness", crc.Thickness);
-				text += GetJSONString("Fade", crc.Fade, true);
-				if (!entity.HasComponent<MeshComponent>() &&
-					!entity.HasComponent<PointLightComponent>() &&
-					!entity.HasComponent<CameraComponent>() &&
-					!entity.HasComponent<RigidBody2DComponent>() &&
-					!entity.HasComponent<BoxColider2DComponent>())
-					text += Tab(2) + "}" + NewLine();
-				else
-					text += Tab(2) + "}," + NewLine();
+				e["CircleRendererComponent"] = {
+					{ "Color", { crc.Color.r, crc.Color.g, crc.Color.b, crc.Color.a } },
+					{ "Thickness", crc.Thickness },
+					{ "Fade", crc.Fade }
+				};
 			}
 
 			if (entity.HasComponent<MeshComponent>())
 			{
 				auto& mc = entity.GetComponent<MeshComponent>();
-				text += StartJSONObject("MeshComponent");
-				text += GetJSONString("Filepath", Utils::FormatFilepath(mc.Filepath));
-				text += GetJSONString("MaterialIndex", mc.MaterialIndex, true);
-
-				if (!entity.HasComponent<PointLightComponent>() &&
-					!entity.HasComponent<CameraComponent>() &&
-					!entity.HasComponent<RigidBody2DComponent>() &&
-					!entity.HasComponent<BoxColider2DComponent>())
-					text += Tab(2) + "}" + NewLine();
-				else
-					text += Tab(2) + "}," + NewLine();
+				e["MeshComponent"] = {
+					{ "Filepath", Utils::FormatFilepath(mc.Filepath) },
+					{ "MaterialIndex", mc.MaterialIndex }
+				};
 			}
 
 			if (entity.HasComponent<PointLightComponent>())
 			{
-				auto& pl = entity.GetComponent<PointLightComponent>();
-				text += StartJSONObject("PointLightComponent");
-				text += GetJSONString("Color", Encode(pl.Color));
-				text += GetJSONString("AmbientIntensity", pl.AmbientIntensity, true);
+				auto& plc = entity.GetComponent<PointLightComponent>();
+				e["PointLightComponent"] = {
+					{ "Color", { plc.Color.r, plc.Color.g, plc.Color.b } },
+					{ "AmbientIntensity", plc.AmbientIntensity }
+				};
+			}
 
-				if (!entity.HasComponent<CameraComponent>() &&
-					!entity.HasComponent<RigidBody2DComponent>() &&
-					!entity.HasComponent<BoxColider2DComponent>())
-					text += Tab(2) + "}" + NewLine();
-				else
-					text += Tab(2) + "}," + NewLine();
+			if (entity.HasComponent<DirectionalLightComponent>())
+			{
+				auto& dlc = entity.GetComponent<DirectionalLightComponent>();
+				e["DirectionalLightComponent"] = {
+					{ "Color", { dlc.Color.r, dlc.Color.g, dlc.Color.b } },
+					{ "AmbientIntensity", dlc.AmbientIntensity }
+				};
 			}
 
 			if (entity.HasComponent<CameraComponent>())
@@ -249,73 +174,59 @@ namespace OpenEngine {
 				auto& cc = entity.GetComponent<CameraComponent>();
 				auto& camera = cc.Camera;
 				SceneCamera::ProjectionType projType = camera.GetProjectionType();
-
-				text += StartJSONObject("CameraComponent");
-				text += GetJSONString("ProjectionType", ProjectionTypeToString(projType));
 				if (projType == SceneCamera::ProjectionType::Orthographic)
 				{
-					text += GetJSONString("Size", camera.GetOrthographicSize());
-					text += GetJSONString("Near", camera.GetOrthographicNearClip());
-					text += GetJSONString("Far", camera.GetOrthographicFarClip());
+					e["CameraComponent"] = {
+						{ "ProjectionType", ProjectionTypeToString(projType) },
+						{ "Size", camera.GetOrthographicSize() },
+						{ "Near", camera.GetOrthographicNearClip() },
+						{ "Far", camera.GetOrthographicFarClip() },
+						{ "Primary", cc.Primary },
+						{ "FixedAspectRatio", cc.FixedAspectRatio }
+					};
 				}
 				else
 				{
-					text += GetJSONString("VerticalFOV", camera.GetPerspectiveVertivalFOV());
-					text += GetJSONString("Near", camera.GetPerspectiveNearClip());
-					text += GetJSONString("Far", camera.GetPerspectiveFarClip());
+					e["CameraComponent"] = {
+						{ "ProjectionType", ProjectionTypeToString(projType) },
+						{ "VerticalFOV", camera.GetPerspectiveVertivalFOV() },
+						{ "Near", camera.GetPerspectiveNearClip() },
+						{ "Far", camera.GetPerspectiveFarClip() },
+						{ "Primary", cc.Primary },
+						{ "FixedAspectRatio", cc.FixedAspectRatio }
+					};
 				}
-
-				text += GetJSONString("Primary", cc.Primary);
-				text += GetJSONString("FixedAspectRatio", cc.FixedAspectRatio, true);
-
-				if (!entity.HasComponent<RigidBody2DComponent>() &&
-					!entity.HasComponent<BoxColider2DComponent>())
-					text += Tab(2) + "}" + NewLine();
-				else
-					text += Tab(2) + "}," + NewLine();
 			}
 
 			if (entity.HasComponent<RigidBody2DComponent>())
 			{
-				auto& rgb2d = entity.GetComponent<RigidBody2DComponent>();
-
-				text += StartJSONObject("RigidBody2DComponent");
-				text += GetJSONString("Type", BodyTypeToString(rgb2d.Type), true);
-
-				if (!entity.HasComponent<BoxColider2DComponent>())
-					text += Tab(2) + "}" + NewLine();
-				else
-					text += Tab(2) + "}," + NewLine();
+				auto& rb2d = entity.GetComponent<RigidBody2DComponent>();
+				e["RigidBody2DComponent"] = {
+					{ "Type", BodyTypeToString(rb2d.Type) }
+				};
 			}
 
 			if (entity.HasComponent<BoxColider2DComponent>())
 			{
 				auto& bc2d = entity.GetComponent<BoxColider2DComponent>();
-
-				text += StartJSONObject("BoxColider2DComponent");
-				text += GetJSONString("Size", Encode(bc2d.Size));
-				text += GetJSONString("Offset", Encode(bc2d.Offset), true);
-
-				text += Tab(2) + "}" + NewLine();
+				e["BoxColider2DComponent"] = {
+					{ "Offset", Encode(bc2d.Offset) },
+					{ "Size", Encode(bc2d.Size) }
+				};
 			}
 
-			// TODO: Add script component
-
-			if (count == numberOfEntities - 1)
-				text += Tab(2) + "}" + NewLine();
-			else
-				text += Tab(2) + "}," + NewLine();
-
-			count++;
+			jsonEntities.push_back(e);
 		});
 
-		text += Tab() + "]" + NewLine();
-		text += "}";
+		for (int i = 0; i < jsonEntities.size(); i++)
+			jsonData["Entities"] += jsonEntities[i];
 
-		std::ofstream file;
-		file.open(filepath);
-		file << text;
-		file.close();
+		std::ofstream jsonOut(filepath);
+#ifdef OE_DIST
+		jsonOut << jsonData;
+#else
+		jsonOut << std::setw(4) << jsonData;
+#endif
 	}
 
 	void SceneSerializer::Deserialize(const std::string& filepath)
@@ -331,7 +242,11 @@ namespace OpenEngine {
 			for (auto& [key, value] : entities.items())
 			{
 				uint64_t uuid = value["ID"].get<uint64_t>();
-				std::string tag = value["TagComponent"]["Tag"].get<std::string>();
+				std::string tag;
+				if (value.contains("TagComponent"))
+					tag = value["TagComponent"]["Tag"].get<std::string>();
+				else if (value.contains("Tag"))
+					tag = value["Tag"].get<std::string>();
 
 				Entity entity = m_Scene->CreateEntityWithUUID(uuid, tag);
 

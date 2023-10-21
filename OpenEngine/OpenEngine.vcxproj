@@ -168,6 +168,7 @@
     <ClInclude Include="src\OpenEngine\Math\Math.h" />
     <ClInclude Include="src\OpenEngine\Physics\Physics.h" />
     <ClInclude Include="src\OpenEngine\Physics\World.h" />
+    <ClInclude Include="src\OpenEngine\Project\ProjectSerializer.h" />
     <ClInclude Include="src\OpenEngine\Renderer\Buffer.h" />
     <ClInclude Include="src\OpenEngine\Renderer\Camera.h" />
     <ClInclude Include="src\OpenEngine\Renderer\EditorCamera.h" />

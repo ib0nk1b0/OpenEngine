@@ -9,6 +9,28 @@
 
 #include <glm/gtx/string_cast.hpp>
 
+namespace OpenEngine {
+
+	/*class Serializer
+	{
+	public:
+		static std::string BeginFile(const std::string& filepath);
+		static std::string EndFile();
+
+		static std::string BeginObject(const std::string& key);
+		static std::string EndObject();
+
+		static std::string AddString(const std::string& key, const std::string& value);
+		static std::string AddInt(const std::string& key, int value);
+		static std::string AddFloat(const std::string& key, float value);
+		static std::string AddBool(const std::string& key, bool value);
+		static std::string AddVec2(const std::string& key, const glm::vec2& value);
+		static std::string AddVec3(const std::string& key, const glm::vec3& value);
+		static std::string AddVec4(const std::string& key, const glm::vec4& value);
+	};*/
+
+}
+
 namespace OpenEngine::Serializer
 {
 
@@ -29,6 +51,14 @@ namespace OpenEngine::Serializer
 	static std::string StartJSONObject(const std::string& label)
 	{
 		return Tab(3) + "\"" + label + "\": {" + NewLine() + Tab();
+	}
+
+	static std::string EndJSONObject(bool last = false)
+	{
+		if (last)
+			return Tab(3) + "}," + NewLine() + Tab();
+
+		return Tab(3) + "}" + NewLine() + Tab();
 	}
 
 	static std::string GetJSONString(const std::string& label, const std::string& value, bool lastLine = false)

@@ -416,12 +416,26 @@ namespace OpenEngine {
 				size_t pos = path.find_last_of("\\/");
 				meshName = path.substr(pos + 1, path.size() - pos - ext.size() - 1);
 			}
+
+			ImGui::Button(meshName.c_str());
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+				{
+					const wchar_t* path = (const wchar_t*)payload->Data;
+					std::filesystem::path fullPath = std::filesystem::path(g_AssetPath) / path;
+					if (FileDialogs::IsValidFile(fullPath, ".obj"))
+						component.Filepath = Utils::FormatFilepath(fullPath.string());
+				}
+				ImGui::EndDragDropTarget();
+			}
+			/*
 			if (ImGui::Button(meshName.c_str()))
 			{
 				std::string filepath = FileDialogs::OpenFile("Model OBJ (*.obj)\0*.obj\0");
 				if (!filepath.empty() && FileDialogs::IsValidFile(filepath, ".obj"))
 					component.Filepath = Utils::FormatFilepath(filepath);
-			}
+			}*/
 			ImGui::Columns(1);
 			UI::DragInt("Material Index", &component.MaterialIndex, 1, 0, m_Context->m_Materials.size() - 1);
 		});
