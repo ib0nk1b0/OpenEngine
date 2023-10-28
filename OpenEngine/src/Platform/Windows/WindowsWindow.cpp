@@ -155,7 +155,11 @@ namespace OpenEngine {
 		glfwSetTitlebarHitTestCallback(m_Window, [](GLFWwindow* window, int x, int y, int* hit)
 		{
 			Application* app = (Application*)glfwGetWindowUserPointer(window);
-			*hit = app->IsTitleBarHovered();
+			int titlebarHit = 0;
+			bool titlebarHovered = app->IsTitlebarHovered();
+			if (titlebarHovered)
+				titlebarHit = 1;
+			*hit = titlebarHit;
 		});
 	}
 

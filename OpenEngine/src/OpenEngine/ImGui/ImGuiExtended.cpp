@@ -16,6 +16,23 @@ namespace OpenEngine::UI {
 		return GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 	}
 
+	void ShiftCursorPosX(float amount)
+	{
+		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + amount);
+	}
+
+	void ShiftCursorPosY(float amount)
+	{
+		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + amount);
+	}
+
+	void ShiftCursorPos(const glm::vec2& amount)
+	{
+		ImVec2 cursorPos = ImGui::GetCursorPos();
+		ImVec2 newCursorPos = { cursorPos.x + amount.x, cursorPos.y + amount.y };
+		ImGui::SetCursorPos(newCursorPos);
+	}
+
 	bool OpenEngine::UI::DragFloat(const std::string& label, float* value, float speed, float min, float max, float columnWidth, const char* format)
 	{
 		bool dragFloatUsed = false;

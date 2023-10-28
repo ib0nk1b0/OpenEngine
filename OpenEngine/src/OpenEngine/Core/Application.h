@@ -19,15 +19,8 @@ namespace OpenEngine {
 		std::string WorkingDirectory;
 		bool VSyncEnabled = true;
 
-		bool CustomTitleBar = false;
-	};
-
-	struct ApplicationTimings
-	{
-		float LayerOnUpdate;
-		float OnImGuiRender;
-		float SceneOnUpdate;
-		float RendererEndScene;
+		bool CustomTitlebar = false;
+		bool CenteredWindow = false;
 	};
 
 	struct Timing;
@@ -52,7 +45,8 @@ namespace OpenEngine {
 		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
 
 		inline static Application& Get() { return *s_Instance; }
-		bool IsTitleBarHovered() { return m_TitleBarHovered; }
+		bool IsTitlebarHovered() const { return m_TitlebarHovered; }
+		void SetMenubarCallback(const std::function<void()>& menubarCallback) { m_MenubarCallback = menubarCallback; }
 
 		void PrintCurrentUsage();
 
@@ -64,7 +58,8 @@ namespace OpenEngine {
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
-		void DrawTitleBar(float& titlebarOutHeight);
+		void UI_DrawTitlebar(float& titlebarOutHeight);
+		void UI_DrawMenubar();
 		bool IsMaximised();
 	private:
 		std::string m_Name;
@@ -75,7 +70,8 @@ namespace OpenEngine {
 		bool m_Minimised = false;
 		LayerStack m_LayerStack;
 
-		bool m_TitleBarHovered = false;
+		bool m_TitlebarHovered = false;
+		std::function<void()> m_MenubarCallback;
 
 		float m_LastFrameTime = 0.0f;
 

@@ -23,7 +23,7 @@ namespace OpenEngine {
 	{
 		ApplicationSpecification spec;
 		spec.Name = "Open Editor";
-		spec.CustomTitleBar = false;
+		spec.CustomTitlebar = true;
 
 		return new OpenEditor(spec);
 	}
