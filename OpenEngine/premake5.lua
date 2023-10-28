@@ -61,7 +61,6 @@ project "OpenEngine"
     defines
     {
     	"OE_PLATFORM_WINDOWS",
-        "SOME_RANDOM_DEFINE_AGAIN",
     	"GLFW_INCLUDE_NONE"
     }
 

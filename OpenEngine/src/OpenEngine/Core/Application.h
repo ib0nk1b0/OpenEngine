@@ -18,6 +18,8 @@ namespace OpenEngine {
 		std::string Name = "OpenEngine Application";
 		std::string WorkingDirectory;
 		bool VSyncEnabled = true;
+
+		bool CustomTitleBar = false;
 	};
 
 	struct ApplicationTimings
@@ -50,12 +52,10 @@ namespace OpenEngine {
 		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
 
 		inline static Application& Get() { return *s_Instance; }
+		bool IsTitleBarHovered() { return m_TitleBarHovered; }
+
 		void PrintCurrentUsage();
 
-		void SubmitSceneTime(float time) { m_ApplicationTimings.SceneOnUpdate = time; }
-		void SubmitRendererTime(float time) { m_ApplicationTimings.RendererEndScene = time; }
-
-		//ApplicationTimings GetApplicationTimings() { return m_ApplicationTimings; }
 		std::vector<Timing> GetApplicationTimings() { return m_Timings; }
 
 		void AddTiming(const Timing& timing);
@@ -64,6 +64,8 @@ namespace OpenEngine {
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
+		void DrawTitleBar(float& titlebarOutHeight);
+		bool IsMaximised();
 	private:
 		std::string m_Name;
 		ApplicationSpecification m_Specification;
@@ -73,7 +75,7 @@ namespace OpenEngine {
 		bool m_Minimised = false;
 		LayerStack m_LayerStack;
 
-		ApplicationTimings m_ApplicationTimings;
+		bool m_TitleBarHovered = false;
 
 		float m_LastFrameTime = 0.0f;
 
