@@ -7,6 +7,8 @@
 
 #include "entt.hpp"
 
+class b2World;
+
 namespace OpenEngine {
 
 	class Entity;
@@ -30,6 +32,7 @@ namespace OpenEngine {
 
 		void OnEditorStart();
 		void OnRuntimeStart();
+		void OnRuntimeStop();
 
 		void OnUpdate(Timestep ts);
 		void OnUpdateEditor(Timestep ts, EditorCamera& camera);
@@ -64,6 +67,8 @@ namespace OpenEngine {
 
 		std::vector<Material> m_Materials;
 		std::vector<Mesh> m_Meshes;
+
+		b2World* m_PhysicsWorld = nullptr;
 
 		friend class Entity;
 		friend class SceneSerializer;

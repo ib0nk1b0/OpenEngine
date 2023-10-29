@@ -8,8 +8,6 @@ namespace OpenEngine {
 
 	void Physics2D::Update()
 	{
-		if (m_WorldAdded)
-			m_World.Update();
-	}
 
+	}
 }

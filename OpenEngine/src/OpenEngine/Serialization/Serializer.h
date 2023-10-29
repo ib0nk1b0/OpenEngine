@@ -127,6 +127,37 @@ namespace OpenEngine::Serializer
 		return result;
 	}
 
+	static std::string Encode(glm::vec2& values)
+	{
+		std::string result;
+
+		result += "[" + std::to_string(values[0]) + ", ";
+		result += std::to_string(values[1]) + "]";
+
+		return result;
+	}
+
+	static void Decode(std::string values, glm::vec2& result)
+	{
+		std::string delimiter = ", ";
+		std::vector<std::string> convertedValues;
+
+		size_t pos = 0;
+		std::string token;
+		values.erase(0, 1);
+		values.erase(values.length() - 1, 1);
+		for (int i = 0; i < 2; i++)
+		{
+			pos = values.find(delimiter);
+			token = values.substr(0, pos);
+			convertedValues.push_back(token);
+			values.erase(0, pos + delimiter.length());
+		}
+
+		result.x = std::stof(convertedValues[0]);
+		result.y = std::stof(convertedValues[1]);
+	}
+
 	static std::string Encode(glm::vec3& values)
 	{
 		std::string result;
@@ -193,6 +224,23 @@ namespace OpenEngine::Serializer
 		result.g = std::stof(convertedValues[1]);
 		result.b = std::stof(convertedValues[2]);
 		result.a = std::stof(convertedValues[3]);
+	}
+
+	static std::string ConvertFloat2(const nlohmann::json_abi_v3_11_2::json& data)
+	{
+		std::string result;
+		int count = 0;
+
+		result += "[";
+		for (auto it = data.begin(); it != data.end(); ++it)
+		{
+			result += std::to_string((float)it.value());
+			if (count < 1) result += ", ";
+			count++;
+		}
+		result += "]";
+
+		return result;
 	}
 
 	static std::string ConvertFloat3(const nlohmann::json_abi_v3_11_2::json& data)

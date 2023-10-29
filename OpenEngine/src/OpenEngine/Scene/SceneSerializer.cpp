@@ -35,14 +35,14 @@ namespace OpenEngine {
 		return SceneCamera::ProjectionType::Orthographic;
 	}
 
-	static std::string BodyTypeToString(BodyType type)
+	static std::string BodyTypeToString(RigidBody2DComponent::BodyType type)
 	{
 		switch (type)
 		{
-		case BodyType::Static:
+		case RigidBody2DComponent::BodyType::Static:
 			return "Static";
 			break;
-		case BodyType::Dynamic:
+		case RigidBody2DComponent::BodyType::Dynamic:
 			return "Dynamic";
 			break;
 		}
@@ -50,11 +50,11 @@ namespace OpenEngine {
 		return "Static";
 	}
 
-	static BodyType BodyTypeFromString(const std::string& type)
+	static RigidBody2DComponent::BodyType BodyTypeFromString(const std::string& type)
 	{
-		if (type == "Static") return BodyType::Static;
-		if (type == "Dynamic") return BodyType::Dynamic;
-		return BodyType::Static;
+		if (type == "Static") return RigidBody2DComponent::BodyType::Static;
+		if (type == "Dynamic") return RigidBody2DComponent::BodyType::Dynamic;
+		return RigidBody2DComponent::BodyType::Static;
 	}
 
 	void SceneSerializer::Serialize(const std::string& filepath)
@@ -361,8 +361,8 @@ namespace OpenEngine {
 					auto& jsonBC2D = value["BoxColider2DComponent"];
 					auto& bc2dComponent = entity.AddComponent<BoxColider2DComponent>();
 
-					Decode(ConvertFloat3(jsonBC2D["Size"]), bc2dComponent.Size);
-					Decode(ConvertFloat3(jsonBC2D["Offset"]), bc2dComponent.Offset);
+					Decode(ConvertFloat2(jsonBC2D["Size"]), bc2dComponent.Size);
+					Decode(ConvertFloat2(jsonBC2D["Offset"]), bc2dComponent.Offset);
 				}
 
 			}

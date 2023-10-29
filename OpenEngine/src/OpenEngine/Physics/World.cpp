@@ -10,11 +10,7 @@ namespace OpenEngine {
 
 	void World2D::Update()
 	{
-		for (auto& rigidBody : m_RigidBodies)
-		{
-			if (rigidBody.Type == BodyType::Static)
-				OE_CORE_INFO("Static");
-		}
+		
 	}
 
 }

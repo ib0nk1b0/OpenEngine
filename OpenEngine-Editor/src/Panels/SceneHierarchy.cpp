@@ -504,7 +504,7 @@ namespace OpenEngine {
 	
 		DrawComponent<RigidBody2DComponent>("RigidBody2D", entity, [](auto& component)
 		{
-			const char* bodyTypeStrings[] = { "Static", "Dynamic" };
+			const char* bodyTypeStrings[] = { "Static", "Dynamic", "Kinematic" };
 			const char* currentBodyTypeString = bodyTypeStrings[(int)component.Type];
 
 			if (ImGui::BeginCombo("BodyType", currentBodyTypeString))
@@ -515,7 +515,7 @@ namespace OpenEngine {
 					if (ImGui::Selectable(bodyTypeStrings[i], isSelected))
 					{
 						currentBodyTypeString = bodyTypeStrings[i];
-						component.Type = ((BodyType)i);
+						component.Type = ((RigidBody2DComponent::BodyType)i);
 					}
 
 					if (isSelected)
@@ -530,8 +530,12 @@ namespace OpenEngine {
 
 		DrawComponent<BoxColider2DComponent>("BoxColider2D", entity, [](auto& component)
 		{
-			UI::Vec3Controls("Size", component.Size);
-			UI::Vec3Controls("Offset", component.Offset);
+			UI::Vec2Controls("Size", component.Size);
+			UI::Vec2Controls("Offset", component.Offset);
+			UI::DragFloat("Density", component.Density);
+			UI::DragFloat("Friction", component.Friction);
+			UI::DragFloat("Restitution", component.Restitution);
+			UI::DragFloat("RestitutionThreshold", component.RestitutionThreshold);
 		});
 	}
 
