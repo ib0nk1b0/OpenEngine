@@ -129,7 +129,7 @@ namespace OpenEngine {
 	{
 		OE_PROFILE_FUNCTION();
 
-		/*static bool dockspaceOpen = true;
+		static bool dockspaceOpen = true;
 		static bool opt_fullscreen = true;
 		static bool opt_padding = false;
 		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
@@ -170,7 +170,7 @@ namespace OpenEngine {
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
-		style.WindowMinSize.x = windowMinSizeX;*/
+		style.WindowMinSize.x = windowMinSizeX;
 
 		/*ImGui::Begin("Popups");
 		
@@ -281,7 +281,7 @@ namespace OpenEngine {
 		UI_Toolbar();
 		//UI_ColorScheme();
 
-		//ImGui::End();
+		ImGui::End();
 	}
 
 	void EditorLayer::OnEvent(Event& e)

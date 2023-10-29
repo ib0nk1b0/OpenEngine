@@ -134,30 +134,30 @@ namespace OpenEngine {
 				OE_PERF_SCOPE("LayerStack::OnImGuiRender");
 				// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
 				// because it would be confusing to have two docking targets within each others.
-				ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
+				//ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
 
-				ImGuiViewport* viewport = ImGui::GetMainViewport();
-				ImGui::SetNextWindowPos(viewport->Pos);
-				ImGui::SetNextWindowSize(viewport->Size);
-				ImGui::SetNextWindowViewport(viewport->ID);
-				ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-				ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-				window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-				window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-				/*if (!m_Specification.CustomTitleBar && m_MenubarCallback)
-					window_flags |= ImGuiWindowFlags_MenuBar;*/
+				//ImGuiViewport* viewport = ImGui::GetMainViewport();
+				//ImGui::SetNextWindowPos(viewport->Pos);
+				//ImGui::SetNextWindowSize(viewport->Size);
+				//ImGui::SetNextWindowViewport(viewport->ID);
+				//ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+				//ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+				//window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+				//window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+				///*if (!m_Specification.CustomTitleBar && m_MenubarCallback)
+				//	window_flags |= ImGuiWindowFlags_MenuBar;*/
 
-				const bool isMaximised = IsMaximised();
+				//const bool isMaximised = IsMaximised();
 
-				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, isMaximised ? ImVec2(6.0f, 6.0f) : ImVec2(1.0f, 1.0f));
-				ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 3.0f);
+				//ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, isMaximised ? ImVec2(6.0f, 6.0f) : ImVec2(1.0f, 1.0f));
+				//ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 3.0f);
 
-				ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f });
-				ImGui::Begin("DockSpaceWindow", nullptr, window_flags);
-				ImGui::PopStyleColor(); // MenuBarBg
-				ImGui::PopStyleVar(2);
+				//ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f });
+				//ImGui::Begin("DockSpaceWindow", nullptr, window_flags);
+				//ImGui::PopStyleColor(); // MenuBarBg
+				//ImGui::PopStyleVar(2);
 
-				ImGui::PopStyleVar(2);
+				//ImGui::PopStyleVar(2);
 
 				//{
 				//	ImGui::PushStyleColor(ImGuiCol_Border, IM_COL32(50, 50, 50, 255));
@@ -168,25 +168,25 @@ namespace OpenEngine {
 				//	ImGui::PopStyleColor(); // ImGuiCol_Border
 				//}
 
-				if (m_Specification.CustomTitlebar)
+				/*if (m_Specification.CustomTitlebar)
 				{
 					float titleBarHeight;
 					UI_DrawTitlebar(titleBarHeight);
 					ImGui::SetCursorPosY(titleBarHeight);
-				}
+				}*/
 
 				// Dockspace
-				ImGuiIO& io = ImGui::GetIO();
+				/*ImGuiIO& io = ImGui::GetIO();
 				ImGuiStyle& style = ImGui::GetStyle();
 				float minWinSizeX = style.WindowMinSize.x;
 				style.WindowMinSize.x = 370.0f;
 				ImGui::DockSpace(ImGui::GetID("MyDockspace"));
-				style.WindowMinSize.x = minWinSizeX;
+				style.WindowMinSize.x = minWinSizeX;*/
 
 				for (Layer* layer : m_LayerStack)
 					layer->OnImGuiRender();
 
-				ImGui::End();
+				//ImGui::End();
 			}
 			m_ImGuiLayer->End();
 
