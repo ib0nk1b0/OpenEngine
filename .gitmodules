@@ -13,3 +13,6 @@
 [submodule "OpenEngine/vendor/imgui"]
 	path = OpenEngine/vendor/imgui
 	url = https://github.com/ib0nk1b0/imgui
+[submodule "OpenEngine/vendor/Box2D"]
+	path = OpenEngine/vendor/Box2D
+	url = https://github.com/ib0nk1b0/box2d
