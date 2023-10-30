@@ -683,6 +683,10 @@ namespace OpenEngine {
 	{
 		RenderCommand::DisableDepthTest();
 
+		// TODO: move to private variable to have customize option inside the editor
+		glm::vec4 staticBodyColor = { 0.2f, 0.3f, 1.0f, 1.0f };
+		glm::vec4 dynamicBodyColor = { 0.0f, 1.0f, 0.0f, 1.0f };
+
 		if (m_SceneState == SceneState::Edit)
 		{
 			Renderer2D::BeginScene(m_EditorCamera);
@@ -699,7 +703,11 @@ namespace OpenEngine {
 						glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
 							* glm::scale(glm::mat4(1.0f), scale);
 
-						Renderer2D::DrawCircle(transform, { 0.0f, 1.0f, 0.0f, 1.0f }, 0.05f);
+						glm::vec4 color;
+						Entity e = { entity, m_EditorScene.get() };
+						if (e.HasComponent<RigidBody2DComponent>())
+							color = e.GetComponent<RigidBody2DComponent>().Type == RigidBody2DComponent::BodyType::Static ? staticBodyColor : dynamicBodyColor;
+						Renderer2D::DrawCircle(transform, color, 0.05f);
 					}
 				}
 
@@ -714,7 +722,11 @@ namespace OpenEngine {
 							* glm::rotate(glm::mat4(1.0f), tc.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f))
 							* glm::scale(glm::mat4(1.0f), scale);
 
-						Renderer2D::DrawRect(transform, { 0.0f, 1.0f, 0.0f, 1.0f });
+						glm::vec4 color;
+						Entity e = { entity, m_EditorScene.get() };
+						if (e.HasComponent<RigidBody2DComponent>())
+							color = e.GetComponent<RigidBody2DComponent>().Type == RigidBody2DComponent::BodyType::Static ? staticBodyColor : dynamicBodyColor;
+						Renderer2D::DrawRect(transform, color);
 					}
 				}
 			}
@@ -736,7 +748,11 @@ namespace OpenEngine {
 						glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
 							* glm::scale(glm::mat4(1.0f), scale);
 
-						Renderer2D::DrawCircle(transform, { 0.0f, 1.0f, 0.0f, 1.0f }, 0.05f);
+						glm::vec4 color;
+						Entity e = { entity, m_RuntimeScene.get() };
+						if (e.HasComponent<RigidBody2DComponent>())
+							color = e.GetComponent<RigidBody2DComponent>().Type == RigidBody2DComponent::BodyType::Static ? staticBodyColor : dynamicBodyColor;
+						Renderer2D::DrawCircle(transform, color, 0.05f);
 					}
 				}
 
@@ -751,7 +767,11 @@ namespace OpenEngine {
 							* glm::rotate(glm::mat4(1.0f), tc.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f))
 							* glm::scale(glm::mat4(1.0f), scale);
 
-						Renderer2D::DrawRect(transform, { 0.0f, 1.0f, 0.0f, 1.0f });
+						glm::vec4 color;
+						Entity e = { entity, m_RuntimeScene.get() };
+						if (e.HasComponent<RigidBody2DComponent>())
+							color = e.GetComponent<RigidBody2DComponent>().Type == RigidBody2DComponent::BodyType::Static ? staticBodyColor : dynamicBodyColor;
+						Renderer2D::DrawRect(transform, color);
 					}
 				}
 			}
