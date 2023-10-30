@@ -1,0 +1,162 @@
+{
+    "Entities": [
+        {
+            "ID": 11307451992817798633,
+            "Tag": "Quad",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    0.0,
+                    -1.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    11.0,
+                    0.5,
+                    1.0
+                ]
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "RigidBody2DComponent": {
+                "Type": "Static",
+                "FixedRotation": false
+            },
+            "BoxColider2DComponent": {
+                "Offset": [
+                    0.0,
+                    0.0
+                ],
+                "Size": [
+                    0.5,
+                    0.5
+                ],
+                "Density": 1.0,
+                "Friction": 0.5,
+                "Restitution": 0.0,
+                "RestitutionThreshold": 0.5
+            }
+        },
+        {
+            "ID": 17975307741421165753,
+            "Tag": "Orthographic Camera",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "EditorRendererComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "Texture": "assets/textures/camera.png"
+            },
+            "CameraComponent": {
+                "ProjectionType": "Orthographic",
+                "Size": 10.0,
+                "Near": -1.0,
+                "Far": 1.0,
+                "Primary": true,
+                "FixedAspectRatio": false
+            }
+        },
+        {
+            "ID": 17362396106773665868,
+            "Tag": "Ball",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    0.0,
+                    1.8977686166763306,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "CircleRendererComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "Thickness": 1.0,
+                "Fade": 0.004999999888241291
+            },
+            "RigidBody2DComponent": {
+                "Type": "Dynamic",
+                "FixedRotation": false
+            },
+            "CircleColider2DComponent": {
+                "Offset": [
+                    0.0,
+                    0.0
+                ],
+                "Radius": 0.5,
+                "Density": 1.0,
+                "Friction": 0.30000001192092896,
+                "Restitution": 0.550000011920929,
+                "RestitutionThreshold": 0.5
+            }
+        }
+    ]
+}

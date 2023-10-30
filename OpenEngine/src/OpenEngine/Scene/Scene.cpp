@@ -178,6 +178,22 @@ namespace OpenEngine {
 		return entity;
 	}
 
+	Entity Scene::PrimaryCamera()
+	{
+		auto view = m_Registry.view<CameraComponent>();
+		for (auto e : view)
+		{
+			Entity camera = { e, this };
+			if (camera.GetComponent<CameraComponent>().Primary)
+				return camera;
+		}
+
+		OE_CORE_ERROR("No primary camera found. One has been added by OpenEngine to prevent a prgram crash! Ensure to add a primary camera to your scene.");
+		Entity camera = CreateEntity("PrimaryCamera");
+		camera.AddComponent<CameraComponent>();
+		return camera;
+	}
+
 	void Scene::OnEditorStart()
 	{
 		m_CursorEnabled = true;

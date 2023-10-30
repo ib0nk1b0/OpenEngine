@@ -39,12 +39,9 @@ namespace OpenEngine {
 	{
 		switch (type)
 		{
-		case RigidBody2DComponent::BodyType::Static:
-			return "Static";
-			break;
-		case RigidBody2DComponent::BodyType::Dynamic:
-			return "Dynamic";
-			break;
+			case RigidBody2DComponent::BodyType::Static: return "Static";
+			case RigidBody2DComponent::BodyType::Dynamic: return "Dynamic";
+			case RigidBody2DComponent::BodyType::Kinematic: return "Kinematic";
 		}
 
 		return "Static";
@@ -54,6 +51,7 @@ namespace OpenEngine {
 	{
 		if (type == "Static") return RigidBody2DComponent::BodyType::Static;
 		if (type == "Dynamic") return RigidBody2DComponent::BodyType::Dynamic;
+		if (type == "Kinematic") return RigidBody2DComponent::BodyType::Kinematic;
 		return RigidBody2DComponent::BodyType::Static;
 	}
 
@@ -202,7 +200,8 @@ namespace OpenEngine {
 			{
 				auto& rb2d = entity.GetComponent<RigidBody2DComponent>();
 				e["RigidBody2DComponent"] = {
-					{ "Type", BodyTypeToString(rb2d.Type) }
+					{ "Type", BodyTypeToString(rb2d.Type) },
+					{ "FixedRotation", rb2d.FixedRotation }
 				};
 			}
 
@@ -210,8 +209,25 @@ namespace OpenEngine {
 			{
 				auto& bc2d = entity.GetComponent<BoxColider2DComponent>();
 				e["BoxColider2DComponent"] = {
-					{ "Offset", Encode(bc2d.Offset) },
-					{ "Size", Encode(bc2d.Size) }
+					{ "Offset", { bc2d.Offset.x, bc2d.Offset.y } },
+					{ "Size", { bc2d.Size.x, bc2d.Size.y } },
+					{ "Density", bc2d.Density },
+					{ "Friction", bc2d.Friction },
+					{ "Restitution", bc2d.Restitution },
+					{ "RestitutionThreshold", bc2d.RestitutionThreshold }
+				};
+			}
+
+			if (entity.HasComponent<CircleColider2DComponent>())
+			{
+				auto& cc2d = entity.GetComponent<CircleColider2DComponent>();
+				e["CircleColider2DComponent"] = {
+					{ "Offset", { cc2d.Offset.x, cc2d.Offset.y } },
+					{ "Radius",cc2d.Radius },
+					{ "Density", cc2d.Density },
+					{ "Friction", cc2d.Friction },
+					{ "Restitution", cc2d.Restitution },
+					{ "RestitutionThreshold", cc2d.RestitutionThreshold }
 				};
 			}
 
@@ -363,6 +379,23 @@ namespace OpenEngine {
 
 					Decode(ConvertFloat2(jsonBC2D["Size"]), bc2dComponent.Size);
 					Decode(ConvertFloat2(jsonBC2D["Offset"]), bc2dComponent.Offset);
+					bc2dComponent.Density = jsonBC2D["Density"].get<float>();
+					bc2dComponent.Friction = jsonBC2D["Friction"].get<float>();
+					bc2dComponent.Restitution = jsonBC2D["Restitution"].get<float>();
+					bc2dComponent.RestitutionThreshold = jsonBC2D["RestitutionThreshold"].get<float>();
+				}
+
+				if (value.contains("CircleColider2DComponent"))
+				{
+					auto& jsonCC2D = value["CircleColider2DComponent"];
+					auto& cc2dComponent = entity.AddComponent<CircleColider2DComponent>();
+
+					Decode(ConvertFloat2(jsonCC2D["Offset"]), cc2dComponent.Offset);
+					cc2dComponent.Radius = jsonCC2D["Radius"].get<float>();
+					cc2dComponent.Density = jsonCC2D["Density"].get<float>();
+					cc2dComponent.Friction = jsonCC2D["Friction"].get<float>();
+					cc2dComponent.Restitution = jsonCC2D["Restitution"].get<float>();
+					cc2dComponent.RestitutionThreshold = jsonCC2D["RestitutionThreshold"].get<float>();
 				}
 
 			}

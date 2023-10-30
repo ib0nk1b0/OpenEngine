@@ -122,6 +122,8 @@ namespace OpenEngine {
 			m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
 		}
 
+		RenderOverlay();
+
 		m_Framebuffer->UnBind();
 	}
 
@@ -373,6 +375,12 @@ namespace OpenEngine {
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenuBar();
+
+			ImGui::Begin("Settings");
+
+			ImGui::Checkbox("Physics Colliders", &m_DisplayPhysicsColliders);
+
+			ImGui::End();
 		}
 	}
 
@@ -669,6 +677,90 @@ namespace OpenEngine {
 			serializer.Serialize(filepath);
 			m_EditorScene->SetFilepath(filepath);
 		}
+	}
+
+	void EditorLayer::RenderOverlay()
+	{
+		RenderCommand::DisableDepthTest();
+
+		if (m_SceneState == SceneState::Edit)
+		{
+			Renderer2D::BeginScene(m_EditorCamera);
+			
+			if (m_DisplayPhysicsColliders)
+			{
+				{
+					auto view = m_EditorScene->GetAllEntitiesWith<TransformComponent, CircleColider2DComponent>();
+					for (auto entity : view)
+					{
+						auto [tc, cc2d] = view.get<TransformComponent, CircleColider2DComponent>(entity);
+						glm::vec3 translation = tc.Translation + glm::vec3(cc2d.Offset, 0.001f);
+						glm::vec3 scale = tc.Scale * glm::vec3(cc2d.Radius * 2.0f);
+						glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+							* glm::scale(glm::mat4(1.0f), scale);
+
+						Renderer2D::DrawCircle(transform, { 0.0f, 1.0f, 0.0f, 1.0f }, 0.05f);
+					}
+				}
+
+				{
+					auto view = m_EditorScene->GetAllEntitiesWith<TransformComponent, BoxColider2DComponent>();
+					for (auto entity : view)
+					{
+						auto [tc, bc2d] = view.get<TransformComponent, BoxColider2DComponent>(entity);
+						glm::vec3 translation = tc.Translation + glm::vec3(bc2d.Offset, 0.001f);
+						glm::vec3 scale = tc.Scale * glm::vec3(bc2d.Size * 2.0f, 1.0f);
+						glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+							* glm::rotate(glm::mat4(1.0f), tc.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f))
+							* glm::scale(glm::mat4(1.0f), scale);
+
+						Renderer2D::DrawRect(transform, { 0.0f, 1.0f, 0.0f, 1.0f });
+					}
+				}
+			}
+		}
+		else
+		{
+			Entity camera = m_RuntimeScene->PrimaryCamera();
+			Renderer2D::BeginScene(camera.GetComponent<CameraComponent>().Camera, camera.GetTransform());
+
+			if (m_DisplayPhysicsColliders)
+			{
+				{
+					auto view = m_RuntimeScene->GetAllEntitiesWith<TransformComponent, CircleColider2DComponent>();
+					for (auto entity : view)
+					{
+						auto [tc, cc2d] = view.get<TransformComponent, CircleColider2DComponent>(entity);
+						glm::vec3 translation = tc.Translation + glm::vec3(cc2d.Offset, 0.001f);
+						glm::vec3 scale = tc.Scale * glm::vec3(cc2d.Radius * 2.0f);
+						glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+							* glm::scale(glm::mat4(1.0f), scale);
+
+						Renderer2D::DrawCircle(transform, { 0.0f, 1.0f, 0.0f, 1.0f }, 0.05f);
+					}
+				}
+
+				{
+					auto view = m_RuntimeScene->GetAllEntitiesWith<TransformComponent, BoxColider2DComponent>();
+					for (auto entity : view)
+					{
+						auto [tc, bc2d] = view.get<TransformComponent, BoxColider2DComponent>(entity);
+						glm::vec3 translation = tc.Translation + glm::vec3(bc2d.Offset, 0.001f);
+						glm::vec3 scale = tc.Scale * glm::vec3(bc2d.Size * 2.0f, 1.0f);
+						glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+							* glm::rotate(glm::mat4(1.0f), tc.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f))
+							* glm::scale(glm::mat4(1.0f), scale);
+
+						Renderer2D::DrawRect(transform, { 0.0f, 1.0f, 0.0f, 1.0f });
+					}
+				}
+			}
+		}
+
+		Renderer2D::EndScene();
+
+		RenderCommand::EnableDepthTest();
+
 	}
 
 }

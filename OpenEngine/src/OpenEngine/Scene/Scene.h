@@ -29,6 +29,13 @@ namespace OpenEngine {
 		Entity DuplicateEntity(Entity other);
 		Entity GetEntityByUUID(UUID uuid);
 		Entity GetEntityByName(const std::string& name);
+		Entity PrimaryCamera();
+
+		template<typename... Components>
+		auto GetAllEntitiesWith()
+		{
+			return m_Registry.view<Components...>();
+		}
 
 		void OnEditorStart();
 		void OnRuntimeStart();

@@ -40,6 +40,8 @@ namespace OpenEngine {
 		void SaveScene();
 		void SaveSceneAs();
 
+		void RenderOverlay();
+
 		// UI panles
 		void UI_MenuBar();
 		void UI_Stats();
@@ -54,9 +56,12 @@ namespace OpenEngine {
 		bool m_DisplaySceneHierarchy = true;
 		bool m_DisplayProperties = true;
 		bool m_DisplayMaterials = true;
+		bool m_DisplayPhysicsColliders = true;
 
+		Ref<Scene> m_ActiveScene;
 		Ref<Scene> m_EditorScene;
 		Ref<Scene> m_RuntimeScene;
+
 		Ref<Framebuffer> m_Framebuffer;
 		EditorCamera m_EditorCamera;
 

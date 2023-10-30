@@ -46,6 +46,16 @@ namespace OpenEngine {
 		{
 			s_RendererAPI->DrawLines(vertexArray, vertexCount);
 		}
+
+		inline static void EnableDepthTest()
+		{
+			s_RendererAPI->EnableDepthTest();
+		}
+
+		inline static void DisableDepthTest()
+		{
+			s_RendererAPI->DisableDepthTest();
+		}
 	private:
 		static RendererAPI* s_RendererAPI;
 	};
