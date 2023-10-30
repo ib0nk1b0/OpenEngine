@@ -268,13 +268,11 @@ namespace OpenEngine {
 		ImGui::SameLine();
 		ImGui::PushItemWidth(-1);
 
-		//UI::Fonts::PushFont("BoldLarge");
 		{
 			UI::ScopedFont boldLarge(UI::Fonts::Get("BoldLarge"));
 			if (ImGui::Button("+"))
 				ImGui::OpenPopup("AddComponent");
 		}
-		//UI::Fonts::PopFont();
 
 		if (ImGui::BeginPopup("AddComponent"))
 		{
@@ -286,6 +284,7 @@ namespace OpenEngine {
 			AddComponentItem<CameraComponent>("Camera", entity);
 			AddComponentItem<RigidBody2DComponent>("RigidBody2D", entity);
 			AddComponentItem<BoxColider2DComponent>("BoxColider2D", entity);
+			AddComponentItem<CircleColider2DComponent>("CircleColider2D", entity);
 
 			ImGui::EndPopup();
 		}
@@ -502,14 +501,14 @@ namespace OpenEngine {
 			ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
 		});
 	
-		DrawComponent<RigidBody2DComponent>("RigidBody2D", entity, [](auto& component)
+		DrawComponent<RigidBody2DComponent>("Rigid Body 2D", entity, [](auto& component)
 		{
 			const char* bodyTypeStrings[] = { "Static", "Dynamic", "Kinematic" };
 			const char* currentBodyTypeString = bodyTypeStrings[(int)component.Type];
 
 			if (ImGui::BeginCombo("BodyType", currentBodyTypeString))
 			{
-				for (int i = 0; i < 2; i++)
+				for (int i = 0; i < 3; i++)
 				{
 					bool isSelected = currentBodyTypeString == bodyTypeStrings[i];
 					if (ImGui::Selectable(bodyTypeStrings[i], isSelected))
@@ -526,16 +525,27 @@ namespace OpenEngine {
 
 				ImGui::EndCombo();
 			}
+			ImGui::Checkbox("Fixed Rotation", &component.FixedRotation);
 		});
 
-		DrawComponent<BoxColider2DComponent>("BoxColider2D", entity, [](auto& component)
+		DrawComponent<BoxColider2DComponent>("Box Colider 2D", entity, [](auto& component)
 		{
 			UI::Vec2Controls("Size", component.Size);
 			UI::Vec2Controls("Offset", component.Offset);
-			UI::DragFloat("Density", component.Density);
-			UI::DragFloat("Friction", component.Friction);
-			UI::DragFloat("Restitution", component.Restitution);
-			UI::DragFloat("RestitutionThreshold", component.RestitutionThreshold);
+			UI::DragFloat("Density", &component.Density, 0.1f);
+			UI::DragFloat("Friction", &component.Friction, 0.1f);
+			UI::DragFloat("Restitution", &component.Restitution, 0.01f);
+			UI::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.05f, 0.0f, 100.0f, 150.0f);
+		});
+
+		DrawComponent<CircleColider2DComponent>("Circle Colider 2D", entity, [](auto& component)
+		{
+			UI::Vec2Controls("Offset", component.Offset);
+			UI::DragFloat("Radius", &component.Radius, 0.1f);
+			UI::DragFloat("Density", &component.Density, 0.1f);
+			UI::DragFloat("Friction", &component.Friction, 0.1f);
+			UI::DragFloat("Restitution", &component.Restitution, 0.01f);
+			UI::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.05f, 0.0f, 100.0f, 150.0f);
 		});
 	}
 

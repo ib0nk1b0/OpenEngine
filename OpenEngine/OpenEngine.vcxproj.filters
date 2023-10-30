@@ -22,9 +22,6 @@
     <Filter Include="src\OpenEngine\Math">
       <UniqueIdentifier>{BDD3F8D1-2935-D6DF-B2A2-1C921E030D9F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\OpenEngine\Physics">
-      <UniqueIdentifier>{D6B7B89A-C2B1-E1EC-AB1E-78FD97B74759}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\OpenEngine\Project">
       <UniqueIdentifier>{AA5852B1-9652-7B03-7FBF-11146B58E16F}</UniqueIdentifier>
     </Filter>
@@ -146,12 +143,6 @@
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Math\Math.h">
       <Filter>src\OpenEngine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="src\OpenEngine\Physics\Physics.h">
-      <Filter>src\OpenEngine\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\OpenEngine\Physics\World.h">
-      <Filter>src\OpenEngine\Physics</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Project\ProjectSerializer.h">
       <Filter>src\OpenEngine\Project</Filter>
@@ -1546,12 +1537,6 @@
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Math\Math.cpp">
       <Filter>src\OpenEngine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="src\OpenEngine\Physics\Physics.cpp">
-      <Filter>src\OpenEngine\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\OpenEngine\Physics\World.cpp">
-      <Filter>src\OpenEngine\Physics</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\Buffer.cpp">
       <Filter>src\OpenEngine\Renderer</Filter>

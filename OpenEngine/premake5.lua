@@ -46,6 +46,7 @@ project "OpenEngine"
 
   links
   {
+    "Box2D",
     "GLFW",
     "Glad",
     "ImGui",
