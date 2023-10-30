@@ -22,6 +22,9 @@
     <Filter Include="src\OpenEngine\Math">
       <UniqueIdentifier>{BDD3F8D1-2935-D6DF-B2A2-1C921E030D9F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\OpenEngine\Project">
+      <UniqueIdentifier>{AA5852B1-9652-7B03-7FBF-11146B58E16F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\OpenEngine\Renderer">
       <UniqueIdentifier>{8A84AAC8-F6BB-F25F-FFC5-56836B7C1959}</UniqueIdentifier>
     </Filter>
@@ -102,6 +105,9 @@
     <ClInclude Include="src\OpenEngine\Core\MouseButtonCodes.h">
       <Filter>src\OpenEngine\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenEngine\Core\Random.h">
+      <Filter>src\OpenEngine\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\OpenEngine\Core\Timestep.h">
       <Filter>src\OpenEngine\Core</Filter>
     </ClInclude>
@@ -129,11 +135,17 @@
     <ClInclude Include="src\OpenEngine\ImGui\ImGuiExtended.h">
       <Filter>src\OpenEngine\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenEngine\ImGui\ImGuiFonts.h">
+      <Filter>src\OpenEngine\ImGui</Filter>
+    </ClInclude>
     <ClInclude Include="src\OpenEngine\ImGui\ImGuiLayer.h">
       <Filter>src\OpenEngine\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Math\Math.h">
       <Filter>src\OpenEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Project\ProjectSerializer.h">
+      <Filter>src\OpenEngine\Project</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\Buffer.h">
       <Filter>src\OpenEngine\Renderer</Filter>
@@ -148,6 +160,9 @@
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\GraphicsContext.h">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Renderer\Mesh.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\OrthographicCamera.h">
@@ -190,6 +205,9 @@
       <Filter>src\OpenEngine\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Scene\SceneCamera.h">
+      <Filter>src\OpenEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Scene\SceneSerializer.h">
       <Filter>src\OpenEngine\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Scene\ScriptableEntity.h">
@@ -1482,10 +1500,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\Physics\Physics.h" />
-    <ClInclude Include="src\OpenEngine\Physics\World.h" />
-    <ClInclude Include="src\OpenEngine\Renderer\Mesh.h" />
-    <ClInclude Include="src\OpenEngine\Core\Random.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenEngine\Core\Application.cpp">
@@ -1500,13 +1514,22 @@
     <ClCompile Include="src\OpenEngine\Core\Log.cpp">
       <Filter>src\OpenEngine\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\OpenEngine\Core\Random.cpp">
+      <Filter>src\OpenEngine\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\OpenEngine\Core\UUID.cpp">
       <Filter>src\OpenEngine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Debug\Instrumentor.cpp">
+      <Filter>src\OpenEngine\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiBuild.cpp">
       <Filter>src\OpenEngine\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiExtended.cpp">
+      <Filter>src\OpenEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\ImGui\ImGuiFonts.cpp">
       <Filter>src\OpenEngine\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiLayer.cpp">
@@ -1525,6 +1548,9 @@
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\GraphicsContext.cpp">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Renderer\Mesh.cpp">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\OrthographicCamera.cpp">
@@ -1566,6 +1592,9 @@
     <ClCompile Include="src\OpenEngine\Scene\SceneCamera.cpp">
       <Filter>src\OpenEngine\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\OpenEngine\Scene\SceneSerializer.cpp">
+      <Filter>src\OpenEngine\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
@@ -1605,10 +1634,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\OpenEngine\Physics\Physics.cpp" />
-    <ClCompile Include="src\OpenEngine\Physics\World.cpp" />
-    <ClCompile Include="src\OpenEngine\Serialization\Serializer.cpp" />
-    <ClCompile Include="src\OpenEngine\Renderer\Mesh.cpp" />
-    <ClCompile Include="src\OpenEngine\Core\Random.cpp" />
   </ItemGroup>
 </Project>

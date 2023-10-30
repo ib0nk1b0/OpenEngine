@@ -1,91 +1,42 @@
 #include "oepch.h"
 #include "Scene.h"
 
-#include "Entity.h"
-#include "Components.h"
-#include "ScriptableEntity.h"
-#include "OpenEngine/Renderer/Renderer.h"
-#include "OpenEngine/Physics/Physics.h"	
 #include "OpenEngine/Core/KeyCodes.h"
 #include "OpenEngine/Core/Input.h"
 #include "OpenEngine/Core/Application.h"
+#include "OpenEngine/Scene/Entity.h"
+#include "OpenEngine/Scene/Components.h"
+#include "OpenEngine/Scene/ScriptableEntity.h"
+#include "OpenEngine/Renderer/Renderer.h"
+#include "OpenEngine/Renderer/Mesh.h"
+
+#include "box2d/b2_world.h"
+#include "box2d/b2_body.h"
+#include "box2d/b2_fixture.h"
+#include "box2d/b2_polygon_shape.h"
+#include "box2d/b2_circle_shape.h"
 
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
-#include <OpenEngine/Renderer/Mesh.h>
 
 namespace OpenEngine {
 
-#if Dungeon
-	struct Keybinds
+	static b2BodyType RigidBody2DTypeToBox2DBody(RigidBody2DComponent::BodyType bodyType)
 	{
-		int UP = Key::W;
-		int DOWN = Key::S;
-		int LEFT = Key::A;
-		int RIGHT = Key::D;
-	};
-
-	class PlayerScript : public ScriptableEntity
-	{
-	public:
-		void OnCreate()
+		switch (bodyType)
 		{
-
+			case RigidBody2DComponent::BodyType::Static: return b2BodyType::b2_staticBody;
+			case RigidBody2DComponent::BodyType::Dynamic: return b2BodyType::b2_dynamicBody;
+			case RigidBody2DComponent::BodyType::Kinematic:	return b2BodyType::b2_kinematicBody;
 		}
 
-		void OnUpdate(Timestep ts)
-		{
-			UpdateMovement(ts);
-		}
+		return b2BodyType::b2_staticBody;
+	}
 
-		void UpdateMovement(Timestep ts)
-		{
-			auto& translation = GetComponent<TransformComponent>().Translation;
-			if (Input::IsKeyPressed(m_Keybinds.UP))
-				translation.y += m_Speed * ts;
-			if (Input::IsKeyPressed(m_Keybinds.DOWN))
-				translation.y -= m_Speed * ts;
-			if (Input::IsKeyPressed(m_Keybinds.LEFT))
-				translation.x -= m_Speed * ts;
-			if (Input::IsKeyPressed(m_Keybinds.RIGHT))
-				translation.x += m_Speed * ts;
-		}
-
-		void OnDestroy()
-		{
-
-		}
-	private:
-		float m_Speed = 2.0f;
-
-		Keybinds m_Keybinds;
-	};
-
-	class CameraScript : public ScriptableEntity
-	{
-	public:
-		void OnUpdate(Timestep ts)
-		{
-			auto& translation = GetComponent<TransformComponent>().Translation;
-			if (Input::IsKeyPressed(m_Keybinds.UP))
-				translation.y += m_Speed * ts;
-			if (Input::IsKeyPressed(m_Keybinds.DOWN))
-				translation.y -= m_Speed * ts;
-			if (Input::IsKeyPressed(m_Keybinds.LEFT))
-				translation.x -= m_Speed * ts;
-			if (Input::IsKeyPressed(m_Keybinds.RIGHT))
-				translation.x += m_Speed * ts;
-		}
-
-	private:
-		float m_Speed = 2.0f;
-
-		Keybinds m_Keybinds;
-	};
-#endif
 	Scene::Scene()
 	{
 		Material& defaultMaterial = m_Materials.emplace_back();
+		m_Filepath = "UntitledScene.openengine";
 	}
 
 	Scene::~Scene()
@@ -170,6 +121,7 @@ namespace OpenEngine {
 		{
 			auto& rb2d = newEntity.AddComponent<RigidBody2DComponent>();
 			rb2d.Type = other.GetComponent<RigidBody2DComponent>().Type;
+			rb2d.FixedRotation = other.GetComponent<RigidBody2DComponent>().FixedRotation;
 		}
 
 		if (other.HasComponent<BoxColider2DComponent>())
@@ -177,6 +129,21 @@ namespace OpenEngine {
 			auto& bc2d = newEntity.AddComponent<BoxColider2DComponent>();
 			bc2d.Offset = other.GetComponent<BoxColider2DComponent>().Offset;
 			bc2d.Size = other.GetComponent<BoxColider2DComponent>().Size;
+			bc2d.Density = other.GetComponent<BoxColider2DComponent>().Density;
+			bc2d.Friction = other.GetComponent<BoxColider2DComponent>().Friction;
+			bc2d.Restitution = other.GetComponent<BoxColider2DComponent>().Restitution;
+			bc2d.RestitutionThreshold = other.GetComponent<BoxColider2DComponent>().RestitutionThreshold;
+		}
+
+		if (other.HasComponent<CircleColider2DComponent>())
+		{
+			auto& cc2d = newEntity.AddComponent<CircleColider2DComponent>();
+			cc2d.Offset = other.GetComponent<CircleColider2DComponent>().Offset;
+			cc2d.Radius = other.GetComponent<CircleColider2DComponent>().Radius;
+			cc2d.Density = other.GetComponent<CircleColider2DComponent>().Density;
+			cc2d.Friction = other.GetComponent<CircleColider2DComponent>().Friction;
+			cc2d.Restitution = other.GetComponent<CircleColider2DComponent>().Restitution;
+			cc2d.RestitutionThreshold = other.GetComponent<CircleColider2DComponent>().RestitutionThreshold;
 		}
 
 		return newEntity;
@@ -211,6 +178,22 @@ namespace OpenEngine {
 		return entity;
 	}
 
+	Entity Scene::PrimaryCamera()
+	{
+		auto view = m_Registry.view<CameraComponent>();
+		for (auto e : view)
+		{
+			Entity camera = { e, this };
+			if (camera.GetComponent<CameraComponent>().Primary)
+				return camera;
+		}
+
+		OE_CORE_ERROR("No primary camera found. One has been added by OpenEngine to prevent a prgram crash! Ensure to add a primary camera to your scene.");
+		Entity camera = CreateEntity("PrimaryCamera");
+		camera.AddComponent<CameraComponent>();
+		return camera;
+	}
+
 	void Scene::OnEditorStart()
 	{
 		m_CursorEnabled = true;
@@ -219,21 +202,75 @@ namespace OpenEngine {
 
 	void Scene::OnRuntimeStart()
 	{
+		b2Vec2 gravity = { 0.0f, -9.8f };
+		m_PhysicsWorld = new b2World(gravity);
+		auto view = m_Registry.view<RigidBody2DComponent>();
+
+		for (auto e : view)
+		{
+			Entity entity = { e, this };
+			auto& transform = entity.GetComponent<TransformComponent>();
+			auto& rb2d = entity.GetComponent<RigidBody2DComponent>();
+
+			b2BodyDef bodyDef;
+			bodyDef.type = RigidBody2DTypeToBox2DBody(rb2d.Type);
+			bodyDef.position = { transform.Translation.x, transform.Translation.y };
+			bodyDef.angle = transform.Rotation.z;
+
+			b2Body* body = m_PhysicsWorld->CreateBody(&bodyDef);
+			body->SetFixedRotation(rb2d.FixedRotation);
+			rb2d.RuntimeBody = body;
+
+			if (entity.HasComponent<BoxColider2DComponent>())
+			{
+				auto& bc2d = entity.GetComponent<BoxColider2DComponent>();
+
+				b2PolygonShape boxShape;
+				boxShape.SetAsBox(bc2d.Size.x * transform.Scale.x, bc2d.Size.y * transform.Scale.y);
+
+				b2FixtureDef fixtureDef;
+				fixtureDef.shape = &boxShape;
+				fixtureDef.density = bc2d.Density;
+				fixtureDef.friction = bc2d.Friction;
+				fixtureDef.restitution = bc2d.Restitution;
+				fixtureDef.restitutionThreshold = bc2d.RestitutionThreshold;
+				body->CreateFixture(&fixtureDef);
+			}
+
+			if (entity.HasComponent<CircleColider2DComponent>())
+			{
+				auto& cc2d = entity.GetComponent<CircleColider2DComponent>();
+
+				b2CircleShape circleShape;
+				circleShape.m_p.Set(cc2d.Offset.x, cc2d.Offset.y);
+				circleShape.m_radius = transform.Scale.x * cc2d.Radius;
+
+				b2FixtureDef fixtureDef;
+				fixtureDef.shape = &circleShape;
+				fixtureDef.density = cc2d.Density;
+				fixtureDef.friction = cc2d.Friction;
+				fixtureDef.restitution = cc2d.Restitution;
+				fixtureDef.restitutionThreshold = cc2d.RestitutionThreshold;
+				body->CreateFixture(&fixtureDef);
+			}
+		}
+
 		m_CursorEnabled = false;
 		if (m_Filepath == "assets\\Scenes\\CubeGame.openengine")
 			glfwSetInputMode((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
 
-#if Dungeon
-		auto player = GetEntityByName("Player");
-		player.AddComponent<NativeScriptComponent>().Bind<PlayerScript>();
-		auto camera = GetEntityByName("Orthographic Camera");
-		camera.AddComponent<NativeScriptComponent>().Bind<CameraScript>();
-#endif
+	void Scene::OnRuntimeStop()
+	{
+		/*delete m_PhysicsWorld;
+		m_PhysicsWorld = nullptr;*/
 	}
 
 	void Scene::OnUpdate(Timestep ts)
 	{
 		// Update parent entities
+
+		OE_PROFILE_FUNCTION();
 
 		auto children = GetEntitiesWithParents();
 		for (auto childID : children)
@@ -243,7 +280,10 @@ namespace OpenEngine {
 			glm::vec3 forwardDirection = glm::rotate(glm::quat(glm::vec3(parent.GetComponent<TransformComponent>().Rotation.x, parent.GetComponent<TransformComponent>().Rotation.y, 0.0f)), glm::vec3(0.0f, 0.0f, -1.0f));
 			if (child.GetTranslation() != parent.GetTranslation() + child.GetComponent<ParentComponent>().Offset)
 			{
-				child.GetComponent<TransformComponent>().Translation = parent.GetTranslation() + forwardDirection;
+				glm::vec3 parentPosition = parent.GetTranslation();
+				glm::vec3 offset = child.GetComponent<ParentComponent>().Offset; 
+				glm::vec3 position = parentPosition + forwardDirection;
+				child.GetComponent<TransformComponent>().Translation = position;
 				OE_CORE_INFO("{0}, {1}, {2}", forwardDirection.x, forwardDirection.y, forwardDirection.z);
 			}
 		}
@@ -251,7 +291,9 @@ namespace OpenEngine {
 
 	void Scene::OnUpdateEditor(Timestep ts, EditorCamera& camera)
 	{
-		Timer timer;
+		OE_PROFILE_FUNCTION();
+		OE_PERF_FUNC();
+
 		OnUpdate(ts);
 
 		{
@@ -266,7 +308,6 @@ namespace OpenEngine {
 			Renderer::BeginScene(camera, lights);
 
 			auto view = m_Registry.view<TransformComponent, MeshComponent>();
-
 			for (auto entity : view)
 			{
 				auto [transform, meshComponent] = view.get<TransformComponent, MeshComponent>(entity);
@@ -275,16 +316,14 @@ namespace OpenEngine {
 				
 				if (meshComponent.Filepath != "null")
 				{
-					Ref<MeshInstance> mesh;
 					bool exists = false;
 					int index = 0;
-
+					
 					for (int i = 0; i < m_Meshes.size(); i++)
 					{
 						if (m_Meshes[i].GetFilePath() == meshComponent.Filepath)
 						{
 							index = i;
-							mesh = CreateRef<MeshInstance>(CreateRef<Mesh>(m_Meshes[i]), material);
 							exists = true;
 						}
 					}
@@ -292,9 +331,7 @@ namespace OpenEngine {
 					if (!exists)
 					{
 						m_Meshes.emplace_back(meshComponent.Filepath);
-						mesh = CreateRef<MeshInstance>(CreateRef<Mesh>(m_Meshes[m_Meshes.size() - 1]), material);
-						m_Meshes[m_Meshes.size() - 1].AddIndexCount(mesh->GetIndexCount());
-						index = m_Meshes.size() - 1;
+						index = (int)m_Meshes.size() - 1;
 					}
 
 					Renderer::Submit(m_Meshes[index], transform.GetTransform(), material, (int)entity);
@@ -302,9 +339,6 @@ namespace OpenEngine {
 			}
 
 			Renderer::EndScene(m_Meshes);
-			timer.Stop();
-
-			Application::Get().SubmitSceneTime(timer);
 		}
 
 		{
@@ -384,14 +418,22 @@ namespace OpenEngine {
 
 		// Init Physics
 		{
-			auto physics = Physics2D(9.8f);
-			World2D world = World2D();
-			physics.AddWorld(world);
+			const int32 velocityInterations = 6;
+			const int32 positionInterations = 2;
 
+			m_PhysicsWorld->Step(ts, velocityInterations, positionInterations);
 			auto view = m_Registry.view<RigidBody2DComponent>();
-			for (auto entityID : view)
+			for (auto e : view)
 			{
-				Entity entity = Entity{ entityID, this };
+				Entity entity = { e, this };
+				auto& transform = entity.GetComponent<TransformComponent>();
+				auto& rb2d = entity.GetComponent<RigidBody2DComponent>();
+
+				b2Body* body = (b2Body*)rb2d.RuntimeBody;
+				const auto& position = body->GetPosition();
+				transform.Translation.x = position.x;
+				transform.Translation.y = position.y;
+				transform.Rotation.z = body->GetAngle();
 			}
 		}
 
@@ -434,7 +476,6 @@ namespace OpenEngine {
 
 					if (meshComponent.Filepath != "null")
 					{
-						Ref<MeshInstance> mesh;
 						bool exists = false;
 						int index = 0;
 
@@ -443,7 +484,6 @@ namespace OpenEngine {
 							if (m_Meshes[i].GetFilePath() == meshComponent.Filepath)
 							{
 								index = i;
-								mesh = CreateRef<MeshInstance>(CreateRef<Mesh>(m_Meshes[i]), material);
 								exists = true;
 							}
 						}
@@ -451,9 +491,7 @@ namespace OpenEngine {
 						if (!exists)
 						{
 							m_Meshes.emplace_back(meshComponent.Filepath);
-							mesh = CreateRef<MeshInstance>(CreateRef<Mesh>(m_Meshes[m_Meshes.size() - 1]), material);
-							m_Meshes[m_Meshes.size() - 1].AddIndexCount(mesh->GetIndexCount());
-							index = m_Meshes.size() - 1;
+							index = (int)m_Meshes.size() - 1;
 						}
 
 						Renderer::Submit(m_Meshes[index], transform.GetTransform(), material, (int)entity);
@@ -574,6 +612,27 @@ namespace OpenEngine {
 					auto oldNsc = entity.GetComponent<NativeScriptComponent>();
 					auto& nsc = newEntity.AddComponent<NativeScriptComponent>();
 					nsc = oldNsc;
+				}
+
+				if (entity.HasComponent<RigidBody2DComponent>())
+				{
+					auto oldRb2d = entity.GetComponent<RigidBody2DComponent>();
+					auto& rb2d = newEntity.AddComponent<RigidBody2DComponent>();
+					rb2d = oldRb2d;
+				}
+
+				if (entity.HasComponent<BoxColider2DComponent>())
+				{
+					auto oldBc2d = entity.GetComponent<BoxColider2DComponent>();
+					auto& bc2d = newEntity.AddComponent<BoxColider2DComponent>();
+					bc2d = oldBc2d;
+				}
+
+				if (entity.HasComponent<CircleColider2DComponent>())
+				{
+					auto oldCc2d = entity.GetComponent<CircleColider2DComponent>();
+					auto& cc2d = newEntity.AddComponent<CircleColider2DComponent>();
+					cc2d = oldCc2d;
 				}
 		});
 	}

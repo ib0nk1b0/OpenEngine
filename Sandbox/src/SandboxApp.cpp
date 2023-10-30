@@ -22,6 +22,7 @@ OpenEngine::Application* OpenEngine::CreateApplication()
 	OpenEngine::ApplicationSpecification spec;
 	spec.Name = "Sandbox";
 	spec.WorkingDirectory = "../OpenEngine-Editor";
+	spec.VSyncEnabled = false;
 
 	return new Sandbox(spec);
 }

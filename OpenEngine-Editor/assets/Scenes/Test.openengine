@@ -1,53 +1,38 @@
 {
-	"Entities": [
-		{
-			"ID": 7418863504489394087,
-			"TagComponent": {
-				"Tag": "Player"
-			},
-			"TransformComponent": {
-				"Translation": [0.000000, 0.000000, 0.000000],
-				"Rotation": [0.000000, 0.000000, 0.000000],
-				"Scale": [1.000000, 1.000000, 1.000000]
-			},
-			"SpriteRendererComponent": {
-				"Color": [0.158137, 0.216446, 0.602317, 1.000000]
-			}
-		},
-		{
-			"ID": 15531667845365260076,
-			"TagComponent": {
-				"Tag": "Dungeon"
-			},
-			"TransformComponent": {
-				"Translation": [0.000000, 0.000000, -0.100000],
-				"Rotation": [0.000000, 0.000000, 0.000000],
-				"Scale": [20.000000, 20.000000, 1.000000]
-			},
-			"SpriteRendererComponent": {
-				"Color": [1.000000, 1.000000, 1.000000, 1.000000],
-				"Texture": "assets/textures/untitled.png",
-				"Scale": 1.000000
-			}
-		},
-		{
-			"ID": 11081195284968229159,
-			"TagComponent": {
-				"Tag": "Orthographic Camera"
-			},
-			"TransformComponent": {
-				"Translation": [0.000000, 0.000000, 0.000000],
-				"Rotation": [0.000000, 0.000000, 0.000000],
-				"Scale": [1.000000, 1.000000, 1.000000]
-			},
-			"CameraComponent": {
-				"ProjectionType": "Orthographic",
-				"Size": 10.000000,
-				"Near": -1.000000,
-				"Far": 1.000000,
-				"Primary": true,
-				"FixedAspectRatio": false
-			}
-		}
-	]
+    "Entities": [
+        {
+            "ID": 18352110597963130644,
+            "Tag": "Mesh",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "MeshComponent": {
+                "Filepath": "assets/Models/Cube.obj",
+                "MaterialIndex": 0
+            }
+        }
+    ]
 }

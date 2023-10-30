@@ -1,157 +1,229 @@
 #include "oepch.h"
 #include "ImGuiExtended.h"
 
+#include "OpenEngine/ImGui/ImGuiFonts.h"
+
 #include <imgui.h>
 #include <imgui_internal.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace ImGui {
+namespace OpenEngine::UI {
 
-	float ImGui::GetLineHeight()
+	float OpenEngine::UI::GetLineHeight()
 	{
 		return GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 	}
 
-	bool ImGui::OEDragFloat(const std::string& label, float* value, float speed, float min, float max, float columnWidth, const char* format)
+	void ShiftCursorPosX(float amount)
+	{
+		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + amount);
+	}
+
+	void ShiftCursorPosY(float amount)
+	{
+		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + amount);
+	}
+
+	void ShiftCursorPos(const glm::vec2& amount)
+	{
+		ImVec2 cursorPos = ImGui::GetCursorPos();
+		ImVec2 newCursorPos = { cursorPos.x + amount.x, cursorPos.y + amount.y };
+		ImGui::SetCursorPos(newCursorPos);
+	}
+
+	bool OpenEngine::UI::DragFloat(const std::string& label, float* value, float speed, float min, float max, float columnWidth, const char* format)
 	{
 		bool dragFloatUsed = false;
-		PushID(label.c_str());
+		ImGui::PushID(label.c_str());
 
-		Columns(2);
-		SetColumnWidth(0, columnWidth);
-		Text(label.c_str());
-		NextColumn();
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, columnWidth);
+		ImGui::Text(label.c_str());
+		ImGui::NextColumn();
 
-		if (DragFloat("##", value, speed, min, max, format))
+		if (ImGui::DragFloat("##", value, speed, min, max, format))
 			dragFloatUsed = true;
 
-		Columns(1);
-
-		PopID();
+		ImGui::Columns(1);
+		
+		ImGui::PopID();
 
 		return dragFloatUsed;
 	}
 
-	bool ImGui::OEDragInt(const std::string& label, int* value, int speed, int min, int max, float columnWidth)
+	bool OpenEngine::UI::DragInt(const std::string& label, int* value, int speed, int min, int max, float columnWidth)
 	{
 		bool used = false;
 
-		PushID(label.c_str());
+		ImGui::PushID(label.c_str());
 
-		Columns(2);
-		SetColumnWidth(0, columnWidth);
-		Text(label.c_str());
-		NextColumn();
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, columnWidth);
+		ImGui::Text(label.c_str());
+		ImGui::NextColumn();
 
-		if (DragInt("##", value, speed, min, max))
+		if (ImGui::DragInt("##", value, speed, min, max))
 			used = true;
 
-		Columns(1);
+		ImGui::Columns(1);
 
-		PopID();
+		ImGui::PopID();
 
 		return used;
 	}
 
-	void ImGui::OEVec3Controls(const std::string& label, glm::vec3& values, float resetValue, float columnWidth)
+	void Vec2Controls(const std::string& label, glm::vec2& values, float resetValue, float columnWidth)
 	{
-		ImGuiIO& io = GetIO();
+		ImGuiIO& io = ImGui::GetIO();
 		auto boldFont = io.Fonts->Fonts[0];
 
-		PushID(label.c_str());
+		ImGui::PushID(label.c_str());
 
-		Columns(2);
-		SetColumnWidth(0, columnWidth);
-		Text(label.c_str());
-		NextColumn();
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, columnWidth);
+		ImGui::Text(label.c_str());
+		ImGui::NextColumn();
 
-		PushMultiItemsWidths(3, CalcItemWidth());
-		PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
+		ImGui::PushMultiItemsWidths(2, ImGui::CalcItemWidth());
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
 
 		float lineHeight = GetLineHeight();
 
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
 
-		PushStyleColor(ImGuiCol_Button, ImVec4{ 0.4f, 0.1f, 0.15f, 1.0f });
-		PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.65f, 0.2f, 0.2f, 1.0f });
-		PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.4f, 0.1f, 0.15f, 1.0f });
-		PushFont(boldFont);
-		if (Button("X", buttonSize))
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.4f, 0.1f, 0.15f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.65f, 0.2f, 0.2f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.4f, 0.1f, 0.15f, 1.0f });
+		OpenEngine::UI::Fonts::PushFont("Bold");
+		if (ImGui::Button("X", buttonSize))
 			values.x = resetValue;
-		PopFont();
-		PopStyleColor(3);
+		OpenEngine::UI::Fonts::PopFont();
+		ImGui::PopStyleColor(3);
 
-		SameLine();
-		DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, "%.2f");
-		PopItemWidth();
-		SameLine();
+		ImGui::SameLine();
+		ImGui::DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
 
-		PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.35f, 0.2f, 1.0f });
-		PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.3f, 0.55f, 0.3f, 1.0f });
-		PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.35f, 0.2f, 1.0f });
-		PushFont(boldFont);
-		if (Button("Y", buttonSize))
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.35f, 0.2f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.3f, 0.55f, 0.3f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.35f, 0.2f, 1.0f });
+		OpenEngine::UI::Fonts::PushFont("Bold");
+		if (ImGui::Button("Y", buttonSize))
 			values.y = resetValue;
-		PopFont();
-		PopStyleColor(3);
+		OpenEngine::UI::Fonts::PopFont();
+		ImGui::PopStyleColor(3);
 
-		SameLine();
-		DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f");
-		PopItemWidth();
-		SameLine();
+		ImGui::SameLine();
+		ImGui::DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::PopItemWidth();
 
-		PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.25f, 0.4f, 1.0f });
-		PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f });
-		PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.25f, 0.4f, 1.0f });
-		PushFont(boldFont);
-		if (Button("Z", buttonSize))
+		ImGui::PopStyleVar();
+
+		ImGui::Columns(1);
+
+		ImGui::PopID();
+	}
+
+	void OpenEngine::UI::Vec3Controls(const std::string& label, glm::vec3& values, float resetValue, float columnWidth)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		auto boldFont = io.Fonts->Fonts[0];
+
+		ImGui::PushID(label.c_str());
+
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, columnWidth);
+		ImGui::Text(label.c_str());
+		ImGui::NextColumn();
+
+		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
+
+		float lineHeight = GetLineHeight();
+
+		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.4f, 0.1f, 0.15f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.65f, 0.2f, 0.2f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.4f, 0.1f, 0.15f, 1.0f });
+		OpenEngine::UI::Fonts::PushFont("Bold");
+		if (ImGui::Button("X", buttonSize))
+			values.x = resetValue;
+		OpenEngine::UI::Fonts::PopFont();
+		ImGui::PopStyleColor(3);
+
+		ImGui::SameLine();
+		ImGui::DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.35f, 0.2f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.3f, 0.55f, 0.3f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.35f, 0.2f, 1.0f });
+		OpenEngine::UI::Fonts::PushFont("Bold");
+		if (ImGui::Button("Y", buttonSize))
+			values.y = resetValue;
+		OpenEngine::UI::Fonts::PopFont();
+		ImGui::PopStyleColor(3);
+
+		ImGui::SameLine();
+		ImGui::DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.25f, 0.4f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.25f, 0.4f, 1.0f });
+		OpenEngine::UI::Fonts::PushFont("Bold");
+		if (ImGui::Button("Z", buttonSize))
 			values.z = resetValue;
-		PopFont();
-		PopStyleColor(3);
+		OpenEngine::UI::Fonts::PopFont();
+		ImGui::PopStyleColor(3);
 
-		SameLine();
-		DragFloat("##Z", &values.z, 0.1f, 0.0f, 0.0f, "%.2f");
-		PopItemWidth();
+		ImGui::SameLine();
+		ImGui::DragFloat("##Z", &values.z, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::PopItemWidth();
 
-		PopStyleVar();
+		ImGui::PopStyleVar();
 
-		Columns(1);
+		ImGui::Columns(1);
 
-		PopID();
+		ImGui::PopID();
 	}
 
-	void ImGui::OEColorEdit4(const char* label, float* value)
+	void OpenEngine::UI::ColorEdit4(const char* label, float* value)
 	{
-		PushID(label);
+		ImGui::PushID(label);
 
-		Columns(2);
-		SetColumnWidth(0, 100.0f);
-		Text(label);
-		NextColumn();
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, 100.0f);
+		ImGui::Text(label);
+		ImGui::NextColumn();
 
-		ColorEdit4("##", value);
+		ImGui::ColorEdit4("##", value);
 
-		Columns(1);
+		ImGui::Columns(1);
 
-		PopID();
+		ImGui::PopID();
 	}
 
-	void ImGui::OEColorEdit3(const char* label, float* value)
+	void OpenEngine::UI::ColorEdit3(const char* label, float* value)
 	{
-		PushID(label);
+		ImGui::PushID(label);
 
-		Columns(2);
-		SetColumnWidth(0, 100.0f);
-		Text(label);
-		NextColumn();
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, 100.0f);
+		ImGui::Text(label);
+		ImGui::NextColumn();
 
-		ColorEdit3("##", value);
+		ImGui::ColorEdit3("##", value);
 
-		Columns(1);
+		ImGui::Columns(1);
 
-		PopID();
+		ImGui::PopID();
 	}
 
 }

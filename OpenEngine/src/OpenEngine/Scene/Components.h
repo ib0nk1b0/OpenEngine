@@ -114,7 +114,6 @@ namespace OpenEngine {
 		//std::filesystem::path Filepath;
 		std::string Filepath = "null";
 		int MaterialIndex = 0;
-		MeshInstance* Mesh;
 
 		MeshComponent() = default;
 		MeshComponent(const MeshComponent&) = default;
@@ -148,30 +147,49 @@ namespace OpenEngine {
 		CameraComponent(const CameraComponent&) = default;
 	};
 
-	enum class BodyType { Static = 0, Dynamic };
 
 	struct RigidBody2DComponent
 	{
+		enum class BodyType { Static = 0, Dynamic, Kinematic };
 		BodyType Type = BodyType::Static;
+		bool FixedRotation = false;
+
+		void* RuntimeBody = nullptr;
 
 		RigidBody2DComponent() = default;
 		RigidBody2DComponent(const RigidBody2DComponent&) = default;
-
-		RigidBody2DComponent(const BodyType& Type)
-			: Type(Type)
-		{
-		}
 	};
 
 	struct BoxColider2DComponent
 	{
-		glm::vec3 Size = { 1.0f, 1.0f, 1.0f };
-		glm::vec3 Offset = { 0.0f, 0.0f, 0.0f };
+		glm::vec2 Size = { 0.5f, 0.5f };
+		glm::vec2 Offset = { 0.0f, 0.0f };
+
+		float Density = 1.0f;
+		float Friction = 0.5f;
+		float Restitution = 0.0f;
+		float RestitutionThreshold = 0.5f;
+
+		void* RuntimeFixture = nullptr;
 
 		BoxColider2DComponent() = default;
 		BoxColider2DComponent(const BoxColider2DComponent&) = default;
-		BoxColider2DComponent(const glm::vec3& size, const glm::vec3& offset)
-			: Size(size), Offset(offset) {}
+	};
+
+	struct CircleColider2DComponent
+	{
+		glm::vec2 Offset = { 0.0f, 0.0f };
+		float Radius = 0.5f;
+
+		float Density = 1.0f;
+		float Friction = 0.5f;
+		float Restitution = 0.0f;
+		float RestitutionThreshold = 0.5f;
+
+		void* RuntimeFixture = nullptr;
+
+		CircleColider2DComponent() = default;
+		CircleColider2DComponent(const CircleColider2DComponent&) = default;
 	};
 
 	class ScriptableEntity;

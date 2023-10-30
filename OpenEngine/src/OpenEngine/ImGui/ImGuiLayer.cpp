@@ -2,6 +2,7 @@
 #include "ImGuiLayer.h"
 
 #include "OpenEngine/Core/Application.h"
+#include "OpenEngine/ImGui/ImGuiFonts.h"
 
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
@@ -37,9 +38,27 @@ namespace OpenEngine {
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
-		io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/static/OpenSans/OpenSans-Bold.ttf", 16.0f);
+		UI::FontConfiguration OpenSans;
+		OpenSans.Name = "OpenSans";
+		OpenSans.Filepath = "assets/fonts/Open_Sans/static/OpenSans/OpenSans-Regular.ttf";
+		OpenSans.Size = 16.0f;
+		UI::Fonts::Add(OpenSans, true);
+
+		UI::FontConfiguration Bold;
+		Bold.Name = "Bold";
+		Bold.Filepath = "assets/fonts/Open_Sans/static/OpenSans/OpenSans-Bold.ttf";
+		Bold.Size = 16.0f;
+		UI::Fonts::Add(Bold);
+
+		UI::FontConfiguration BoldLarge;
+		BoldLarge.Name = "BoldLarge";
+		BoldLarge.Filepath = "assets/fonts/Open_Sans/static/OpenSans/OpenSans-Bold.ttf";
+		BoldLarge.Size = 24.0f;
+		UI::Fonts::Add(BoldLarge);
+
+		/*io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/static/OpenSans/OpenSans-Bold.ttf", 16.0f);
 		io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/static/OpenSans/OpenSans-Bold.ttf", 24.0f);
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/static/OpenSans/OpenSans-Regular.ttf", 16.0f);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/static/OpenSans/OpenSans-Regular.ttf", 16.0f);*/
 
 		// Setup styles
 		//ImGui::StyleColorsClassic();

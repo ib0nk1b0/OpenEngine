@@ -54,7 +54,7 @@ namespace OpenEngine {
 		glBindVertexArray(0);
 	}
 
-	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
+	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer, uint32_t indexOffset)
 	{
 		OE_PROFILE_FUNCTION();
 
@@ -63,7 +63,7 @@ namespace OpenEngine {
 		glBindVertexArray(m_RendererID);
 		vertexBuffer->Bind();
 
-		uint32_t index = 0;
+		uint32_t index = indexOffset;
 		const auto& layout = vertexBuffer->GetLayout();
 		for (const auto& element : layout)
 		{
@@ -81,6 +81,7 @@ namespace OpenEngine {
 						ShaderDataTypeToOpenGLBaseType(element.Type),
 						layout.GetStride(),
 						(const void*)element.Offset);
+					glVertexAttribDivisor(index, (int)element.PerInstance);
 					index++;
 					break;
 				}
@@ -98,6 +99,7 @@ namespace OpenEngine {
 						element.Normalized ? GL_TRUE : GL_FALSE,
 						layout.GetStride(),
 						(const void*)element.Offset);
+					glVertexAttribDivisor(index, (int)element.PerInstance);
 					index++;
 					break;
 				}

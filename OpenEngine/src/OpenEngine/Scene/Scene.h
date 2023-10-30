@@ -7,6 +7,8 @@
 
 #include "entt.hpp"
 
+class b2World;
+
 namespace OpenEngine {
 
 	class Entity;
@@ -27,9 +29,17 @@ namespace OpenEngine {
 		Entity DuplicateEntity(Entity other);
 		Entity GetEntityByUUID(UUID uuid);
 		Entity GetEntityByName(const std::string& name);
+		Entity PrimaryCamera();
+
+		template<typename... Components>
+		auto GetAllEntitiesWith()
+		{
+			return m_Registry.view<Components...>();
+		}
 
 		void OnEditorStart();
 		void OnRuntimeStart();
+		void OnRuntimeStop();
 
 		void OnUpdate(Timestep ts);
 		void OnUpdateEditor(Timestep ts, EditorCamera& camera);
@@ -65,8 +75,10 @@ namespace OpenEngine {
 		std::vector<Material> m_Materials;
 		std::vector<Mesh> m_Meshes;
 
+		b2World* m_PhysicsWorld = nullptr;
+
 		friend class Entity;
-		friend class Serializer;
+		friend class SceneSerializer;
 		friend class SceneHierarchyPanel;
 		friend class MaterialPanel;
 	};

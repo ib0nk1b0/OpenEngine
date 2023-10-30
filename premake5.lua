@@ -17,6 +17,7 @@ group "Dependencies"
   include "OpenEngine/vendor/GLFW"
   include "OpenEngine/vendor/Glad"
   include "OpenEngine/vendor/imgui"
+  include "OpenEngine/vendor/Box2D"
 group ""
 
 group "Core"

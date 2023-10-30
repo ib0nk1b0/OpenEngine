@@ -76,8 +76,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>oepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OE_PLATFORM_WINDOWS;SOME_RANDOM_DEFINE_AGAIN;GLFW_INCLUDE_NONE;OE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\EnTT\include;vendor\ImGuizmo;vendor\Json;C:\VulkanSDK\1.3.243.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OE_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;OE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\EnTT\include;vendor\ImGuizmo;vendor\Json;vendor\Assimp\include;vendor\Box2D\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -89,7 +89,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>C:\VulkanSDK\1.3.243.0\Lib\vulkan-1.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -97,8 +97,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>oepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OE_PLATFORM_WINDOWS;SOME_RANDOM_DEFINE_AGAIN;GLFW_INCLUDE_NONE;OE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\EnTT\include;vendor\ImGuizmo;vendor\Json;C:\VulkanSDK\1.3.243.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OE_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;OE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\EnTT\include;vendor\ImGuizmo;vendor\Json;vendor\Assimp\include;vendor\Box2D\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -114,7 +114,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>C:\VulkanSDK\1.3.243.0\Lib\vulkan-1.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -122,8 +122,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>oepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OE_PLATFORM_WINDOWS;SOME_RANDOM_DEFINE_AGAIN;GLFW_INCLUDE_NONE;OE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\EnTT\include;vendor\ImGuizmo;vendor\Json;C:\VulkanSDK\1.3.243.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OE_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;OE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\EnTT\include;vendor\ImGuizmo;vendor\Json;vendor\Assimp\include;vendor\Box2D\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -139,7 +139,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>C:\VulkanSDK\1.3.243.0\Lib\vulkan-1.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -163,10 +163,10 @@
     <ClInclude Include="src\OpenEngine\Events\KeyEvent.h" />
     <ClInclude Include="src\OpenEngine\Events\MouseEvent.h" />
     <ClInclude Include="src\OpenEngine\ImGui\ImGuiExtended.h" />
+    <ClInclude Include="src\OpenEngine\ImGui\ImGuiFonts.h" />
     <ClInclude Include="src\OpenEngine\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\OpenEngine\Math\Math.h" />
-    <ClInclude Include="src\OpenEngine\Physics\Physics.h" />
-    <ClInclude Include="src\OpenEngine\Physics\World.h" />
+    <ClInclude Include="src\OpenEngine\Project\ProjectSerializer.h" />
     <ClInclude Include="src\OpenEngine\Renderer\Buffer.h" />
     <ClInclude Include="src\OpenEngine\Renderer\Camera.h" />
     <ClInclude Include="src\OpenEngine\Renderer\EditorCamera.h" />
@@ -187,6 +187,7 @@
     <ClInclude Include="src\OpenEngine\Scene\Entity.h" />
     <ClInclude Include="src\OpenEngine\Scene\Scene.h" />
     <ClInclude Include="src\OpenEngine\Scene\SceneCamera.h" />
+    <ClInclude Include="src\OpenEngine\Scene\SceneSerializer.h" />
     <ClInclude Include="src\OpenEngine\Scene\ScriptableEntity.h" />
     <ClInclude Include="src\OpenEngine\Serialization\Serializer.h" />
     <ClInclude Include="src\OpenEngine\Utils\PlatformUtils.h" />
@@ -625,12 +626,12 @@
     <ClCompile Include="src\OpenEngine\Core\Log.cpp" />
     <ClCompile Include="src\OpenEngine\Core\Random.cpp" />
     <ClCompile Include="src\OpenEngine\Core\UUID.cpp" />
+    <ClCompile Include="src\OpenEngine\Debug\Instrumentor.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiExtended.cpp" />
+    <ClCompile Include="src\OpenEngine\ImGui\ImGuiFonts.cpp" />
     <ClCompile Include="src\OpenEngine\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\OpenEngine\Math\Math.cpp" />
-    <ClCompile Include="src\OpenEngine\Physics\Physics.cpp" />
-    <ClCompile Include="src\OpenEngine\Physics\World.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\Buffer.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\OpenEngine\Renderer\Framebuffer.cpp" />
@@ -649,7 +650,7 @@
     <ClCompile Include="src\OpenEngine\Scene\Entity.cpp" />
     <ClCompile Include="src\OpenEngine\Scene\Scene.cpp" />
     <ClCompile Include="src\OpenEngine\Scene\SceneCamera.cpp" />
-    <ClCompile Include="src\OpenEngine\Serialization\Serializer.cpp" />
+    <ClCompile Include="src\OpenEngine\Scene\SceneSerializer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp" />
@@ -669,6 +670,9 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="vendor\Box2D\Box2D.vcxproj">
+      <Project>{A434E80C-1049-10BE-D9CA-B31D459E0CEF}</Project>
+    </ProjectReference>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
     </ProjectReference>

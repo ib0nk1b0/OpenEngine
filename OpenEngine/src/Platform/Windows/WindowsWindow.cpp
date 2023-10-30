@@ -1,6 +1,7 @@
 #include "oepch.h"
 #include "WindowsWindow.h"
 
+#include "OpenEngine/Core/Application.h"
 #include "OpenEngine/Events/ApplicationEvent.h"
 #include "OpenEngine/Events/MouseEvent.h"
 #include "OpenEngine/Events/KeyEvent.h"
@@ -150,6 +151,16 @@ namespace OpenEngine {
 			MouseMovedEvent event((float)x, (float)y);
 			data.EventCallback(event);
 		});
+
+		glfwSetTitlebarHitTestCallback(m_Window, [](GLFWwindow* window, int x, int y, int* hit)
+		{
+			Application* app = (Application*)glfwGetWindowUserPointer(window);
+			int titlebarHit = 0;
+			bool titlebarHovered = app->IsTitlebarHovered();
+			if (titlebarHovered)
+				titlebarHit = 1;
+			*hit = titlebarHit;
+		});
 	}
 
 	void WindowsWindow::Shutdown()
@@ -188,5 +199,9 @@ namespace OpenEngine {
 	bool WindowsWindow::IsVSync() const
 	{
 		return m_Data.VSync;
+	}
+	void WindowsWindow::SetCustomTitlebar()
+	{
+		glfwWindowHint(GLFW_TITLEBAR, false);
 	}
 }

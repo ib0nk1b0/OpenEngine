@@ -1,0 +1,124 @@
+{
+    "Entities": [
+        {
+            "ID": 1961729936670710882,
+            "Tag": "Quad",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    12.0,
+                    0.5,
+                    1.0
+                ]
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ID": 11842900357103636152,
+            "Tag": "Quad",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    -0.012066000141203403,
+                    1.6139390468597412,
+                    -0.05606599897146225
+                ],
+                "Rotation": [
+                    0.07343299686908722,
+                    -0.1853010058403015,
+                    -0.7678240537643433
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "SpriteRendererComponent": {
+                "Color": "[1.000000, 0.549020, 0.309804, 1.000000]",
+                "Texture": "assets/textures/Checkerboard.png",
+                "Scale": 1.0
+            }
+        },
+        {
+            "ID": 1623105778250201721,
+            "Tag": "Orthographic Camera",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "EditorRendererComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "Texture": "assets/textures/camera.png"
+            },
+            "CameraComponent": {
+                "ProjectionType": "Orthographic",
+                "Size": 10.0,
+                "Near": -1.0,
+                "Far": 1.0,
+                "Primary": true,
+                "FixedAspectRatio": false
+            }
+        }
+    ]
+}

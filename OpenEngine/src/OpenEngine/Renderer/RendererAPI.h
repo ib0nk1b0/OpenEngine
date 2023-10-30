@@ -27,6 +27,9 @@ namespace OpenEngine {
 		virtual void SetLineWidth(float width) = 0;
 		virtual void DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount) = 0;
 
+		virtual void EnableDepthTest() = 0;
+		virtual void DisableDepthTest() = 0;
+
 		inline static API GetAPI() { return s_API; }
 	private:
 		static API s_API;

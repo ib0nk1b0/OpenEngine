@@ -5,6 +5,8 @@
 #include "OpenEngine/Utils/PlatformUtils.h"
 #include "OpenEngine/Math/Math.h"
 
+#include "OpenEngine/ImGui/ImGuiFonts.h"
+
 #include <imgui/imgui.h>
 #include <ImGuizmo/ImGuizmo.h>
 
@@ -47,6 +49,29 @@ namespace OpenEngine {
 		m_MaterialPanel.SetContext(m_EditorScene);
 
 		m_EditorCamera = EditorCamera(60.0f, 1.778f, 0.1f, 1000.0f);
+
+		/*
+		* 
+		* 1000 cubes 2-3ms frame time in release mode
+		* most of the time spent in Scene Update, probably due to mesh->SetData()
+		* *//*
+		m_EditorScene->CreateEntity("Light").AddComponent<PointLightComponent>();
+		m_EditorScene->GetEntityByName("Light").GetComponent<TransformComponent>().Translation = { -0.2f, 0.5f, 0.3f };
+
+		for (float x = -2.5; x < 2.5; x++)
+		{
+			for (int y = 1; y < 11; y++)
+			{
+				for (int z = -2.5; z < 2.5; z++)
+				{
+					Entity cube = m_EditorScene->CreateEntity("Cube");
+					cube.AddComponent<MeshComponent>();
+					cube.GetComponent<MeshComponent>().Filepath = Utils::FormatFilepath("assets\\Models\\Cube.obj");
+					cube.GetComponent<TransformComponent>().Translation = { x, y, z };
+					cube.GetComponent<TransformComponent>().Scale = { 0.8f, 0.8f, 0.8f };
+				}
+			}
+		}/**/
 	}
 
 	void EditorLayer::OnDetach()
@@ -57,6 +82,7 @@ namespace OpenEngine {
 	void EditorLayer::OnUpdate(Timestep ts)
 	{
 		OE_PROFILE_FUNCTION();
+		OE_PERF_SCOPE("EditorLayer::OnUpdate");
 
 		m_FrameTime = ts;
 		m_EditorCamera.OnUpdate(ts);
@@ -95,6 +121,8 @@ namespace OpenEngine {
 			m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_EditorScene.get());
 			m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
 		}
+
+		RenderOverlay();
 
 		m_Framebuffer->UnBind();
 	}
@@ -136,14 +164,29 @@ namespace OpenEngine {
 			ImGui::PopStyleVar(2);
 
 		ImGuiIO& io = ImGui::GetIO();
+		ImGuiStyle& style = ImGui::GetStyle();
+		float windowMinSizeX = style.WindowMinSize.x;
+		style.WindowMinSize.x = 370.0f;
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
+		style.WindowMinSize.x = windowMinSizeX;
 
-		ImGuiStyle& style = ImGui::GetStyle();
-		style.WindowMinSize.x = 370.0f;
+		/*ImGui::Begin("Popups");
+		
+		if (ImGui::Button("Popup"))
+			ImGui::OpenPopup("popup1");
+
+		bool open = true;
+		if (ImGui::BeginPopupModal("popup1", &open))
+		{
+			ImGui::Text("This is a popup!");
+			ImGui::EndPopup();
+		}
+
+		ImGui::End();*/
 
 		UI_MenuBar();
 
@@ -332,6 +375,12 @@ namespace OpenEngine {
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenuBar();
+
+			ImGui::Begin("Settings");
+
+			ImGui::Checkbox("Physics Colliders", &m_DisplayPhysicsColliders);
+
+			ImGui::End();
 		}
 	}
 
@@ -353,8 +402,8 @@ namespace OpenEngine {
 			ImGui::Text("Indicies: %d", stats.GetTotalIndexCount());
 
 			ImGui::Separator();
-			float gridSize = m_EditorScene->GetGridSize();
-			if (ImGui::OEDragFloat("Grid size", &gridSize, 1))
+			int gridSize = m_EditorScene->GetGridSize();
+			if (UI::DragInt("Grid size", &gridSize))
 				m_EditorScene->SetGridSize(gridSize);
 
 			ImGui::End();
@@ -363,13 +412,12 @@ namespace OpenEngine {
 		ImGui::Begin("Performance Stats");
 		ImGui::Text("Frame Time: %f", m_FrameTime.GetMilliseconds());
 		
-		auto stats = Application::Get().GetApplicationTimings();
+		auto timings = Application::Get().GetApplicationTimings();
 
-		ImGui::Text("Application::Layer::OnUpdate: %f", stats.LayerOnUpdate);
-		ImGui::Text("Application::Layer::OnImGuiRender: %f", stats.OnImGuiRender);
-		ImGui::Text("Scene::OnUpdate: %f", stats.SceneOnUpdate);
-		ImGui::Text("Renderer::EndScene: %f", stats.RendererEndScene);
+		for (Timing& timing : timings)
+			ImGui::Text("%s: %f ms", timing.Name.c_str(), timing.Time);
 
+		Application::Get().ClearTimings();
 		ImGui::End();
 	}
 
@@ -378,23 +426,23 @@ namespace OpenEngine {
 		ImGui::Begin("Editor Camera");
 
 		float fov = m_EditorCamera.GetFOV();
-		if (ImGui::OEDragFloat("FOV", &fov, 0.5f, 0.0f, 120.0f))
+		if (UI::DragFloat("FOV", &fov, 0.5f, 0.0f, 120.0f))
 			m_EditorCamera.SetFOV(fov);
 
 		float nearClip = m_EditorCamera.GetNearClip();
-		if (ImGui::OEDragFloat("Near Clip", &nearClip))
+		if (UI::DragFloat("Near Clip", &nearClip))
 			m_EditorCamera.SetNearClip(nearClip);
 
 		float farClip = m_EditorCamera.GetFarClip();
-		if (ImGui::OEDragFloat("Far Clip", &farClip))
+		if (UI::DragFloat("Far Clip", &farClip))
 			m_EditorCamera.SetFarClip(farClip);
 
 		float pitch = m_EditorCamera.GetPitch();
-		if (ImGui::OEDragFloat("Pitch", &pitch, 0.1f))
+		if (UI::DragFloat("Pitch", &pitch, 0.1f))
 			m_EditorCamera.SetPitch(pitch);
 
 		float yaw = m_EditorCamera.GetYaw();
-		if (ImGui::OEDragFloat("Yaw", &yaw, 0.1f))
+		if (UI::DragFloat("Yaw", &yaw, 0.1f))
 			m_EditorCamera.SetYaw(yaw);
 
 		ImGui::Checkbox("Rotation enabled", &m_EditorCamera.m_Rotate);
@@ -415,6 +463,13 @@ namespace OpenEngine {
 
 		ImGui::Begin("##Toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 		float size = ImGui::GetWindowHeight() - 4;
+
+		{
+			UI::ScopedFont bold(UI::Fonts::Get("Bold"));
+			ImGui::Text("%s", Utils::GetFileNameFromPath(m_EditorScene->GetFilepath()).c_str());
+			ImGui::SameLine();
+		}
+
 		Ref<Texture2D> icon = m_SceneState == SceneState::Edit ? m_PlayIcon : m_StopIcon;
 		ImGui::SetCursorPosX(ImGui::GetWindowContentRegionMax().x * 0.5f - size * 0.5f);
 		if (ImGui::ImageButton((ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
@@ -596,7 +651,7 @@ namespace OpenEngine {
 		{
 			NewScene(filepath.string());
 
-			Serializer serializer(m_EditorScene);
+			SceneSerializer serializer(m_EditorScene);
 			serializer.Deserialize(filepath.string());
 		}
 	}
@@ -608,7 +663,7 @@ namespace OpenEngine {
 			SaveSceneAs();
 		else
 		{
-			Serializer serializer(m_EditorScene);
+			SceneSerializer serializer(m_EditorScene);
 			serializer.Serialize(filepath);
 		}
 	}
@@ -618,10 +673,114 @@ namespace OpenEngine {
 		std::string filepath = FileDialogs::SaveFile("OpenEngine Scene (*.openengine)\0*.openengine\0");
 		if (!filepath.empty())
 		{
-			Serializer serializer(m_EditorScene);
+			SceneSerializer serializer(m_EditorScene);
 			serializer.Serialize(filepath);
 			m_EditorScene->SetFilepath(filepath);
 		}
+	}
+
+	void EditorLayer::RenderOverlay()
+	{
+		RenderCommand::DisableDepthTest();
+
+		// TODO: move to private variable to have customize option inside the editor
+		glm::vec4 staticBodyColor = { 0.2f, 0.3f, 1.0f, 1.0f };
+		glm::vec4 dynamicBodyColor = { 0.0f, 1.0f, 0.0f, 1.0f };
+
+		if (m_SceneState == SceneState::Edit)
+		{
+			Renderer2D::BeginScene(m_EditorCamera);
+			
+			if (m_DisplayPhysicsColliders)
+			{
+				{
+					auto view = m_EditorScene->GetAllEntitiesWith<TransformComponent, CircleColider2DComponent>();
+					for (auto entity : view)
+					{
+						auto [tc, cc2d] = view.get<TransformComponent, CircleColider2DComponent>(entity);
+						glm::vec3 translation = tc.Translation + glm::vec3(cc2d.Offset, 0.001f);
+						glm::vec3 scale = tc.Scale * glm::vec3(cc2d.Radius * 2.0f);
+						glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+							* glm::scale(glm::mat4(1.0f), scale);
+
+						glm::vec4 color;
+						Entity e = { entity, m_EditorScene.get() };
+						if (e.HasComponent<RigidBody2DComponent>())
+							color = e.GetComponent<RigidBody2DComponent>().Type == RigidBody2DComponent::BodyType::Static ? staticBodyColor : dynamicBodyColor;
+						Renderer2D::DrawCircle(transform, color, 0.05f);
+					}
+				}
+
+				{
+					auto view = m_EditorScene->GetAllEntitiesWith<TransformComponent, BoxColider2DComponent>();
+					for (auto entity : view)
+					{
+						auto [tc, bc2d] = view.get<TransformComponent, BoxColider2DComponent>(entity);
+						glm::vec3 translation = tc.Translation + glm::vec3(bc2d.Offset, 0.001f);
+						glm::vec3 scale = tc.Scale * glm::vec3(bc2d.Size * 2.0f, 1.0f);
+						glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+							* glm::rotate(glm::mat4(1.0f), tc.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f))
+							* glm::scale(glm::mat4(1.0f), scale);
+
+						glm::vec4 color;
+						Entity e = { entity, m_EditorScene.get() };
+						if (e.HasComponent<RigidBody2DComponent>())
+							color = e.GetComponent<RigidBody2DComponent>().Type == RigidBody2DComponent::BodyType::Static ? staticBodyColor : dynamicBodyColor;
+						Renderer2D::DrawRect(transform, color);
+					}
+				}
+			}
+		}
+		else
+		{
+			Entity camera = m_RuntimeScene->PrimaryCamera();
+			Renderer2D::BeginScene(camera.GetComponent<CameraComponent>().Camera, camera.GetTransform());
+
+			if (m_DisplayPhysicsColliders)
+			{
+				{
+					auto view = m_RuntimeScene->GetAllEntitiesWith<TransformComponent, CircleColider2DComponent>();
+					for (auto entity : view)
+					{
+						auto [tc, cc2d] = view.get<TransformComponent, CircleColider2DComponent>(entity);
+						glm::vec3 translation = tc.Translation + glm::vec3(cc2d.Offset, 0.001f);
+						glm::vec3 scale = tc.Scale * glm::vec3(cc2d.Radius * 2.0f);
+						glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+							* glm::scale(glm::mat4(1.0f), scale);
+
+						glm::vec4 color;
+						Entity e = { entity, m_RuntimeScene.get() };
+						if (e.HasComponent<RigidBody2DComponent>())
+							color = e.GetComponent<RigidBody2DComponent>().Type == RigidBody2DComponent::BodyType::Static ? staticBodyColor : dynamicBodyColor;
+						Renderer2D::DrawCircle(transform, color, 0.05f);
+					}
+				}
+
+				{
+					auto view = m_RuntimeScene->GetAllEntitiesWith<TransformComponent, BoxColider2DComponent>();
+					for (auto entity : view)
+					{
+						auto [tc, bc2d] = view.get<TransformComponent, BoxColider2DComponent>(entity);
+						glm::vec3 translation = tc.Translation + glm::vec3(bc2d.Offset, 0.001f);
+						glm::vec3 scale = tc.Scale * glm::vec3(bc2d.Size * 2.0f, 1.0f);
+						glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+							* glm::rotate(glm::mat4(1.0f), tc.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f))
+							* glm::scale(glm::mat4(1.0f), scale);
+
+						glm::vec4 color;
+						Entity e = { entity, m_RuntimeScene.get() };
+						if (e.HasComponent<RigidBody2DComponent>())
+							color = e.GetComponent<RigidBody2DComponent>().Type == RigidBody2DComponent::BodyType::Static ? staticBodyColor : dynamicBodyColor;
+						Renderer2D::DrawRect(transform, color);
+					}
+				}
+			}
+		}
+
+		Renderer2D::EndScene();
+
+		RenderCommand::EnableDepthTest();
+
 	}
 
 }

@@ -39,9 +39,9 @@ namespace OpenEngine {
 			ImGui::Text("Material index: %d", i);
 
 			Material& material = m_Context->m_Materials[i];
-			ImGui::OEColorEdit3("Albedo", glm::value_ptr(material.Albedo));
-			ImGui::OEDragFloat("Roughness", &material.Roughness, 0.05f, 0.0f, 1.0f);
-			ImGui::OEDragFloat("Metalic", &material.Metalic, 0.05f, 0.0f, 1.0f);
+			UI::ColorEdit3("Albedo", glm::value_ptr(material.Albedo));
+			UI::DragFloat("Roughness", &material.Roughness, 0.05f, 0.0f, 1.0f);
+			UI::DragFloat("Metalic", &material.Metalic, 0.05f, 0.0f, 1.0f);
 
 			ImGui::Separator();
 

@@ -46,10 +46,11 @@ namespace OpenEngine {
 		operator uint32_t() const { return (uint32_t)m_EntityHandle; }
 
 		UUID GetUUID() { return GetComponent<IDComponent>().ID; }
+		//TransformComponent& GetTransform() { return GetComponent<TransformComponent>(); }
 		glm::mat4 GetTransform() { return GetComponent<TransformComponent>().GetTransform(); }
-		glm::vec3 GetTranslation() { return GetComponent<TransformComponent>().Translation; }
-		glm::vec3 GetScale() { return GetComponent<TransformComponent>().Scale; }
-		glm::vec3 GetRotation() { return GetComponent<TransformComponent>().Rotation; }
+		glm::vec3& GetTranslation() { return GetComponent<TransformComponent>().Translation; }
+		glm::vec3& GetScale() { return GetComponent<TransformComponent>().Scale; }
+		glm::vec3& GetRotation() { return GetComponent<TransformComponent>().Rotation; }
 		std::string GetName() { return GetComponent<TagComponent>().Tag; }
 		bool HasParent()
 		{

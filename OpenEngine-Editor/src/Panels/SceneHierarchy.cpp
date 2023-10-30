@@ -5,6 +5,7 @@
 #include "ContentBrowserPanel.h"
 #include "OpenEngine/Utils/PlatformUtils.h"
 #include "OpenEngine/ImGui/ImGuiExtended.h"
+#include "OpenEngine/ImGui/ImGuiFonts.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
@@ -203,7 +204,7 @@ namespace OpenEngine {
 
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
 
-		float lineHeight = ImGui::GetLineHeight();
+		float lineHeight = UI::GetLineHeight();
 		ImGui::Separator();
 		bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, label.c_str());
 		ImGui::PopStyleVar();
@@ -267,8 +268,11 @@ namespace OpenEngine {
 		ImGui::SameLine();
 		ImGui::PushItemWidth(-1);
 
-		if (ImGui::Button("+"))
-			ImGui::OpenPopup("AddComponent");
+		{
+			UI::ScopedFont boldLarge(UI::Fonts::Get("BoldLarge"));
+			if (ImGui::Button("+"))
+				ImGui::OpenPopup("AddComponent");
+		}
 
 		if (ImGui::BeginPopup("AddComponent"))
 		{
@@ -280,6 +284,7 @@ namespace OpenEngine {
 			AddComponentItem<CameraComponent>("Camera", entity);
 			AddComponentItem<RigidBody2DComponent>("RigidBody2D", entity);
 			AddComponentItem<BoxColider2DComponent>("BoxColider2D", entity);
+			AddComponentItem<CircleColider2DComponent>("CircleColider2D", entity);
 
 			ImGui::EndPopup();
 		}
@@ -307,21 +312,21 @@ namespace OpenEngine {
 
 				ImGui::EndCombo();
 			}
-			ImGui::OEVec3Controls("Offset", component.Offset);
+			UI::Vec3Controls("Offset", component.Offset);
 		});
 
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
 		{
-			ImGui::OEVec3Controls("Translation", component.Translation);
+			UI::Vec3Controls("Translation", component.Translation);
 			glm::vec3 rotation = glm::degrees(component.Rotation);
-			ImGui::OEVec3Controls("Rotation", rotation);
+			UI::Vec3Controls("Rotation", rotation);
 			component.Rotation = glm::radians(rotation);
-			ImGui::OEVec3Controls("Scale", component.Scale, 1.0f);
+			UI::Vec3Controls("Scale", component.Scale, 1.0f);
 		});
 
 		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [=](auto& component)
 		{
-			ImGui::OEColorEdit4("Color", glm::value_ptr(component.Color));
+			UI::ColorEdit4("Color", glm::value_ptr(component.Color));
 
 			Ref<Texture2D> texturePreview;
 
@@ -335,7 +340,7 @@ namespace OpenEngine {
 			}
 
 			ImGuiID id = 1;
-			ImGui::ImageButtonEx(id, (ImTextureID)texturePreview->GetRendererID(), { 32, 32 }, { 0, 1 }, { 1, 0 }, { 0, 0, 0, 0 }, { 1, 1, 1, 1 });
+			ImGui::ImageButtonEx(id, (ImTextureID)texturePreview->GetRendererID(), { 32, 32 }, { 0, 1 }, { 1, 0 }, { 1, 1, 1, 1 }, { 1, 1, 1, 1, });
 			if (ImGui::BeginDragDropTarget())
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
@@ -353,44 +358,44 @@ namespace OpenEngine {
 			if (ImGui::Button("Clear"))
 				component.Texture = nullptr;
 
-			ImGui::OEDragFloat("Scale", &component.Scale, 0.1f, 1.0f, 50.0f, 150.0f);
+			UI::DragFloat("Scale", &component.Scale, 0.1f, 1.0f, 50.0f, 150.0f);
 
 		});
 
 		DrawComponent<EditorRendererComponent>("Editor Renderer", entity, [=](auto& component)
+		{
+			UI::ColorEdit4("Color", glm::value_ptr(component.Color));
+
+			Ref<Texture2D> texturePreview;
+
+			if (!component.Texture)
+				texturePreview = Texture2D::Create("assets/icons/BlankTexture.png");
+			else
 			{
-				ImGui::OEColorEdit4("Color", glm::value_ptr(component.Color));
-
-				Ref<Texture2D> texturePreview;
-
-				if (!component.Texture)
-					texturePreview = Texture2D::Create("assets/icons/BlankTexture.png");
-				else
-				{
-					texturePreview = component.Texture;
-					ImGui::Text("%s", component.Texture->GetFilePath().c_str());
-					ImGui::SameLine();
-				}
-
-				ImGuiID id = 1;
-				ImGui::ImageButtonEx(id, (ImTextureID)texturePreview->GetRendererID(), { 64, 64 }, { 0, 1 }, { 1, 0 }, { 0, 0, 0, 0 }, { 1, 1, 1, 1 });
-				if (ImGui::BeginDragDropTarget())
-				{
-					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
-					{
-						const wchar_t* path = (const wchar_t*)payload->Data;
-						std::filesystem::path fullPath = std::filesystem::path(g_AssetPath) / path;
-						if (FileDialogs::IsValidFile(fullPath, ".png"))
-							component.Texture = Texture2D::Create(fullPath.string());
-					}
-					ImGui::EndDragDropTarget();
-				}
-
+				texturePreview = component.Texture;
+				ImGui::Text("%s", component.Texture->GetFilePath().c_str());
 				ImGui::SameLine();
+			}
 
-				if (ImGui::Button("Clear"))
-					component.Texture = nullptr;
-			});
+			ImGuiID id = 1;
+			ImGui::ImageButtonEx(id, (ImTextureID)texturePreview->GetRendererID(), { 64, 64 }, { 0, 1 }, { 1, 0 }, { 1, 1, 1, 1 }, { 1, 1, 1, 1 });
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+				{
+					const wchar_t* path = (const wchar_t*)payload->Data;
+					std::filesystem::path fullPath = std::filesystem::path(g_AssetPath) / path;
+					if (FileDialogs::IsValidFile(fullPath, ".png"))
+						component.Texture = Texture2D::Create(fullPath.string());
+				}
+				ImGui::EndDragDropTarget();
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Clear"))
+				component.Texture = nullptr;
+		});
 
 		DrawComponent<MeshComponent>("Mesh", entity, [=](auto& component)
 		{
@@ -398,45 +403,41 @@ namespace OpenEngine {
 			ImGui::SetColumnWidth(0, 100.0f);
 			ImGui::Text("Mesh");
 			ImGui::NextColumn();
-			std::string meshName;
-			std::string ext;
-			std::string path = component.Filepath;
-			if (path == "null")
-				meshName = path;
-			else
+			
+			ImGui::Button(Utils::GetFileNameFromPath(component.Filepath).c_str());
+			if (ImGui::BeginDragDropTarget())
 			{
-				size_t extensionPos = path.find_last_of(".");
-				ext = path.substr(extensionPos);
-				size_t pos = path.find_last_of("\\/");
-				meshName = path.substr(pos + 1, path.size() - pos - ext.size() - 1);
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+				{
+					const wchar_t* path = (const wchar_t*)payload->Data;
+					std::filesystem::path fullPath = std::filesystem::path(g_AssetPath) / path;
+					if (FileDialogs::IsValidFile(fullPath, ".obj"))
+						component.Filepath = Utils::FormatFilepath(fullPath.string());
+				}
+				ImGui::EndDragDropTarget();
 			}
-			if (ImGui::Button(meshName.c_str()))
-			{
-				std::string filepath = FileDialogs::OpenFile("Model OBJ (*.obj)\0*.obj\0");
-				if (!filepath.empty() && FileDialogs::IsValidFile(filepath, ".obj"))
-					component.Filepath = filepath;
-			}
+			
 			ImGui::Columns(1);
-			ImGui::OEDragInt("Material Index", &component.MaterialIndex, 1, 0, m_Context->m_Materials.size() - 1);
+			UI::DragInt("Material Index", &component.MaterialIndex, 1, 0, m_Context->m_Materials.size() - 1);
 		});
 
 		DrawComponent<PointLightComponent>("Point Light", entity, [=](auto& component)
 		{
-			ImGui::OEColorEdit3("Color", glm::value_ptr(component.Color));
-			ImGui::OEDragFloat("Ambient Intensity", &component.AmbientIntensity, 0.05f, 0.0f, 1.0f, 150.0f);
+			UI::ColorEdit3("Color", glm::value_ptr(component.Color));
+			UI::DragFloat("Ambient Intensity", &component.AmbientIntensity, 0.05f, 0.0f, 1.0f, 150.0f);
 		});
 
 		DrawComponent<DirectionalLightComponent>("Directional Light", entity, [=](auto& component)
 		{
-			ImGui::OEColorEdit3("Color", glm::value_ptr(component.Color));
-			ImGui::OEDragFloat("Ambient Intensity", &component.AmbientIntensity, 0.05f, 0.0f, 1.0f, 150.0f);
+			UI::ColorEdit3("Color", glm::value_ptr(component.Color));
+			UI::DragFloat("Ambient Intensity", &component.AmbientIntensity, 0.05f, 0.0f, 1.0f, 150.0f);
 		});
 
 		DrawComponent<CircleRendererComponent>("Circle Renderer", m_SelectionContext, [](auto& component)
 		{
-			ImGui::OEColorEdit4("Color", glm::value_ptr(component.Color));
-			ImGui::OEDragFloat("Thickness", &component.Thickness, 0.01f, 0.0f, 1.0f);
-			ImGui::OEDragFloat("Fade", &component.Fade, 0.005f, 0.0f, 1.0f, 100.0f, "%.3f");
+			UI::ColorEdit4("Color", glm::value_ptr(component.Color));
+			UI::DragFloat("Thickness", &component.Thickness, 0.01f, 0.0f, 1.0f);
+			UI::DragFloat("Fade", &component.Fade, 0.005f, 0.0f, 1.0f, 100.0f, "%.3f");
 		});
 
 		DrawComponent<CameraComponent>("Camera", entity, [](auto& component)
@@ -469,30 +470,30 @@ namespace OpenEngine {
 			if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
 			{
 				float verticalFOV = glm::degrees(camera.GetPerspectiveVertivalFOV());
-				if (ImGui::OEDragFloat("VFOV", &verticalFOV))
+				if (UI::DragFloat("VFOV", &verticalFOV))
 					camera.SetPerspectiveVertivalFOV(glm::radians(verticalFOV));
 
 				float nearClip = camera.GetPerspectiveNearClip();
-				if (ImGui::OEDragFloat("Near", &nearClip, 0.1f))
+				if (UI::DragFloat("Near", &nearClip, 0.1f))
 					camera.SetPerspectiveNearClip(nearClip);
 
 				float farClip = camera.GetPerspectiveFarClip();
-				if (ImGui::OEDragFloat("Far", &farClip, 0.1f))
+				if (UI::DragFloat("Far", &farClip, 0.1f))
 					camera.SetPerspectiveFarClip(farClip);
 			}
 
 			if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
 			{
 				float orthoSize = camera.GetOrthographicSize();
-				if (ImGui::OEDragFloat("Size", &orthoSize, 0.1f, 0.25f, 50.0f))
+				if (UI::DragFloat("Size", &orthoSize, 0.1f, 0.25f, 50.0f))
 					camera.SetOrthographicSize(orthoSize);
 
 				float nearClip = camera.GetOrthographicNearClip();
-				if (ImGui::OEDragFloat("Near", &nearClip, 0.1f))
+				if (UI::DragFloat("Near", &nearClip, 0.1f))
 					camera.SetOrthographicNearClip(nearClip);
 
 				float farClip = camera.GetOrthographicFarClip();
-				if (ImGui::OEDragFloat("Far", &farClip, 0.1f))
+				if (UI::DragFloat("Far", &farClip, 0.1f))
 					camera.SetOrthographicFarClip(farClip);
 			}
 
@@ -500,20 +501,20 @@ namespace OpenEngine {
 			ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
 		});
 	
-		DrawComponent<RigidBody2DComponent>("RigidBody2D", entity, [](auto& component)
+		DrawComponent<RigidBody2DComponent>("Rigid Body 2D", entity, [](auto& component)
 		{
-			const char* bodyTypeStrings[] = { "Static", "Dynamic" };
+			const char* bodyTypeStrings[] = { "Static", "Dynamic", "Kinematic" };
 			const char* currentBodyTypeString = bodyTypeStrings[(int)component.Type];
 
 			if (ImGui::BeginCombo("BodyType", currentBodyTypeString))
 			{
-				for (int i = 0; i < 2; i++)
+				for (int i = 0; i < 3; i++)
 				{
 					bool isSelected = currentBodyTypeString == bodyTypeStrings[i];
 					if (ImGui::Selectable(bodyTypeStrings[i], isSelected))
 					{
 						currentBodyTypeString = bodyTypeStrings[i];
-						component.Type = ((BodyType)i);
+						component.Type = ((RigidBody2DComponent::BodyType)i);
 					}
 
 					if (isSelected)
@@ -524,12 +525,27 @@ namespace OpenEngine {
 
 				ImGui::EndCombo();
 			}
+			ImGui::Checkbox("Fixed Rotation", &component.FixedRotation);
 		});
 
-		DrawComponent<BoxColider2DComponent>("BoxColider2D", entity, [](auto& component)
+		DrawComponent<BoxColider2DComponent>("Box Colider 2D", entity, [](auto& component)
 		{
-			ImGui::OEVec3Controls("Size", component.Size);
-			ImGui::OEVec3Controls("Offset", component.Offset);
+			UI::Vec2Controls("Size", component.Size);
+			UI::Vec2Controls("Offset", component.Offset);
+			UI::DragFloat("Density", &component.Density, 0.1f);
+			UI::DragFloat("Friction", &component.Friction, 0.1f);
+			UI::DragFloat("Restitution", &component.Restitution, 0.01f);
+			UI::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.05f, 0.0f, 100.0f, 150.0f);
+		});
+
+		DrawComponent<CircleColider2DComponent>("Circle Colider 2D", entity, [](auto& component)
+		{
+			UI::Vec2Controls("Offset", component.Offset);
+			UI::DragFloat("Radius", &component.Radius, 0.1f);
+			UI::DragFloat("Density", &component.Density, 0.1f);
+			UI::DragFloat("Friction", &component.Friction, 0.1f);
+			UI::DragFloat("Restitution", &component.Restitution, 0.01f);
+			UI::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.05f, 0.0f, 100.0f, 150.0f);
 		});
 	}
 

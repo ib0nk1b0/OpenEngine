@@ -39,15 +39,18 @@ project "OpenEngine"
     "%{IncludeDir.entt}",
     "%{IncludeDir.ImGuizmo}",
     "%{IncludeDir.json}",
-    "%{IncludeDir.VulkanSDK}"
+    "%{IncludeDir.Assimp}",
+    "%{IncludeDir.Box2D}"
+    --"%{IncludeDir.VulkanSDK}"
   }
 
   links
   {
+    "Box2D",
     "GLFW",
     "Glad",
     "ImGui",
-    "%{Library.Vulkan}",
+    --"%{Library.Vulkan}",
     "opengl32.lib"
   }
 
@@ -60,7 +63,6 @@ project "OpenEngine"
     defines
     {
     	"OE_PLATFORM_WINDOWS",
-        "SOME_RANDOM_DEFINE_AGAIN",
     	"GLFW_INCLUDE_NONE"
     }
 

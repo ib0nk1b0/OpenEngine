@@ -32,6 +32,11 @@ namespace OpenEngine {
 			s_RendererAPI->DrawIndexed(vertexArray, indexCount);
 		}
 
+		inline static void DrawInstanced(const Ref<VertexArray>& vertexArray, uint32_t indexCount, uint32_t instanceCount)
+		{
+			s_RendererAPI->DrawInstanced(vertexArray, indexCount, instanceCount);
+		}
+
 		inline static void SetLineWidth(float width)
 		{
 			s_RendererAPI->SetLineWidth(width);
@@ -40,6 +45,16 @@ namespace OpenEngine {
 		inline static void DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount)
 		{
 			s_RendererAPI->DrawLines(vertexArray, vertexCount);
+		}
+
+		inline static void EnableDepthTest()
+		{
+			s_RendererAPI->EnableDepthTest();
+		}
+
+		inline static void DisableDepthTest()
+		{
+			s_RendererAPI->DisableDepthTest();
 		}
 	private:
 		static RendererAPI* s_RendererAPI;

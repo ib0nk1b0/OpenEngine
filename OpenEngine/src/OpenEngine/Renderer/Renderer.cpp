@@ -70,6 +70,8 @@ namespace OpenEngine {
 
 	void Renderer::BeginScene(const EditorCamera& camera, std::vector<Entity> lights)
 	{
+		OE_PROFILE_FUNCTION();
+
 		s_SceneData.CubeShader->Bind();
 		s_SceneData.CubeShader->SetMat4("u_ViewProjection", camera.GetViewProjection());
 		auto& cameraPosition = camera.GetViewProjection()[0];
@@ -96,6 +98,8 @@ namespace OpenEngine {
 
 	void Renderer::BeginScene(const Camera& camera, const glm::mat4& transform, std::vector<Entity> lights)
 	{
+		OE_PROFILE_FUNCTION();
+
 		s_SceneData.CubeShader->Bind();
 		s_SceneData.CubeShader->SetMat4("u_ViewProjection", camera.GetProjection() * glm::inverse(transform));
 		auto& cameraPosition = camera.GetProjection()[0];
@@ -130,22 +134,29 @@ namespace OpenEngine {
 		s_SceneData.CubeVertexBufferPtr = s_SceneData.CubeVertexBufferBase;
 	}
 
-	void Renderer::EndScene(std::vector<Mesh>& meshes)
+	void Renderer::EndScene(std::vector<Mesh>& meshes, bool wireframe)
 	{
-		Timer timer;
+		OE_PROFILE_FUNCTION();
+		OE_PERF_FUNC();
+
+		if (wireframe)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		else
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 		for (auto& mesh : meshes)
 		{
 			if (!mesh.HasMeshes())
 				continue;
-			mesh.Flush();
-			auto count = mesh.GetIndexCount();
-			RenderCommand::DrawIndexed(mesh.GetVertexArray(), count);
-			s_SceneData.Stats.DrawCalls++;
-			mesh.ResetData();
-		}
-		timer.Stop();
 
-		Application::Get().SubmitRendererTime(timer);
+			mesh.Flush();
+			RenderCommand::DrawInstanced(mesh.GetVertexArray(), mesh.GetIndexCount(), mesh.InstanceCount());
+			mesh.ResetData();
+			
+			s_SceneData.Stats.DrawCalls++;
+		}
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
 	void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform)
