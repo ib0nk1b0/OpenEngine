@@ -2,7 +2,7 @@ project "OpenEngine"
   kind "StaticLib"  
   language "C++"
   cppdialect "C++17"
-  staticruntime "on"
+  staticruntime "off"
 
   targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
@@ -19,7 +19,8 @@ project "OpenEngine"
     "vendor/glm/glm/**.hpp",
     "vendor/glm/glm/**.inl",
     "vendor/ImGuizmo/ImGuizmo.h",
-    "vendor/ImGuizmo/ImGuizmo.cpp"
+    "vendor/ImGuizmo/ImGuizmo.cpp",
+    
   }
 
   defines
@@ -50,11 +51,16 @@ project "OpenEngine"
     "GLFW",
     "Glad",
     "ImGui",
+    "./vendor/Assimp/lib/x64/assimp-vc143-mt.lib",
+    --"Assimp",
     --"%{Library.Vulkan}",
     "opengl32.lib"
   }
 
   filter "files:vendor/ImGuizmo/**.cpp"
+  flags { "NoPCH" }
+
+  filter "files:vendor/Assimp/**.cpp"
   flags { "NoPCH" }
 
   filter "system:windows"

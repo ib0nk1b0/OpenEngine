@@ -1,8 +1,12 @@
 #include "oepch.h"
 #include "Mesh.h"
 
-#include "OpenEngine/Scene/Scene.h"
 #include "OpenEngine/Core/Application.h"
+#include "OpenEngine/Scene/Scene.h"
+
+#include <assimp/cimport.h>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 namespace OpenEngine {
 
@@ -27,6 +31,12 @@ namespace OpenEngine {
 		: m_Filepath(filepath)
 	{
 		OE_PROFILE_FUNCTION();
+		
+		const aiScene* model = aiImportFile(filepath.c_str(), aiProcessPreset_TargetRealtime_Fast);
+
+		OE_CORE_WARN("Loading model ({0}) ...", filepath);
+		OE_CORE_WARN("	Number of meshes => ({0})", model->mNumMeshes);
+		OE_CORE_WARN("	Number of vertices => ({0})", model->mMeshes[0]->mNumVertices);
 
 		LoadFromFile(filepath);
 
@@ -119,7 +129,6 @@ namespace OpenEngine {
 		
 		return false;
 	}
-
 	void Mesh::LoadFromFile(const std::string& filepath)
 	{
 		OE_PROFILE_FUNCTION();
