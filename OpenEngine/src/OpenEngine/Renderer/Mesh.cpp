@@ -4,9 +4,11 @@
 #include "OpenEngine/Core/Application.h"
 #include "OpenEngine/Scene/Scene.h"
 
-#include <assimp/cimport.h>
+#include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+
+#define ASSIMP_LOAD_FLAGS (aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices )
 
 namespace OpenEngine {
 
@@ -32,24 +34,24 @@ namespace OpenEngine {
 	{
 		OE_PROFILE_FUNCTION();
 		
-		const aiScene* model = aiImportFile(filepath.c_str(), aiProcessPreset_TargetRealtime_Fast);
+		Assimp::Importer importer;
 
-		OE_CORE_WARN("Loading model ({0}) ...", filepath);
-		OE_CORE_WARN("	Number of meshes => ({0})", model->mNumMeshes);
-		OE_CORE_WARN("	Number of vertices => ({0})", model->mMeshes[0]->mNumVertices);
+		const aiScene* scene = importer.ReadFile(filepath.c_str(), ASSIMP_LOAD_FLAGS);
 
-		LoadFromFile(filepath);
+		for (int i = 0; i < scene->mMeshes[0]->mNumVertices; i++)
+		{
+			m_VertexPositions.push_back({ scene->mMeshes[0]->mVertices[i].x, scene->mMeshes[0]->mVertices[i].y, scene->mMeshes[0]->mVertices[i].z });
+			m_VertexNormals.push_back({ scene->mMeshes[0]->mNormals[i].x, scene->mMeshes[0]->mNormals[i].y, scene->mMeshes[0]->mNormals[i].z });
+		}
 
-		/*if (m_VertexPositions.size() < 50)
-			m_Data.MaxMeshes = 1000;
-		else if (m_VertexPositions.size() < 200)
-			m_Data.MaxMeshes = 500;
-		else if (m_VertexPositions.size() < 500)
-			m_Data.MaxMeshes = 100;
-		else if (m_VertexPositions.size() < 1000)
-			m_Data.MaxMeshes = 50;
-		else
-			m_Data.MaxMeshes = 10;*/
+		for (int i = 0; i < scene->mMeshes[0]->mNumFaces; i++)
+		{
+			m_IndiciesVec.push_back(scene->mMeshes[0]->mFaces[i].mIndices[0]);
+			m_IndiciesVec.push_back(scene->mMeshes[0]->mFaces[i].mIndices[1]);
+			m_IndiciesVec.push_back(scene->mMeshes[0]->mFaces[i].mIndices[2]);
+		}
+
+		//LoadFromFile(filepath);
 
 		m_Data.MaxMeshVerticies = m_Data.MaxMeshes * m_IndiciesVec.size();
 		m_Data.MaxMeshIndicies = m_Data.MaxMeshes * m_IndiciesVec.size();
@@ -59,15 +61,6 @@ namespace OpenEngine {
 
 		m_Data.InstanceBufferBase = new InstanceVertex[m_Data.MaxMeshes];
 		m_Data.InstanceBufferPointer = m_Data.InstanceBufferBase;
-
-		uint32_t* indicies = new uint32_t[m_Data.MaxMeshIndicies];
-
-		for (uint32_t i = 0; i < m_Data.MaxMeshIndicies; i++)
-		{
-			int index = i % (m_IndiciesVec.size() - 1);
-			indicies[i] = i;
-			//indicies[i] = m_IndiciesVec[index];
-		}
 
 		m_VertexArray = VertexArray::Create();
 
@@ -93,42 +86,24 @@ namespace OpenEngine {
 		});
 		m_VertexArray->AddVertexBuffer(m_InstanceBuffer, 2);
 
-		m_IndexBuffer = IndexBuffer::Create(indicies, m_Data.MaxMeshIndicies);
+		m_IndexBuffer = IndexBuffer::Create(m_IndiciesVec.data(), m_IndiciesVec.size());
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
-		for (int i = 0; i < m_IndiciesVec.size(); i++)
+		for (int i = 0; i < m_VertexPositions.size(); i++)
 		{
-			uint32_t vertexIndex = m_IndiciesVec[i];
-			uint32_t normalsIndex = m_NormalsVec[i];
-
-			UniqueVertex vertex;
-			vertex.Index = vertexIndex;
-			vertex.Normal = normalsIndex;
-			if (VertexExists(vertex))
-				continue;
-
-			m_Data.VertexBufferPointer->Position = m_VertexPositions[vertexIndex];
-			m_Data.VertexBufferPointer->Normal = m_VertexNormals[normalsIndex];
+			m_Data.VertexBufferPointer->Position = m_VertexPositions[i];
+			m_Data.VertexBufferPointer->Normal = m_VertexNormals[i];
 			m_Data.VertexBufferPointer++;
-
-			m_UniqueVerticies.push_back(vertex);
 		}
 
 		uint32_t dataSize = (uint32_t)((uint8_t*)m_Data.VertexBufferPointer - (uint8_t*)m_Data.VertexBufferBase);
 		m_VertexBuffer->SetData(m_Data.VertexBufferBase, dataSize);
-		delete[] indicies;
 	}
 
 	Mesh::~Mesh()
 	{
 	}
 
-	bool Mesh::VertexExists(UniqueVertex vertex)
-	{
-		
-		
-		return false;
-	}
 	void Mesh::LoadFromFile(const std::string& filepath)
 	{
 		OE_PROFILE_FUNCTION();
@@ -204,7 +179,6 @@ namespace OpenEngine {
 
 	void Mesh::Flush()
 	{
-
 		uint32_t dataSize = (uint32_t)((uint8_t*)m_Data.InstanceBufferPointer - (uint8_t*)m_Data.InstanceBufferBase);
 		m_InstanceBuffer->SetData(m_Data.InstanceBufferBase, dataSize);
 	}
