@@ -156,6 +156,9 @@
     <ClInclude Include="src\OpenEngine\Renderer\EditorCamera.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenEngine\Renderer\Font.h">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\Framebuffer.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
@@ -1542,6 +1545,9 @@
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\EditorCamera.cpp">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Renderer\Font.cpp">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\Framebuffer.cpp">

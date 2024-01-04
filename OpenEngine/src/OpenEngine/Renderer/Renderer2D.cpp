@@ -161,7 +161,7 @@ namespace OpenEngine {
 		s_Data.CircleVertexArray->SetIndexBuffer(quadIB);
 		delete[] quadIndicies;
 
-		s_Data.WhiteTexture = Texture2D::Create(1, 1);
+		s_Data.WhiteTexture = Texture2D::Create(TextureSpecification());
 		uint32_t whiteTextureData = 0xffffffff;
 		s_Data.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 

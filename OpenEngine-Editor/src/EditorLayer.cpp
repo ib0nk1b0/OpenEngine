@@ -4,6 +4,7 @@
 #include "OpenEngine/Scene/Components.h"
 #include "OpenEngine/Utils/PlatformUtils.h"
 #include "OpenEngine/Math/Math.h"
+#include "OpenEngine/Renderer/Font.h"
 
 #include "OpenEngine/ImGui/ImGuiFonts.h"
 
@@ -24,9 +25,12 @@ namespace OpenEngine {
 
 	extern const std::filesystem::path g_AssetPath;
 
+	static Font* s_Font;
+
 	EditorLayer::EditorLayer()
 		: Layer("EditorLayer")
 	{
+		s_Font = new Font("assets/fonts/Open_Sans/static/OpenSans/OpenSans-Regular.ttf");
 	}
 
 	void EditorLayer::OnAttach()
@@ -418,6 +422,10 @@ namespace OpenEngine {
 			ImGui::Text("%s: %f ms", timing.Name.c_str(), timing.Time);
 
 		Application::Get().ClearTimings();
+		ImGui::End();
+
+		ImGui::Begin("TextureAtlas");
+		ImGui::Image((ImTextureID)s_Font->GetAtlasTexture()->GetRendererID(), { 512, 512 }, { 0, 1 }, { 1, 0 });
 		ImGui::End();
 	}
 
