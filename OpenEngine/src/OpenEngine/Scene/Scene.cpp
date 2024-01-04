@@ -188,7 +188,7 @@ namespace OpenEngine {
 				return camera;
 		}
 
-		OE_CORE_ERROR("No primary camera found. One has been added by OpenEngine to prevent a prgram crash! Ensure to add a primary camera to your scene.");
+		OE_CORE_ERROR("No primary camera found. One has been added by OpenEngine to prevent a program crash! Ensure to add a primary camera to your scene.");
 		Entity camera = CreateEntity("PrimaryCamera");
 		camera.AddComponent<CameraComponent>();
 		return camera;
@@ -226,7 +226,7 @@ namespace OpenEngine {
 				auto& bc2d = entity.GetComponent<BoxColider2DComponent>();
 
 				b2PolygonShape boxShape;
-				boxShape.SetAsBox(bc2d.Size.x * transform.Scale.x, bc2d.Size.y * transform.Scale.y);
+				boxShape.SetAsBox(bc2d.Size.x * transform.Scale.x, bc2d.Size.y * transform.Scale.y, b2Vec2(bc2d.Offset.x, bc2d.Offset.y), 0.0f);
 
 				b2FixtureDef fixtureDef;
 				fixtureDef.shape = &boxShape;

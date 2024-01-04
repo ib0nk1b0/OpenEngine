@@ -411,7 +411,7 @@ namespace OpenEngine {
 				{
 					const wchar_t* path = (const wchar_t*)payload->Data;
 					std::filesystem::path fullPath = std::filesystem::path(g_AssetPath) / path;
-					if (FileDialogs::IsValidFile(fullPath, ".obj"))
+					if (FileDialogs::IsValidFile(fullPath, ".obj") || FileDialogs::IsValidFile(fullPath, ".fbx"))
 						component.Filepath = Utils::FormatFilepath(fullPath.string());
 				}
 				ImGui::EndDragDropTarget();

@@ -18,6 +18,7 @@ group "Dependencies"
   include "OpenEngine/vendor/Glad"
   include "OpenEngine/vendor/imgui"
   include "OpenEngine/vendor/Box2D"
+  --include "OpenEngine/vendor/Assimp"
 group ""
 
 group "Core"
