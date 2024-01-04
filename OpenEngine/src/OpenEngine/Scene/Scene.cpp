@@ -188,7 +188,7 @@ namespace OpenEngine {
 				return camera;
 		}
 
-		OE_CORE_ERROR("No primary camera found. One has been added by OpenEngine to prevent a prgram crash! Ensure to add a primary camera to your scene.");
+		OE_CORE_ERROR("No primary camera found. One has been added by OpenEngine to prevent a program crash! Ensure to add a primary camera to your scene.");
 		Entity camera = CreateEntity("PrimaryCamera");
 		camera.AddComponent<CameraComponent>();
 		return camera;
