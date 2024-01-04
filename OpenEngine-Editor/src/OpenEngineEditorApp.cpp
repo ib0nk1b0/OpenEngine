@@ -24,6 +24,7 @@ namespace OpenEngine {
 		ApplicationSpecification spec;
 		spec.Name = "Open Editor";
 		spec.CustomTitlebar = false;
+		spec.VSyncEnabled = true;
 
 		return new OpenEditor(spec);
 	}
