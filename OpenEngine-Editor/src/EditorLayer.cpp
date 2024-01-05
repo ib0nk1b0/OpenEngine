@@ -25,12 +25,12 @@ namespace OpenEngine {
 
 	extern const std::filesystem::path g_AssetPath;
 
-	static Font* s_Font;
+	static Ref<Font> s_Font;
 
 	EditorLayer::EditorLayer()
 		: Layer("EditorLayer")
 	{
-		s_Font = new Font("assets/fonts/Open_Sans/static/OpenSans/OpenSans-Regular.ttf");
+		s_Font = Font::GetDefault();
 	}
 
 	void EditorLayer::OnAttach()
@@ -52,7 +52,7 @@ namespace OpenEngine {
 		m_SceneHierarchyPanel.SetContext(m_EditorScene);
 		m_MaterialPanel.SetContext(m_EditorScene);
 
-		m_EditorCamera = EditorCamera(60.0f, 1.778f, 0.1f, 1000.0f);
+		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
 		/*
 		* 

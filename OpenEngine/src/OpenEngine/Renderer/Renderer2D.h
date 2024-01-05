@@ -5,6 +5,7 @@
 #include "OpenEngine/Renderer/Texture.h"
 #include "OpenEngine/Renderer/SubTexture2D.h"
 #include "OpenEngine/Renderer/EditorCamera.h"
+#include "OpenEngine/Renderer/Font.h"
 
 namespace OpenEngine
 {
@@ -58,6 +59,9 @@ namespace OpenEngine
 		static void DrawRect(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawRectZ(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawRect(const glm::mat4& transform, const glm::vec4& color, int entityID = -1);
+
+		// Text
+		static void DrawString(const std::string& string, Ref<Font> font, const glm::mat4& transform, const glm::vec4& color);
 
 		struct Statistics
 		{
