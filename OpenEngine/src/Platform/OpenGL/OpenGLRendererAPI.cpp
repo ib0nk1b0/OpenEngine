@@ -65,4 +65,14 @@ namespace OpenEngine {
 		glDisable(GL_DEPTH_TEST);
 	}
 
+	void OpenGLRendererAPI::EnableWireFrameMode()
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+
+	void OpenGLRendererAPI::DisableWireFrameMode()
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+
 }

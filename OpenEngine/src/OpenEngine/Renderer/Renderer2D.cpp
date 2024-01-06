@@ -624,7 +624,7 @@ namespace OpenEngine {
 		DrawLine(lineVerticies[3], lineVerticies[0], color, entityID);
 	}
 
-	void Renderer2D::DrawString(const std::string& string, Ref<Font> font, const glm::mat4& transform, const glm::vec4& color)
+	void Renderer2D::DrawString(const std::string& string, Ref<Font> font, const glm::mat4& transform, const TextParams& textParams, int entityID)
 	{
 		const auto& fontGeometry = font->GetMSDFData()->FontGeometry;
 		const auto& metrics = fontGeometry.getMetrics();
@@ -635,8 +635,6 @@ namespace OpenEngine {
 		double x = 0.0;
 		double fsScale = 1.0 / (metrics.ascenderY - metrics.descenderY);
 		double y = 0.0;
-		float kerningOffset = 0.0f;
-		float lineSpacing = 0.0f;
 
 		const float spaceGlyphAdvance = fontGeometry.getGlyph(' ')->getAdvance();
 
@@ -649,7 +647,7 @@ namespace OpenEngine {
 			if (character == '\n')
 			{
 				x = 0;
-				y -= fsScale * metrics.lineHeight + lineSpacing;
+				y -= fsScale * metrics.lineHeight + textParams.LineSpacing;
 				continue;
 			}
 
@@ -664,13 +662,13 @@ namespace OpenEngine {
 					advance = (float)dAdvance;
 				}
 
-				x += fsScale * advance + kerningOffset;
+				x += fsScale * advance + textParams.Kerning;
 				continue;
 			}
 
 			if (character == '\t')
 			{
-				x += 4.0f * (fsScale * spaceGlyphAdvance + kerningOffset);
+				x += 4.0f * (fsScale * spaceGlyphAdvance + textParams.Kerning);
 				continue;
 			}
 
@@ -700,27 +698,27 @@ namespace OpenEngine {
 			texCoordMax *= glm::vec2(texelWidth, texelHeight);
 
 			s_Data.TextVertexBufferPtr->Position = transform * glm::vec4(quadMin, 0.0f, 1.0f);
-			s_Data.TextVertexBufferPtr->Color = color;
+			s_Data.TextVertexBufferPtr->Color = textParams.Color;
 			s_Data.TextVertexBufferPtr->TexCoord = texCoordMin;
-			s_Data.TextVertexBufferPtr->EntityID = 0;
+			s_Data.TextVertexBufferPtr->EntityID = entityID;
 			s_Data.TextVertexBufferPtr++;
 
 			s_Data.TextVertexBufferPtr->Position = transform * glm::vec4(quadMin.x, quadMax.y, 0.0f, 1.0f);
-			s_Data.TextVertexBufferPtr->Color = color;
+			s_Data.TextVertexBufferPtr->Color = textParams.Color;
 			s_Data.TextVertexBufferPtr->TexCoord = { texCoordMin.x, texCoordMax.y };
-			s_Data.TextVertexBufferPtr->EntityID = 0;
+			s_Data.TextVertexBufferPtr->EntityID = entityID;
 			s_Data.TextVertexBufferPtr++;
 
 			s_Data.TextVertexBufferPtr->Position = transform * glm::vec4(quadMax, 0.0f, 1.0f);
-			s_Data.TextVertexBufferPtr->Color = color;
+			s_Data.TextVertexBufferPtr->Color = textParams.Color;
 			s_Data.TextVertexBufferPtr->TexCoord = texCoordMax;
-			s_Data.TextVertexBufferPtr->EntityID = 0;
+			s_Data.TextVertexBufferPtr->EntityID = entityID;
 			s_Data.TextVertexBufferPtr++;
 
 			s_Data.TextVertexBufferPtr->Position = transform * glm::vec4(quadMax.x, quadMin.y, 0.0f, 1.0f);
-			s_Data.TextVertexBufferPtr->Color = color;
+			s_Data.TextVertexBufferPtr->Color = textParams.Color;
 			s_Data.TextVertexBufferPtr->TexCoord = { texCoordMax.x, texCoordMin.y };
-			s_Data.TextVertexBufferPtr->EntityID = 0;
+			s_Data.TextVertexBufferPtr->EntityID = entityID;
 			s_Data.TextVertexBufferPtr++;
 
 			s_Data.TextIndexCount += 6;
@@ -732,7 +730,7 @@ namespace OpenEngine {
 				char nextCharacter = string[i + 1];
 				fontGeometry.getAdvance(advance, character, nextCharacter);
 
-				x += fsScale * advance + kerningOffset;
+				x += fsScale * advance + textParams.Kerning;
 			}
 		}
 	}

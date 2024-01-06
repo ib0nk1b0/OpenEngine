@@ -139,10 +139,8 @@ namespace OpenEngine {
 		OE_PROFILE_FUNCTION();
 		OE_PERF_FUNC();
 
-		if (wireframe)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		else
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		/*if (wireframe)
+			RenderCommand::EnableWireFrameMode();*/
 
 		for (auto& mesh : meshes)
 		{
@@ -156,7 +154,8 @@ namespace OpenEngine {
 			s_SceneData.Stats.DrawCalls++;
 		}
 
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		/*if (wireframe)
+			RenderCommand::DisableWireFrameMode();*/
 	}
 
 	void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform)
@@ -169,41 +168,6 @@ namespace OpenEngine {
 
 		RenderCommand::DrawIndexed(vertexArray, s_SceneData.CubeIndexCount);
 	}
-
-	/*void Renderer::Submit(Cube cube, int entityID)
-	{
-		s_SceneData.CubeShader->Bind();
-		s_SceneData.CubeShader->SetMat4("u_ViewProjection", s_SceneData.ViewProjectionMatrix);
-
-		for (size_t i = 0; i < 8; i++)
-		{
-			s_SceneData.CubeVertexBufferPtr->Position = cube.Transform * s_SceneData.CubeVertexPositions[i];
-			s_SceneData.CubeVertexBufferPtr->Color = { cube.Mat.Albedo.x, cube.Mat.Albedo.y, cube.Mat.Albedo.z, 1.0f };
-			s_SceneData.CubeVertexBufferPtr->EntityID = entityID;
-			s_SceneData.CubeVertexBufferPtr++;
-		}
-
-		s_SceneData.CubeIndexCount += 36;
-
-		uint32_t dataSize = (uint32_t)((uint8_t*)s_SceneData.CubeVertexBufferPtr - (uint8_t*)s_SceneData.CubeVertexBufferBase);
-		s_SceneData.CubeVertexBuffer->SetData(s_SceneData.CubeVertexBufferBase, dataSize);
-
-		RenderCommand::DrawIndexed(s_SceneData.CubeVertexArray, s_SceneData.CubeIndexCount);
-
-	}*/
-
-	/*void Renderer::Submit(Cube cube, const glm::mat4& transform, Camera* camera, int entityID)
-	{
-		s_SceneData.CubeShader->Bind();
-		s_SceneData.CubeShader->SetMat4("u_ViewProjection", s_SceneData.ViewProjectionMatrix);
-		auto cameraPosition = camera->GetProjection()[0];
-		s_SceneData.CubeShader->SetFloat3("u_CameraPosition", glm::vec3(cameraPosition.x, cameraPosition.y, cameraPosition.z));
-		s_SceneData.CubeShader->SetMat4("u_Model", transform);
-		cube.SetData(transform, entityID);
-
-		RenderCommand::DrawIndexed(cube.GetVertexArray());
-	}*/
-
 
 	void Renderer::Submit(Mesh& mesh, const glm::mat4& transform, Material material, int entityID)
 	{

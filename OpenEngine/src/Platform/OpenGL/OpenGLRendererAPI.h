@@ -20,6 +20,8 @@ namespace OpenEngine {
 
 		virtual void EnableDepthTest() override;
 		virtual void DisableDepthTest() override;
+		virtual void EnableWireFrameMode() override;
+		virtual void DisableWireFrameMode() override;
 	};
 
 }

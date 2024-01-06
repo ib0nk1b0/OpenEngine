@@ -29,6 +29,8 @@ namespace OpenEngine {
 
 		virtual void EnableDepthTest() = 0;
 		virtual void DisableDepthTest() = 0;
+		virtual void EnableWireFrameMode() = 0;
+		virtual void DisableWireFrameMode() = 0;
 
 		inline static API GetAPI() { return s_API; }
 	private:

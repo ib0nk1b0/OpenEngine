@@ -146,6 +146,13 @@ namespace OpenEngine {
 			cc2d.RestitutionThreshold = other.GetComponent<CircleColider2DComponent>().RestitutionThreshold;
 		}
 
+		if (other.HasComponent<TextComponent>())
+		{
+			auto& otherTc = other.GetComponent<TextComponent>();
+			auto& tc = newEntity.AddComponent<TextComponent>();
+			tc = otherTc;
+		}
+
 		return newEntity;
 	}
 
@@ -368,6 +375,19 @@ namespace OpenEngine {
 			}
 
 			{
+				auto view = m_Registry.view<TransformComponent, TextComponent>();
+				for (auto entity : view)
+				{
+					auto [transform, text] = view.get<TransformComponent, TextComponent>(entity);
+					Renderer2D::TextParams textParams;
+					textParams.Color = text.Color;
+					textParams.Kerning = text.Kerning;
+					textParams.LineSpacing = text.LineSpacing;
+					Renderer2D::DrawString(text.Text, text.TextFont, transform.GetTransform(), textParams, (int)entity);
+				}
+			}
+
+			{
 				auto view = m_Registry.view<TransformComponent, EditorRendererComponent>();
 				for (auto entity : view)
 				{
@@ -391,11 +411,6 @@ namespace OpenEngine {
 					}
 				}
 			}
-
-			TransformComponent tc;
-			tc.Scale = { 1, 1, 1.0f };
-
-			Renderer2D::DrawString("Hello World!", Font::GetDefault(), tc.GetTransform(), glm::vec4(1.0f));
 
 			Renderer2D::EndScene();
 		}
@@ -531,6 +546,19 @@ namespace OpenEngine {
 				}
 			}
 
+			{
+				auto view = m_Registry.view<TransformComponent, TextComponent>();
+				for (auto entity : view)
+				{
+					auto [transform, text] = view.get<TransformComponent, TextComponent>(entity);
+					Renderer2D::TextParams textParams;
+					textParams.Color = text.Color;
+					textParams.Kerning = text.Kerning;
+					textParams.LineSpacing = text.LineSpacing;
+					Renderer2D::DrawString(text.Text, text.TextFont, transform.GetTransform(), textParams, (int)entity);
+				}
+			}
+
 			Renderer2D::EndScene();
 		}
 
@@ -638,6 +666,13 @@ namespace OpenEngine {
 					auto oldCc2d = entity.GetComponent<CircleColider2DComponent>();
 					auto& cc2d = newEntity.AddComponent<CircleColider2DComponent>();
 					cc2d = oldCc2d;
+				}
+
+				if (entity.HasComponent<TextComponent>())
+				{
+					auto oldTc = entity.GetComponent<TextComponent>();
+					auto& tc = newEntity.AddComponent<TextComponent>();
+					tc = oldTc;
 				}
 		});
 	}
