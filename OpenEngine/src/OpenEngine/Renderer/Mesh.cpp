@@ -38,13 +38,13 @@ namespace OpenEngine {
 
 		const aiScene* scene = importer.ReadFile(filepath.c_str(), ASSIMP_LOAD_FLAGS);
 
-		for (int i = 0; i < scene->mMeshes[0]->mNumVertices; i++)
+		for (unsigned int i = 0; i < scene->mMeshes[0]->mNumVertices; i++)
 		{
 			m_VertexPositions.push_back({ scene->mMeshes[0]->mVertices[i].x, scene->mMeshes[0]->mVertices[i].y, scene->mMeshes[0]->mVertices[i].z });
 			m_VertexNormals.push_back({ scene->mMeshes[0]->mNormals[i].x, scene->mMeshes[0]->mNormals[i].y, scene->mMeshes[0]->mNormals[i].z });
 		}
 
-		for (int i = 0; i < scene->mMeshes[0]->mNumFaces; i++)
+		for (unsigned int i = 0; i < scene->mMeshes[0]->mNumFaces; i++)
 		{
 			m_IndiciesVec.push_back(scene->mMeshes[0]->mFaces[i].mIndices[0]);
 			m_IndiciesVec.push_back(scene->mMeshes[0]->mFaces[i].mIndices[1]);

@@ -56,6 +56,16 @@ namespace OpenEngine {
 		{
 			s_RendererAPI->DisableDepthTest();
 		}
+
+		inline static void EnableWireFrameMode()
+		{
+			s_RendererAPI->EnableWireFrameMode();
+		}
+
+		inline static void DisableWireFrameMode()
+		{
+			s_RendererAPI->DisableWireFrameMode();
+		}
 	private:
 		static RendererAPI* s_RendererAPI;
 	};

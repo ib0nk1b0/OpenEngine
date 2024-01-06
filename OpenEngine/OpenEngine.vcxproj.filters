@@ -156,6 +156,9 @@
     <ClInclude Include="src\OpenEngine\Renderer\EditorCamera.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenEngine\Renderer\Font.h">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\Framebuffer.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
@@ -1500,6 +1503,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenEngine\Renderer\MSDFData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenEngine\Core\Application.cpp">
@@ -1542,6 +1546,9 @@
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\EditorCamera.cpp">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Renderer\Font.cpp">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Renderer\Framebuffer.cpp">

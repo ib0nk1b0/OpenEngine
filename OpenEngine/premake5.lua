@@ -41,7 +41,9 @@ project "OpenEngine"
     "%{IncludeDir.ImGuizmo}",
     "%{IncludeDir.json}",
     "%{IncludeDir.Assimp}",
-    "%{IncludeDir.Box2D}"
+    "%{IncludeDir.Box2D}",
+    "%{IncludeDir.msdf_atlas_gen}",
+    "%{IncludeDir.msdfgen}"
     --"%{IncludeDir.VulkanSDK}"
   }
 
@@ -52,7 +54,7 @@ project "OpenEngine"
     "Glad",
     "ImGui",
     "./vendor/Assimp/lib/x64/assimp-vc143-mt.lib",
-    --"Assimp",
+    "msdf-atlas-gen",
     --"%{Library.Vulkan}",
     "opengl32.lib"
   }

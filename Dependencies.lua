@@ -11,6 +11,8 @@ IncludeDir["json"] = "%{wks.location}/OpenEngine/vendor/Json/"
 IncludeDir["ImGuizmo"] = "%{wks.location}/OpenEngine/vendor/ImGuizmo/"
 IncludeDir["Assimp"] = "%{wks.location}/OpenEngine/vendor/Assimp/include"
 IncludeDir["Box2D"] = "%{wks.location}/OpenEngine/vendor/Box2D/include"
+IncludeDir["msdfgen"] = "%{wks.location}/OpenEngine/vendor/msdf-atlas-gen/msdfgen"
+IncludeDir["msdf_atlas_gen"] = "%{wks.location}/OpenEngine/vendor/msdf-atlas-gen/msdf-atlas-gen"
 --IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
 
 --LibraryDir = {}

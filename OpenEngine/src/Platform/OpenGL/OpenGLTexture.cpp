@@ -5,12 +5,41 @@
 
 namespace OpenEngine {
 
-	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
-		: m_Width(width), m_Height(height)
+	namespace Utils {
+
+		static GLenum OpenEngineImageFormatToGLDataFormat(ImageFormat format)
+		{
+			switch (format)
+			{
+				case ImageFormat::RGB8:  return GL_RGB;
+				case ImageFormat::RGBA8: return GL_RGBA;
+			}
+
+			OE_CORE_ASSERT(false, "");
+			return 0;
+		}
+
+		static GLenum OpenEngineImageFormatToGLInternalFormat(ImageFormat format)
+		{
+			switch (format)
+			{
+				case ImageFormat::RGB8:  return GL_RGB8;
+				case ImageFormat::RGBA8: return GL_RGBA8;
+			}
+
+			OE_CORE_ASSERT(false, "");
+			return 0;
+		}
+
+	}
+
+	OpenGLTexture2D::OpenGLTexture2D(const TextureSpecification& specification)
+		: m_Specification(specification), m_Width(specification.Width), m_Height(specification.Height)
 	{
 		OE_PROFILE_FUNCTION();
 
-		m_InternalFormat = GL_RGBA8, m_DataFormat = GL_RGBA;
+		m_InternalFormat = Utils::OpenEngineImageFormatToGLInternalFormat(specification.Format);
+		m_DataFormat = Utils::OpenEngineImageFormatToGLDataFormat(specification.Format);
 		OE_CORE_ASSERT(m_InternalFormat & m_DataFormat, "Format not supported!");
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);

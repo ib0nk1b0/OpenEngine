@@ -9,6 +9,7 @@
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
+#include <imgui/misc/cpp/imgui_stdlib.h>
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -59,16 +60,7 @@ namespace OpenEngine {
 						quad.AddComponent<SpriteRendererComponent>();
 					}
 					ImGui::Separator();
-					/*if (ImGui::BeginMenu("Mesh"))
-					{
-						if (ImGui::MenuItem("Cube"))
-						{
-							Entity cube = m_Context->CreateEntity("Cube");
-							cube.AddComponent<MeshComponent>();
-						}
-
-						ImGui::EndMenu();
-					}*/
+					
 					if (ImGui::MenuItem("Mesh"))
 					{
 						Entity mesh = m_Context->CreateEntity("Mesh");
@@ -285,6 +277,7 @@ namespace OpenEngine {
 			AddComponentItem<RigidBody2DComponent>("RigidBody2D", entity);
 			AddComponentItem<BoxColider2DComponent>("BoxColider2D", entity);
 			AddComponentItem<CircleColider2DComponent>("CircleColider2D", entity);
+			AddComponentItem<TextComponent>("TextComponent", entity);
 
 			ImGui::EndPopup();
 		}
@@ -546,6 +539,14 @@ namespace OpenEngine {
 			UI::DragFloat("Friction", &component.Friction, 0.1f);
 			UI::DragFloat("Restitution", &component.Restitution, 0.01f);
 			UI::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.05f, 0.0f, 100.0f, 150.0f);
+		});
+
+		DrawComponent<TextComponent>("Text Component", entity, [](auto& component)
+		{
+			ImGui::InputTextMultiline("Text", &component.Text, ImVec2(0, 0));
+			UI::ColorEdit4("Color", glm::value_ptr(component.Color));
+			UI::DragFloat("Kerning", &component.Kerning, 0.01f);
+			UI::DragFloat("Line Spacing", &component.LineSpacing, 0.05f);
 		});
 	}
 

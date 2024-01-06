@@ -231,6 +231,17 @@ namespace OpenEngine {
 				};
 			}
 
+			if (entity.HasComponent<TextComponent>())
+			{
+				auto& tc = entity.GetComponent<TextComponent>();
+				e["TextComponent"] = {
+					{ "Text", tc.Text },
+					{ "Color", { tc.Color.r, tc.Color.g, tc.Color.b, tc.Color.a } },
+					{ "Kerning",tc.Kerning },
+					{ "LineSpacing", tc.LineSpacing }
+				};
+			}
+
 			jsonEntities.push_back(e);
 		});
 
@@ -396,6 +407,17 @@ namespace OpenEngine {
 					cc2dComponent.Friction = jsonCC2D["Friction"].get<float>();
 					cc2dComponent.Restitution = jsonCC2D["Restitution"].get<float>();
 					cc2dComponent.RestitutionThreshold = jsonCC2D["RestitutionThreshold"].get<float>();
+				}
+
+				if (value.contains("TextComponent"))
+				{
+					auto& jsonTc = value["TextComponent"];
+					auto& tc = entity.AddComponent<TextComponent>();
+
+					tc.Text = jsonTc["Text"].get<std::string>();
+					Decode(ConvertFloat4(jsonTc["Color"]), tc.Color);
+					tc.Kerning = jsonTc["Kerning"].get<float>();
+					tc.LineSpacing = jsonTc["LineSpacing"].get<float>();
 				}
 
 			}

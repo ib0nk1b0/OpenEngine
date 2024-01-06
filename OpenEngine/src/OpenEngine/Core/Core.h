@@ -21,8 +21,8 @@
 #endif
 
 #ifdef OE_ENABLE_ASSERTS
-	#define OE_ASSERT(x, ...) { if(!(x)) { OE_ERROR("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
-	#define OE_CORE_ASSERT(x, ...) { if(!(x)) { OE_CORE_ERROR("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
+#define OE_ASSERT(x, ...) { if(!(x)) { OE_ERROR("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
+#define OE_CORE_ASSERT(x, ...) { if(!(x)) { OE_CORE_ERROR("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
 #else
 	#define OE_ASSERT
 	#define OE_CORE_ASSERT
