@@ -3,6 +3,7 @@
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
+#include <mono/metadata/object.h>
 
 namespace OpenEngine {
 
@@ -115,6 +116,39 @@ namespace OpenEngine {
 
 		s_Data->CoreAssembly = LoadCSharpAssembly("Resources/Scripts/OpenEngine-ScriptCore.dll");
 		PrintAssemblyTypes(s_Data->CoreAssembly);
+
+		// Create an object
+
+		MonoImage* assemblyImage = mono_assembly_get_image(s_Data->CoreAssembly);
+		MonoClass* monoClass = mono_class_from_name(assemblyImage, "OpenEngine", "Main");
+
+		MonoObject* instance = mono_object_new(s_Data->AppDomain, monoClass);
+		mono_runtime_object_init(instance);
+
+		MonoMethod* printMessegeFunc = mono_class_get_method_from_name(monoClass, "PrintMessege", 0);
+		mono_runtime_invoke(printMessegeFunc, instance, nullptr, nullptr);
+
+		int value = 3;
+		void* param = &value;
+
+		MonoMethod* printIntFunc = mono_class_get_method_from_name(monoClass, "PrintInt", 1);
+		mono_runtime_invoke(printIntFunc, instance, &param, nullptr);
+
+		int value2 = 27;
+		void* params[2] =
+		{
+			&value,
+			&value2
+		};
+
+		MonoMethod* printIntsFunc = mono_class_get_method_from_name(monoClass, "PrintInts", 2);
+		mono_runtime_invoke(printIntsFunc, instance, params, nullptr);
+
+		MonoString* monoString = mono_string_new(s_Data->AppDomain, "Hello World from C++");
+		void* stringParam = monoString;
+
+		MonoMethod* printCustomMessegeFunc = mono_class_get_method_from_name(monoClass, "PrintCustomMessage", 1);
+		mono_runtime_invoke(printCustomMessegeFunc, instance, &stringParam, nullptr);
 	}
 
 }

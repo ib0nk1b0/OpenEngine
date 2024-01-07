@@ -22,6 +22,11 @@ namespace OpenEngine
             Console.WriteLine($"C# Says: {value}");
         }
 
+        public void PrintInts(int value1, int value2)
+        {
+            Console.WriteLine($"C# Says: {value1} and {value2}");
+        }
+
         public void PrintCustomMessage(string message)
         {
             Console.WriteLine($"C# Says: {message}");
