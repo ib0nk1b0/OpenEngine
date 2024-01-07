@@ -1,24 +1,31 @@
 using System;
 
-public class Main
+namespace OpenEngine
 {
-    public Main()
+
+    public class Main
     {
-        Console.WriteLine("Main Constructor!");
+        public float Number { get; set; }
+
+        public Main()
+        {
+            Console.WriteLine("Main Constructor!");
+        }
+
+        public void PrintMessege()
+        {
+            Console.WriteLine("Hello World! From C#");
+        }
+
+        public void PrintInt(int value)
+        {
+            Console.WriteLine($"C# Says: {value}");
+        }
+
+        public void PrintCustomMessage(string message)
+        {
+            Console.WriteLine($"C# Says: {message}");
+        }
     }
 
-    public void PrintMessege()
-    {
-        Console.WriteLine("Hello World! From C#");
-    }
-
-    public void PrintInt(int value)
-    {
-        Console.WriteLine($"C# Says: {value}");
-    }
-
-    public void PrintCustomMessage(string message)
-    {
-        Console.WriteLine($"C# Says: {message}");
-    }
 }

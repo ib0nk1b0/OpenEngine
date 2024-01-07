@@ -4,6 +4,7 @@
 #include "OpenEngine/Core/Random.h"
 #include "OpenEngine/Renderer/Renderer.h"
 #include "OpenEngine/Debug/Instrumentor.h"
+#include "OpenEngine/Scripting/ScriptEngine.h"
 
 #include "Input.h"
 
@@ -59,6 +60,7 @@ namespace OpenEngine {
 			std::filesystem::current_path(m_Specification.WorkingDirectory);
 
 		Renderer::Init();
+		ScriptEngine::Init();
 		Random::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
@@ -68,6 +70,8 @@ namespace OpenEngine {
 	Application::~Application()
 	{
 		OE_PROFILE_FUNCTION();
+
+		ScriptEngine::Shutdown();
 	}
 
 	void Application::PushLayer(Layer* layer)
