@@ -1,0 +1,92 @@
+{
+    "Entities": [
+        {
+            "ID": 17662598558537029551,
+            "Tag": "Quad",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "ScriptComponent": {
+                "ClassName": "Sandbox.Player"
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ID": 5747130823482501996,
+            "Tag": "Orthographic Camera",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "EditorRendererComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "Texture": "assets/textures/camera.png"
+            },
+            "CameraComponent": {
+                "ProjectionType": "Orthographic",
+                "Size": 10.0,
+                "Near": -1.0,
+                "Far": 1.0,
+                "Primary": true,
+                "FixedAspectRatio": false
+            }
+        }
+    ]
+}

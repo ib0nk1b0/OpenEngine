@@ -93,6 +93,14 @@ namespace OpenEngine {
 				};
 			}
 
+			if (entity.HasComponent<ScriptComponent>())
+			{
+				auto& sc = entity.GetComponent<ScriptComponent>();
+				e["ScriptComponent"] = {
+					{ "Class", sc.ClassName },
+				};
+			}
+
 			if (entity.HasComponent<SpriteRendererComponent>())
 			{
 				auto& src = entity.GetComponent<SpriteRendererComponent>();
@@ -294,6 +302,14 @@ namespace OpenEngine {
 					Decode(ConvertFloat3(jsonTransform["Translation"]), transformComponent.Translation);
 					Decode(ConvertFloat3(jsonTransform["Rotation"]), transformComponent.Rotation);
 					Decode(ConvertFloat3(jsonTransform["Scale"]), transformComponent.Scale);
+				}
+
+				if (value.contains("ScriptComponent"))
+				{
+					auto& jsonScript = value["ScriptComponent"];
+					auto& scriptComponent = entity.AddComponent<ScriptComponent>();
+
+					scriptComponent.ClassName = jsonScript["ClassName"].get<std::string>();
 				}
 
 				if (value.contains("SpriteRendererComponent"))

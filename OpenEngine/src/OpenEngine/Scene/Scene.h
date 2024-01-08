@@ -40,6 +40,8 @@ namespace OpenEngine {
 		void OnEditorStart();
 		void OnRuntimeStart();
 		void OnRuntimeStop();
+		void OnPhysics2DStart();
+		void OnPhysics2DStop();
 
 		void OnUpdate(Timestep ts);
 		void OnUpdateEditor(Timestep ts, EditorCamera& camera);

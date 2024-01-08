@@ -1,5 +1,8 @@
 #pragma once
 
+#include "OpenEngine/Scene/Scene.h"
+#include "OpenEngine/Scene/Entity.h"
+
 #include <string>
 #include <filesystem>
 
@@ -31,7 +34,7 @@ namespace OpenEngine {
 	class ScriptInstance
 	{
 	public:
-		ScriptInstance(Ref<ScriptClass> scriptClass);
+		ScriptInstance(Ref<ScriptClass> scriptClass, Entity entity);
 
 		void InvokeOnCreate();
 		void InvokeOnUpdate(float ts);
@@ -39,6 +42,7 @@ namespace OpenEngine {
 		Ref<ScriptClass> m_ScriptClass;
 		MonoObject* m_Instance;
 
+		MonoMethod* m_Constructor;
 		MonoMethod* m_OnCreateMethod;
 		MonoMethod* m_OnUpdateMethod;
 	};
@@ -51,6 +55,14 @@ namespace OpenEngine {
 
 		static void LoadAssembly(const std::filesystem::path& filepath);
 
+		static void OnRuntimeStart(Scene* scene);
+		static void OnRuntimeStop();
+
+		static void OnCreateEntity(Entity entity);
+		static void OnUpdateEntity(Entity entity, float ts);
+		static bool EntityClassExists(const std::string& fullClassName);
+
+		static Scene* GetSceneContext();
 		static std::unordered_map<std::string, Ref<ScriptClass>> GetEntityClasses();
 	private:
 		static void InitMono();

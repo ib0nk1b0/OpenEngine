@@ -270,16 +270,16 @@ namespace OpenEngine {
 		if (ImGui::BeginPopup("AddComponent"))
 		{
 			AddComponentItem<TransformComponent>("Transform", entity);
+			AddComponentItem<CameraComponent>("Camera", entity);
+			AddComponentItem<ScriptComponent>("Script", entity);
 			AddComponentItem<SpriteRendererComponent>("Sprite Renderer", entity);
 			AddComponentItem<CircleRendererComponent>("Circle Renderer", entity);
 			AddComponentItem<EditorRendererComponent>("Editor Renderer", entity);
 			AddComponentItem<MeshComponent>("Mesh", entity);
-			AddComponentItem<CameraComponent>("Camera", entity);
-			AddComponentItem<RigidBody2DComponent>("RigidBody2D", entity);
-			AddComponentItem<BoxColider2DComponent>("BoxColider2D", entity);
-			AddComponentItem<CircleColider2DComponent>("CircleColider2D", entity);
-			AddComponentItem<ScriptComponent>("ScriptComponent", entity);
-			AddComponentItem<TextComponent>("TextComponent", entity);
+			AddComponentItem<TextComponent>("Text", entity);
+			AddComponentItem<RigidBody2DComponent>("Rigid Body 2D", entity);
+			AddComponentItem<BoxColider2DComponent>("Box Colider 2D", entity);
+			AddComponentItem<CircleColider2DComponent>("Circle Colider 2D", entity);
 
 			ImGui::EndPopup();
 		}
@@ -317,6 +317,18 @@ namespace OpenEngine {
 			UI::Vec3Controls("Rotation", rotation);
 			component.Rotation = glm::radians(rotation);
 			UI::Vec3Controls("Scale", component.Scale, 1.0f);
+		});
+
+		DrawComponent<ScriptComponent>("Script Component", entity, [](auto& component)
+		{
+			if (ScriptEngine::EntityClassExists(component.ClassName))
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.2f, 0.9f, 0.3f, 1.0f));
+			else
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.2f, 0.3f, 1.0f));
+
+			ImGui::InputText("##Class", &component.ClassName);
+
+			ImGui::PopStyleColor();
 		});
 
 		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [=](auto& component)
@@ -541,19 +553,6 @@ namespace OpenEngine {
 			UI::DragFloat("Friction", &component.Friction, 0.1f);
 			UI::DragFloat("Restitution", &component.Restitution, 0.01f);
 			UI::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.05f, 0.0f, 100.0f, 150.0f);
-		});
-
-		DrawComponent<ScriptComponent>("Script Component", entity, [](auto& component)
-		{
-			const auto& entityClasses = ScriptEngine::GetEntityClasses();
-			if (entityClasses.find(component.Name) != entityClasses.end())
-				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.2f, 0.9f, 0.3f, 1.0f));
-			else
-				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.2f, 0.3f, 1.0f));
-
-			ImGui::InputText("Class", &component.Name);
-
-			ImGui::PopStyleColor();
 		});
 
 		DrawComponent<TextComponent>("Text Component", entity, [](auto& component)

@@ -7,6 +7,7 @@
 #include "OpenEngine/Scene/Entity.h"
 #include "OpenEngine/Scene/Components.h"
 #include "OpenEngine/Scene/ScriptableEntity.h"
+#include "OpenEngine/Scripting/ScriptEngine.h"
 #include "OpenEngine/Renderer/Renderer.h"
 #include "OpenEngine/Renderer/Mesh.h"
 
@@ -153,6 +154,13 @@ namespace OpenEngine {
 			tc = otherTc;
 		}
 
+		if (other.HasComponent<ScriptComponent>())
+		{
+			auto& otherSc = other.GetComponent<ScriptComponent>();
+			auto& sc = newEntity.AddComponent<ScriptComponent>();
+			sc = otherSc;
+		}
+
 		return newEntity;
 	}
 
@@ -209,6 +217,33 @@ namespace OpenEngine {
 
 	void Scene::OnRuntimeStart()
 	{
+		OnPhysics2DStart();
+		ScriptEngine::OnRuntimeStart(this);
+		
+		// Scripting
+		{
+			auto view = m_Registry.view<ScriptComponent>();
+			for (auto e : view)
+			{
+				Entity entity = { e, this };
+				ScriptEngine::OnCreateEntity(entity);
+			}
+		}
+
+		// TODO:
+		m_CursorEnabled = false;
+		if (m_Filepath == "assets\\Scenes\\CubeGame.openengine")
+			glfwSetInputMode((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
+
+	void Scene::OnRuntimeStop()
+	{
+		OnPhysics2DStop();
+		ScriptEngine::OnRuntimeStop();
+	}
+
+	void Scene::OnPhysics2DStart()
+	{
 		b2Vec2 gravity = { 0.0f, -9.8f };
 		m_PhysicsWorld = new b2World(gravity);
 		auto view = m_Registry.view<RigidBody2DComponent>();
@@ -261,13 +296,9 @@ namespace OpenEngine {
 				body->CreateFixture(&fixtureDef);
 			}
 		}
-
-		m_CursorEnabled = false;
-		if (m_Filepath == "assets\\Scenes\\CubeGame.openengine")
-			glfwSetInputMode((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 
-	void Scene::OnRuntimeStop()
+	void Scene::OnPhysics2DStop()
 	{
 		/*delete m_PhysicsWorld;
 		m_PhysicsWorld = nullptr;*/
@@ -422,6 +453,15 @@ namespace OpenEngine {
 
 		// Update Scripts
 		{
+			// C# Scripts
+			auto view = m_Registry.view<ScriptComponent>();
+			for (auto e : view)
+			{
+				Entity entity = { e, this };
+				ScriptEngine::OnUpdateEntity(entity, ts);
+			}
+
+			// C++ Scripts
 			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
 			{
 				// TODO: Move to Scene::OnScenePlay
@@ -434,6 +474,7 @@ namespace OpenEngine {
 
 				nsc.Instance->OnUpdate(ts);
 			});
+
 		}
 
 		// Init Physics
@@ -584,6 +625,8 @@ namespace OpenEngine {
 
 		m_Registry.each([&](auto entityID)
 		{
+				// TODO: Somehow link Duplicate to this
+				//       The problem with Duplicate is that it only duplicates the entity in the current scene
 				Entity entity{ entityID, this };
 				Entity newEntity = other->CreateEntityWithUUID(entity.GetUUID(), entity.GetComponent<TagComponent>().Tag);
 
@@ -673,6 +716,13 @@ namespace OpenEngine {
 					auto oldTc = entity.GetComponent<TextComponent>();
 					auto& tc = newEntity.AddComponent<TextComponent>();
 					tc = oldTc;
+				}
+
+				if (entity.HasComponent<ScriptComponent>())
+				{
+					auto oldSc = entity.GetComponent<ScriptComponent>();
+					auto& sc = newEntity.AddComponent<ScriptComponent>();
+					sc = oldSc;
 				}
 		});
 	}
