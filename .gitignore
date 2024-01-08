@@ -5,10 +5,10 @@ bin-int/
 Intermediates
 
 #files
-*.vcxproj
-*.vcxproj.user
-*.vcxproj.filters
-*.sln
-*.json
-*.csproj
-*.csproj.user
+**.vcxproj
+**.vcxproj.user
+**.vcxproj.filters
+**.sln
+**.json
+**.csproj
+**.csproj.user
