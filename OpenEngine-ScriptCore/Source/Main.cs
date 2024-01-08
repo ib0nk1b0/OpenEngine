@@ -25,11 +25,11 @@ namespace OpenEngine
         internal extern static void NativeLog_Vector(ref Vector3 parameter, out Vector3 reuslt);
     }
 
-    public class Main
+    public class Entity
     {
         public float Number { get; set; }
 
-        public Main()
+        public Entity()
         {
             Console.WriteLine("Main Constructor!");
             Log("Message from the C# constructor calling NativeLog", 2024);

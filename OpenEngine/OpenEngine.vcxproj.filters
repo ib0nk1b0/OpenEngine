@@ -31,6 +31,9 @@
     <Filter Include="src\OpenEngine\Scene">
       <UniqueIdentifier>{81B88011-6D47-0ADB-1666-1ED602D41A81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\OpenEngine\Scripting">
+      <UniqueIdentifier>{66D24EBA-52F7-9D3A-7B42-83CA67C69C58}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\OpenEngine\Serialization">
       <UniqueIdentifier>{F1C7FD58-DD82-ED04-863A-664F72D43795}</UniqueIdentifier>
     </Filter>
@@ -165,6 +168,9 @@
     <ClInclude Include="src\OpenEngine\Renderer\GraphicsContext.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenEngine\Renderer\MSDFData.h">
+      <Filter>src\OpenEngine\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\OpenEngine\Renderer\Mesh.h">
       <Filter>src\OpenEngine\Renderer</Filter>
     </ClInclude>
@@ -215,6 +221,12 @@
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Scene\ScriptableEntity.h">
       <Filter>src\OpenEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Scripting\ScriptEngine.h">
+      <Filter>src\OpenEngine\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenEngine\Scripting\ScriptGlue.h">
+      <Filter>src\OpenEngine\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenEngine\Serialization\Serializer.h">
       <Filter>src\OpenEngine\Serialization</Filter>
@@ -1503,7 +1515,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenEngine\Renderer\MSDFData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenEngine\Core\Application.cpp">
@@ -1601,6 +1612,12 @@
     </ClCompile>
     <ClCompile Include="src\OpenEngine\Scene\SceneSerializer.cpp">
       <Filter>src\OpenEngine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Scripting\ScriptEngine.cpp">
+      <Filter>src\OpenEngine\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenEngine\Scripting\ScriptGlue.cpp">
+      <Filter>src\OpenEngine\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>

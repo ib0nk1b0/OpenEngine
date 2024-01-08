@@ -6,6 +6,7 @@
 #include "OpenEngine/Utils/PlatformUtils.h"
 #include "OpenEngine/ImGui/ImGuiExtended.h"
 #include "OpenEngine/ImGui/ImGuiFonts.h"
+#include "OpenEngine/Scripting/ScriptEngine.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
@@ -277,6 +278,7 @@ namespace OpenEngine {
 			AddComponentItem<RigidBody2DComponent>("RigidBody2D", entity);
 			AddComponentItem<BoxColider2DComponent>("BoxColider2D", entity);
 			AddComponentItem<CircleColider2DComponent>("CircleColider2D", entity);
+			AddComponentItem<ScriptComponent>("ScriptComponent", entity);
 			AddComponentItem<TextComponent>("TextComponent", entity);
 
 			ImGui::EndPopup();
@@ -539,6 +541,19 @@ namespace OpenEngine {
 			UI::DragFloat("Friction", &component.Friction, 0.1f);
 			UI::DragFloat("Restitution", &component.Restitution, 0.01f);
 			UI::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.05f, 0.0f, 100.0f, 150.0f);
+		});
+
+		DrawComponent<ScriptComponent>("Script Component", entity, [](auto& component)
+		{
+			const auto& entityClasses = ScriptEngine::GetEntityClasses();
+			if (entityClasses.find(component.Name) != entityClasses.end())
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.2f, 0.9f, 0.3f, 1.0f));
+			else
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.2f, 0.3f, 1.0f));
+
+			ImGui::InputText("Class", &component.Name);
+
+			ImGui::PopStyleColor();
 		});
 
 		DrawComponent<TextComponent>("Text Component", entity, [](auto& component)
