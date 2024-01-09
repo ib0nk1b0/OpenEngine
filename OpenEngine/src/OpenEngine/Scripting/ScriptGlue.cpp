@@ -16,46 +16,69 @@ namespace OpenEngine {
 
 #define OE_ADD_INTERNAL_CALL(Name) mono_add_internal_call("OpenEngine.InternalCalls::"#Name, Name)
 
-	static void NativeLog(MonoString* string, int parameter)
-	{
-		char* cStr = mono_string_to_utf8(string);
-		std::string str(cStr);
-		mono_free(cStr);
-		std::cout << "C++ says for C#: " << str << ", " << parameter << std::endl;
-	}
-
-	static void NativeLog_Vector(glm::vec3* parameter, glm::vec3* outResult)
-	{
-		OE_CORE_WARN("Value: {}", *parameter);
-		*outResult = glm::normalize(*parameter);
-	}
-
-	static void Entity_GetTranslation(UUID entityID, glm::vec3* outTranslation)
+	static void TransformComponent_GetTranslation(UUID entityID, glm::vec3* outTranslation)
 	{
 		Scene* scene = ScriptEngine::GetSceneContext();
 		Entity entity = scene->GetEntityByUUID(entityID);
 		*outTranslation = entity.GetComponent<TransformComponent>().Translation;
 	}
 
-	static void Entity_SetTranslation(UUID entityID, glm::vec3* translation)
+	static void TransformComponent_SetTranslation(UUID entityID, glm::vec3* translation)
 	{
 		Scene* scene = ScriptEngine::GetSceneContext();
 		Entity entity = scene->GetEntityByUUID(entityID);
 		entity.GetComponent<TransformComponent>().Translation = *translation;
 	}
+
+	static void TransformComponent_GetRotation(UUID entityID, glm::vec3* outRotation)
+	{
+		Scene* scene = ScriptEngine::GetSceneContext();
+		Entity entity = scene->GetEntityByUUID(entityID);
+		*outRotation = entity.GetComponent<TransformComponent>().Rotation;
+	}
+
+	static void TransformComponent_SetRotation(UUID entityID, glm::vec3* rotation)
+	{
+		Scene* scene = ScriptEngine::GetSceneContext();
+		Entity entity = scene->GetEntityByUUID(entityID);
+		entity.GetComponent<TransformComponent>().Rotation = *rotation;
+	}
+
+	static void TransformComponent_GetScale(UUID entityID, glm::vec3* outScale)
+	{
+		Scene* scene = ScriptEngine::GetSceneContext();
+		Entity entity = scene->GetEntityByUUID(entityID);
+		*outScale = entity.GetComponent<TransformComponent>().Scale;
+	}
+
+	static void TransformComponent_SetScale(UUID entityID, glm::vec3* scale)
+	{
+		Scene* scene = ScriptEngine::GetSceneContext();
+		Entity entity = scene->GetEntityByUUID(entityID);
+		entity.GetComponent<TransformComponent>().Scale = *scale;
+	}
+
 	static bool Input_IsKeyDown(KeyCode keyCode)
 	{
 		return Input::IsKeyPressed(keyCode);
 	}
 
+	static bool Entity_HasComponent(UUID entityID, MonoReflectionType* componentType)
+	{
+		return false;
+	}
+
 	void ScriptGlue::RegisterFunctions()
 	{
-		OE_ADD_INTERNAL_CALL(NativeLog);
-		OE_ADD_INTERNAL_CALL(NativeLog_Vector);
+		OE_ADD_INTERNAL_CALL(TransformComponent_GetTranslation);
+		OE_ADD_INTERNAL_CALL(TransformComponent_SetTranslation);
+		OE_ADD_INTERNAL_CALL(TransformComponent_GetRotation);
+		OE_ADD_INTERNAL_CALL(TransformComponent_SetRotation);
+		OE_ADD_INTERNAL_CALL(TransformComponent_GetScale);
+		OE_ADD_INTERNAL_CALL(TransformComponent_SetScale);
 
-		OE_ADD_INTERNAL_CALL(Entity_GetTranslation);
-		OE_ADD_INTERNAL_CALL(Entity_SetTranslation);
 		OE_ADD_INTERNAL_CALL(Input_IsKeyDown);
+		OE_ADD_INTERNAL_CALL(Entity_HasComponent);
 	}
 
 }

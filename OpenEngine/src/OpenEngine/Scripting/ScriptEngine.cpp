@@ -209,6 +209,7 @@ namespace OpenEngine {
 	void ScriptEngine::OnUpdateEntity(Entity entity, float ts)
 	{
 		UUID entityUUID = entity.GetUUID();
+		
 		OE_CORE_ASSERT(s_Data->EntityInstances.find(entityUUID) != s_Data->EntityInstances.end(), "");
 		Ref<ScriptInstance> instance = s_Data->EntityInstances[entityUUID];
 		instance->InvokeOnUpdate(ts);
