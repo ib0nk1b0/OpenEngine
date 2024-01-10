@@ -97,6 +97,7 @@ namespace OpenEngine {
 		LoadAssembly("Resources/Scripts/OpenEngine-ScriptCore.dll");
 		LoadAssemblyClasses(s_Data->CoreAssembly);
 
+		ScriptGlue::RegisterComponents();
 		ScriptGlue::RegisterFunctions();
 
 		// Retrive entity class
@@ -252,6 +253,11 @@ namespace OpenEngine {
 			if (isEntity)
 				s_Data->EntityClasses[fullName] = CreateRef<ScriptClass>(nameSpace, name);
 		}
+	}
+
+	MonoImage* ScriptEngine::GetCoreAssemblyImage()
+	{
+		return s_Data->CoreAssemblyImage;
 	}
 
 	ScriptClass::ScriptClass(const std::string& classNamespace, const std::string& className)

@@ -190,7 +190,7 @@ namespace OpenEngine {
 				entity = { e, this };
 		}
 
-		return entity;
+		return{};
 	}
 
 	Entity Scene::PrimaryCamera()

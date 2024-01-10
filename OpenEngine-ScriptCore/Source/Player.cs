@@ -8,6 +8,19 @@ namespace Sandbox
         void OnCreate()
         {
             Console.WriteLine($"Player.OnCreate - {ID}");
+            bool hasComponent = HasComponent<TransformComponent>();
+            string name = "Orthographic Camera";
+            Console.WriteLine($"Attempting to find {name}");
+            Entity camera = FindEntityByName(name);
+            Console.WriteLine($"Attempt finished");
+            if (camera != null)
+            {
+                Console.WriteLine($"Camera: {camera.ID}");
+            }
+            if (hasComponent)
+            {
+                Console.WriteLine($"Has a transformComponent");
+            }
         }
 
         void OnUpdate(float ts)
