@@ -641,6 +641,7 @@ namespace OpenEngine {
 		for (size_t i = 0; i < string.size(); i++)
 		{
 			char character = string[i];
+
 			if (character == '\r')
 				continue;
 

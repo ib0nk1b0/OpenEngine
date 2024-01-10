@@ -15,7 +15,7 @@
             "TransformComponent": {
                 "Translation": [
                     0.0,
-                    0.0,
+                    1.6815520524978638,
                     0.0
                 ],
                 "Rotation": [
@@ -39,6 +39,24 @@
                     1.0,
                     1.0
                 ]
+            },
+            "RigidBody2DComponent": {
+                "Type": "Dynamic",
+                "FixedRotation": true
+            },
+            "BoxColider2DComponent": {
+                "Offset": [
+                    0.0,
+                    0.0
+                ],
+                "Size": [
+                    0.5,
+                    0.5
+                ],
+                "Density": 1.0,
+                "Friction": 0.5,
+                "Restitution": 0.0,
+                "RestitutionThreshold": 0.5
             }
         },
         {
@@ -86,6 +104,62 @@
                 "Far": 1.0,
                 "Primary": true,
                 "FixedAspectRatio": false
+            }
+        },
+        {
+            "ID": 14979383610850610293,
+            "Tag": "Floor",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    0.0,
+                    -2.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    9.5,
+                    0.5,
+                    1.0
+                ]
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "RigidBody2DComponent": {
+                "Type": "Static",
+                "FixedRotation": false
+            },
+            "BoxColider2DComponent": {
+                "Offset": [
+                    0.0,
+                    0.0
+                ],
+                "Size": [
+                    0.5,
+                    0.5
+                ],
+                "Density": 1.0,
+                "Friction": 0.5,
+                "Restitution": 0.0,
+                "RestitutionThreshold": 0.5
             }
         }
     ]

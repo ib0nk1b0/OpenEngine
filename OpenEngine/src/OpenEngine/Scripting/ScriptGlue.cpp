@@ -13,6 +13,8 @@
 
 #include <glm/glm.hpp>
 
+#include <box2d/box2d.h>
+
 namespace OpenEngine {
 
 	namespace Utils {
@@ -77,6 +79,34 @@ namespace OpenEngine {
 
 #pragma endregion
 
+#pragma region RigidBody2DComponent
+
+	static void RigidBody2DComponent_ApplyLinearImpulse(UUID entityID, glm::vec2* impulse, glm::vec2* worldPosition, bool wake)
+	{
+		Scene* scene = ScriptEngine::GetSceneContext();
+		OE_CORE_ASSERT(scene, "");
+		Entity entity = scene->GetEntityByUUID(entityID);
+		OE_CORE_ASSERT(entity, "");
+
+		auto& rigidbody2D = entity.GetComponent<RigidBody2DComponent>();
+		b2Body* body = (b2Body*)rigidbody2D.RuntimeBody;
+		body->ApplyLinearImpulse(b2Vec2(impulse->x, impulse->y), b2Vec2(worldPosition->x, worldPosition->y), wake);
+	}
+
+	static void RigidBody2DComponent_ApplyLinearImpulseToCenter(UUID entityID, glm::vec2* impulse, bool wake)
+	{
+		Scene* scene = ScriptEngine::GetSceneContext();
+		OE_CORE_ASSERT(scene, "");
+		Entity entity = scene->GetEntityByUUID(entityID);
+		OE_CORE_ASSERT(entity, "");
+
+		auto& rigidbody2D = entity.GetComponent<RigidBody2DComponent>();
+		b2Body* body = (b2Body*)rigidbody2D.RuntimeBody;
+		body->ApplyLinearImpulseToCenter(b2Vec2(impulse->x, impulse->y), wake);
+	}
+
+#pragma endregion
+
 #pragma region Entity
 
 	static bool Entity_HasComponent(UUID entityID, MonoReflectionType* componentType)
@@ -103,11 +133,35 @@ namespace OpenEngine {
 
 #pragma endregion
 
-#pragma Input
+#pragma region Input
 
 	static bool Input_IsKeyDown(KeyCode keyCode)
 	{
 		return Input::IsKeyPressed(keyCode);
+	}
+
+#pragma endregion
+
+#pragma region Log
+
+	static void Log_Trace(MonoString* message)
+	{
+		OE_TRACE(Utils::MonoStringToString(message));
+	}
+
+	static void Log_Info(MonoString* message)
+	{
+		OE_INFO(Utils::MonoStringToString(message));
+	}
+
+	static void Log_Warn(MonoString* message)
+	{
+		OE_WARN(Utils::MonoStringToString(message));
+	}
+
+	static void Log_Error(MonoString* message)
+	{
+		OE_ERROR(Utils::MonoStringToString(message));
 	}
 
 #pragma endregion
@@ -133,6 +187,7 @@ namespace OpenEngine {
 	{
 		s_EntityHasComponentFuncs.clear();
 		RegisterComponent<TransformComponent>();
+		RegisterComponent<RigidBody2DComponent>();
 	}
 
 	void ScriptGlue::RegisterFunctions()
@@ -144,10 +199,18 @@ namespace OpenEngine {
 		OE_ADD_INTERNAL_CALL(TransformComponent_GetScale);
 		OE_ADD_INTERNAL_CALL(TransformComponent_SetScale);
 
+		OE_ADD_INTERNAL_CALL(RigidBody2DComponent_ApplyLinearImpulse);
+		OE_ADD_INTERNAL_CALL(RigidBody2DComponent_ApplyLinearImpulseToCenter);
+
 		OE_ADD_INTERNAL_CALL(Entity_HasComponent);
 		OE_ADD_INTERNAL_CALL(Entity_FindEntityByName);
 
 		OE_ADD_INTERNAL_CALL(Input_IsKeyDown);
+
+		OE_ADD_INTERNAL_CALL(Log_Trace);
+		OE_ADD_INTERNAL_CALL(Log_Info);
+		OE_ADD_INTERNAL_CALL(Log_Warn);
+		OE_ADD_INTERNAL_CALL(Log_Error);
 	}
 
 }

@@ -37,9 +37,7 @@ namespace OpenEngine
         public T GetComponent<T>() where T : Component, new()
         {
             if (!HasComponent<T>())
-            {
                 return null;
-            }
 
             return new T() { Entity = this };
         }

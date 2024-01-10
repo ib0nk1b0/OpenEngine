@@ -3,8 +3,8 @@ project "OpenEngine-ScriptCore"
   language "C#"
   dotnetframework "4.7.2"
 
-  targetdir ("%{wks.location}/OpenEngine-Editor/Resources/Scripts")
-	objdir ("%{wks.location}/OpenEngine-Editor/Resources/Scripts/Intermediates")
+  targetdir ("../OpenEngine-Editor/Resources/Scripts")
+	objdir ("../OpenEngine-Editor/Resources/Scripts/Intermediates")
 
   files
   {

@@ -97,7 +97,7 @@ namespace OpenEngine {
 			{
 				auto& sc = entity.GetComponent<ScriptComponent>();
 				e["ScriptComponent"] = {
-					{ "Class", sc.ClassName },
+					{ "ClassName", sc.ClassName },
 				};
 			}
 
@@ -397,6 +397,7 @@ namespace OpenEngine {
 					auto& rgbd2DComponent = entity.AddComponent<RigidBody2DComponent>();
 
 					rgbd2DComponent.Type = BodyTypeFromString(jsonRGBD2D["Type"].get<std::string>());
+					rgbd2DComponent.FixedRotation = jsonRGBD2D["FixedRotation"].get<bool>();
 				}
 
 				if (value.contains("BoxColider2DComponent"))

@@ -32,6 +32,32 @@ namespace OpenEngine
 
         #endregion
 
+        #region RigidBody2DComponent
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void RigidBody2DComponent_ApplyLinearImpulse(ulong entityID, ref Vector2 impulse, ref Vector2 worldPosition, bool wake);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void RigidBody2DComponent_ApplyLinearImpulseToCenter(ulong entityID, ref Vector2 impulse, bool wake);
+
+        #endregion
+
+        #region Log
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void Log_Trace(string message);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void Log_Info(string message);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void Log_Warn(string message);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void Log_Error(string message);
+
+        #endregion
+
         #region Entity
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
