@@ -9,6 +9,26 @@
 
 namespace OpenEngine {
 
+	static std::unordered_map<std::string, ScriptFieldType> s_ScriptFieldTypes =
+	{
+		{ "System.Single", ScriptFieldType::Float },
+		{ "System.Double", ScriptFieldType::Double },
+		{ "System.Char", ScriptFieldType::Char },
+		{ "System.Int16", ScriptFieldType::Short },
+		{ "System.Int32", ScriptFieldType::Int },
+		{ "System.Int64", ScriptFieldType::Long },
+		{ "System.Byte", ScriptFieldType::Byte },
+		{ "System.UInt16", ScriptFieldType::UShort },
+		{ "System.UInt32", ScriptFieldType::UInt },
+		{ "System.UInt64", ScriptFieldType::ULong },
+		{ "System.Boolean", ScriptFieldType::Bool },
+		{ "System.String", ScriptFieldType::String },
+		{ "OpenEngine.Vector2", ScriptFieldType::Vector2 },
+		{ "OpenEngine.Vector3", ScriptFieldType::Vector3 },
+		{ "OpenEngine.Vector4", ScriptFieldType::Vector4 },
+		{ "OpenEngine.Entity", ScriptFieldType::Entity },
+	};
+
 	namespace Utils {
 
 		static char* ReadBytes(const std::filesystem::path& filepath, uint32_t* outSize)
@@ -65,9 +85,39 @@ namespace OpenEngine {
 			return assembly;
 		}
 
-		static void PrintAssemblyTypes(MonoAssembly* assembly)
+		static ScriptFieldType MonoTypeToScriptFieldType(MonoType* monoType)
 		{
-			
+			std::string name = mono_type_get_name(monoType);
+
+			auto it = s_ScriptFieldTypes.find(name);
+			if (it == s_ScriptFieldTypes.end())
+				return ScriptFieldType::None;
+
+			return it->second;
+		}
+
+		static std::string ScriptFieldTypeToString(ScriptFieldType fieldType)
+		{
+			switch (fieldType)
+			{
+				case ScriptFieldType::None:    return "None";
+				case ScriptFieldType::Float:   return "Float";
+				case ScriptFieldType::Double:  return "Double";
+				case ScriptFieldType::Char:    return "Char";
+				case ScriptFieldType::Short:   return "Short";
+				case ScriptFieldType::Int:     return "Int";
+				case ScriptFieldType::Long:    return "Long";
+				case ScriptFieldType::Byte:    return "Byte";
+				case ScriptFieldType::UShort:  return "UShort";
+				case ScriptFieldType::UInt:    return "UInt";
+				case ScriptFieldType::ULong:   return "ULong";
+				case ScriptFieldType::Bool:    return "Bool";
+				case ScriptFieldType::String:  return "String";
+				case ScriptFieldType::Vector2: return "Vector2";
+				case ScriptFieldType::Vector3: return "Vector3";
+				case ScriptFieldType::Vector4: return "Vector4";
+				case ScriptFieldType::Entity:  return "Entity";
+			}
 		}
 
 	}
@@ -87,6 +137,7 @@ namespace OpenEngine {
 
 		std::unordered_map<std::string, Ref<ScriptClass>> EntityClasses;
 		std::unordered_map<UUID, Ref<ScriptInstance>> EntityInstances;
+		std::unordered_map<UUID, ScriptFieldMap> EntityScriptFields;
 
 		Scene* SceneContext = nullptr;
 	};
@@ -119,9 +170,26 @@ namespace OpenEngine {
 		return s_Data->SceneContext;
 	}
 
+	Ref<ScriptClass> ScriptEngine::GetEntityClass(const std::string& name)
+	{
+		if (s_Data->EntityClasses.find(name) == s_Data->EntityClasses.end())
+			return nullptr;
+
+		return s_Data->EntityClasses.at(name);
+	}
+
 	std::unordered_map<std::string, Ref<ScriptClass>> ScriptEngine::GetEntityClasses()
 	{
 		return s_Data->EntityClasses;
+	}
+
+	Ref<ScriptInstance> ScriptEngine::GetEntityScriptInstance(UUID entityID)
+	{
+		auto it = s_Data->EntityInstances.find(entityID);
+		if (it == s_Data->EntityInstances.end())
+			return nullptr;
+
+		return it->second;
 	}
 
 	void ScriptEngine::InitMono()
@@ -180,8 +248,18 @@ namespace OpenEngine {
 		const auto& sc = entity.GetComponent<ScriptComponent>();
 		if (EntityClassExists(sc.ClassName))
 		{
+			UUID entityID = entity.GetUUID();
+
 			Ref<ScriptInstance> instance = CreateRef<ScriptInstance>(s_Data->EntityClasses[sc.ClassName], entity);
 			s_Data->EntityInstances[entity.GetUUID()] = instance;
+
+			if (s_Data->EntityScriptFields.find(entityID) != s_Data->EntityScriptFields.end())
+			{
+				const ScriptFieldMap& fieldMap = s_Data->EntityScriptFields.at(entityID);
+				for (const auto& [name, fieldInstance] : fieldMap)
+					instance->SetFieldValueInternal(name, fieldInstance.m_Buffer);
+			}
+
 			instance->InvokeOnCreate();				
 		}
 	}
@@ -231,7 +309,8 @@ namespace OpenEngine {
 			if (!isEntity)
 				continue;
 
-			s_Data->EntityClasses[fullName] = CreateRef<ScriptClass>(nameSpace, name);
+			Ref<ScriptClass> scriptClass = CreateRef<ScriptClass>(nameSpace, name);
+			s_Data->EntityClasses[fullName] = scriptClass;
 
 			mono_class_num_fields(monoClass);
 
@@ -245,8 +324,10 @@ namespace OpenEngine {
 
 				if (flags == 6)
 				{
-					OE_CORE_WARN("{}", fieldName);
-					OE_CORE_WARN("Type: {}", mono_type_get_name(type));
+					ScriptFieldType fieldType = Utils::MonoTypeToScriptFieldType(type);
+					OE_CORE_WARN("{} ({})", fieldName, Utils::ScriptFieldTypeToString(fieldType));
+
+					scriptClass->m_Fields[fieldName] = { fieldType, fieldName , field };
 				}
 			}
 		}
@@ -255,6 +336,15 @@ namespace OpenEngine {
 	MonoImage* ScriptEngine::GetCoreAssemblyImage()
 	{
 		return s_Data->CoreAssemblyImage;
+	}
+
+	ScriptFieldMap& ScriptEngine::GetScriptFieldMap(Entity entity)
+	{
+		OE_CORE_ASSERT(entity, "");
+
+		UUID entityID = entity.GetUUID();
+		auto& fields = s_Data->EntityScriptFields;
+		return s_Data->EntityScriptFields[entityID];
 	}
 
 	ScriptClass::ScriptClass(const std::string& classNamespace, const std::string& className, bool isCore)
@@ -303,6 +393,30 @@ namespace OpenEngine {
 	{
 		void* param = &ts;
 		m_ScriptClass->InvokeMethod(m_Instance, m_OnUpdateMethod, &param);
+	}
+
+	bool ScriptInstance::GetFieldValueInternal(const std::string& name, void* buffer)
+	{
+		const auto& fields = m_ScriptClass->GetFields();
+		auto it = fields.find(name);
+		if (it == fields.end())
+			return false;
+
+		const ScriptField& field = it->second;
+		mono_field_get_value(m_Instance, field.ClassField, buffer);
+		return true;
+	}
+
+	bool ScriptInstance::SetFieldValueInternal(const std::string& name, const void* value)
+	{
+		const auto& fields = m_ScriptClass->GetFields();
+		auto it = fields.find(name);
+		if (it == fields.end())
+			return false;
+
+		const ScriptField& field = it->second;
+		mono_field_set_value(m_Instance, field.ClassField, (void*)value);
+		return true;
 	}
 
 }

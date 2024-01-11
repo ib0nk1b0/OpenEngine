@@ -319,9 +319,10 @@ namespace OpenEngine {
 			UI::Vec3Controls("Scale", component.Scale, 1.0f);
 		});
 
-		DrawComponent<ScriptComponent>("Script Component", entity, [](auto& component)
+		DrawComponent<ScriptComponent>("Script Component", entity, [entity, scene = m_Context](auto& component) mutable
 		{
-			if (ScriptEngine::EntityClassExists(component.ClassName))
+			bool scriptClassExists = ScriptEngine::EntityClassExists(component.ClassName);
+			if (scriptClassExists)
 				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.2f, 0.9f, 0.3f, 1.0f));
 			else
 				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.2f, 0.3f, 1.0f));
@@ -329,6 +330,64 @@ namespace OpenEngine {
 			ImGui::InputText("##Class", &component.ClassName);
 
 			ImGui::PopStyleColor();
+			
+			if (!scene->IsRunning() && scriptClassExists)
+			{
+				Ref<ScriptClass> entityClass = ScriptEngine::GetEntityClass(component.ClassName);
+				const auto& fields = entityClass->GetFields();
+
+				auto& entityFields = ScriptEngine::GetScriptFieldMap(entity);
+				for (const auto& [name, field] : fields)
+				{
+					if (entityFields.find(name) != entityFields.end())
+					{
+						ScriptFieldInstance& scriptField = entityFields.at(name);
+
+						// Display control to set it maybe
+						if (field.Type == ScriptFieldType::Float)
+						{
+							float data = scriptField.GetValue<float>();
+							if (UI::DragFloat(name.c_str(), &data))
+								scriptField.SetValue(data);
+						}
+					}
+					else
+					{
+						if (field.Type == ScriptFieldType::Float)
+						{
+							float data = 0.0f;
+							if (UI::DragFloat(name.c_str(), &data))
+							{
+								ScriptFieldInstance& fieldInstance = entityFields[name];
+								fieldInstance.Field = field;
+								fieldInstance.SetValue(data);
+							}
+						}
+					}
+				}
+
+				return;
+			}
+
+			Ref<ScriptInstance> scriptInstance = ScriptEngine::GetEntityScriptInstance(entity.GetUUID());
+			if (scriptInstance)
+			{
+				const auto& fields = scriptInstance->GetScriptClass()->GetFields();
+				for (const auto& [name, field] : fields)
+				{
+					if (field.Type == ScriptFieldType::Float)
+					{
+						float value = scriptInstance->GetFieldValue<float>(name);
+						UI::DragFloat(name, &value);
+						scriptInstance->SetFieldValue(name, value);
+					}
+					else if (field.Type == ScriptFieldType::Int)
+					{
+						int value = 23;
+						UI::DragInt(name, &value);
+					}
+				}
+			}
 		});
 
 		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [=](auto& component)

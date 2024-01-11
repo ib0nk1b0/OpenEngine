@@ -230,6 +230,8 @@ namespace OpenEngine {
 			}
 		}
 
+		m_IsRunning = true;
+
 		// TODO:
 		m_CursorEnabled = false;
 		if (m_Filepath == "assets\\Scenes\\CubeGame.openengine")
@@ -240,6 +242,8 @@ namespace OpenEngine {
 	{
 		OnPhysics2DStop();
 		ScriptEngine::OnRuntimeStop();
+
+		m_IsRunning = false;
 	}
 
 	void Scene::OnPhysics2DStart()

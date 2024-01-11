@@ -22,6 +22,9 @@ namespace OpenEngine {
 
 		Entity GetSelectedEntity() const { return m_SelectionContext; }
 		void SetSelectedEntity(Entity entity) { m_SelectionContext = entity; }
+
+		void SetSceneState(SceneState state) { m_SceneState = state; }
+		SceneState GetSceneState() { return m_SceneState; }
 	private:
 		void DrawEntityNode(Entity entity);
 		void DrawComponents(Entity entity);
@@ -33,6 +36,8 @@ namespace OpenEngine {
 		Entity m_SelectionContext;
 
 		Ref<Texture2D> m_ClearTextureImage;
+
+		SceneState m_SceneState = SceneState::Edit;
 	};
 
 }

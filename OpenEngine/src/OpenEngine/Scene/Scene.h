@@ -61,15 +61,15 @@ namespace OpenEngine {
 		std::vector<entt::entity> GetEntitiesWithParents();
 		std::vector<Material> GetMaterials() { return m_Materials; }
 		void SetMaterials(std::vector<Material> materials) { m_Materials = materials; }
-	// TODO: Remove
-	public:
-		bool m_RuntimeActive = false;
+
+		bool IsRunning() const { return m_IsRunning; }
 	private:
 		entt::registry m_Registry;
 		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 
 		std::string m_Filepath;
 
+		bool m_IsRunning = false;
 		bool m_CursorEnabled = true;
 		bool m_GridEnabled = true;
 		int m_GridSize = 8;
