@@ -124,6 +124,8 @@ namespace OpenEngine {
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
+			ExecuteMainThreadQueue();
+
 			if (!m_Minimised)
 			{
 				OE_PROFILE_SCOPE("LayerStack OnUpdate");
@@ -211,6 +213,13 @@ namespace OpenEngine {
 	void Application::AddTiming(const Timing& timing)
 	{
 		m_Timings.push_back(timing);
+	}
+
+	void Application::SubmitToMainThread(std::function<void()> func)
+	{
+		std::scoped_lock<std::mutex> lock(m_MainThreadQueueMutex);
+
+		m_MainThreadQueues.emplace_back(func);
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)
@@ -379,5 +388,15 @@ namespace OpenEngine {
 	bool Application::IsMaximised()
 	{
 		return (bool)glfwGetWindowAttrib((GLFWwindow*)m_Window.get(), GLFW_MAXIMIZED);
+	}
+
+	void Application::ExecuteMainThreadQueue()
+	{
+		std::scoped_lock<std::mutex> lock(m_MainThreadQueueMutex);
+
+		for (auto& func : m_MainThreadQueues)
+			func();
+
+		m_MainThreadQueues.clear();
 	}
 }

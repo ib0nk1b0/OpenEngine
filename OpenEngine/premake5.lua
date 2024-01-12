@@ -31,6 +31,7 @@ project "OpenEngine"
   {
     "%{wks.location}/OpenEngine/src",
     "%{wks.location}/OpenEngine/vendor/spdlog/include",
+    "%{IncludeDir.Filewatch}",
     "%{IncludeDir.GLFW}",
     "%{IncludeDir.Glad}",
     "%{IncludeDir.ImGui}",
@@ -43,7 +44,7 @@ project "OpenEngine"
     "%{IncludeDir.mono}",
     "%{IncludeDir.Box2D}",
     "%{IncludeDir.msdf_atlas_gen}",
-    "%{IncludeDir.msdfgen}"
+    "%{IncludeDir.msdfgen}",
     --"%{IncludeDir.VulkanSDK}"
   }
 

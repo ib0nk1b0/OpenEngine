@@ -1,6 +1,7 @@
 --VULKAN_SDK = os.getenv("VULKAN_SDK")
 
 IncludeDir = {}
+IncludeDir["Filewatch"] = "%{wks.location}/OpenEngine/vendor/Filewatch"
 IncludeDir["GLFW"] = "%{wks.location}/OpenEngine/vendor/GLFW/include"
 IncludeDir["Glad"] = "%{wks.location}/OpenEngine/vendor/Glad/include"
 IncludeDir["ImGui"] = "%{wks.location}/OpenEngine/vendor/imgui"
