@@ -44,7 +44,7 @@ namespace OpenEngine
 
         public Entity FindEntityByName(string name)
         {
-            ulong entityID = InternalCalls.Entity_FindEntityByName("Player");
+            ulong entityID = InternalCalls.Entity_FindEntityByName(name);
             
             if (entityID == 0)
                 return null;
