@@ -22,6 +22,7 @@ namespace OpenEngine {
 		std::string MonoStringToString(MonoString* string)
 		{
 			char* cStr = mono_string_to_utf8(string);
+			OE_CORE_WARN("{}", cStr);
 			std::string str(cStr);
 			mono_free(cStr);
 			return str;
@@ -33,47 +34,95 @@ namespace OpenEngine {
 
 #define OE_ADD_INTERNAL_CALL(Name) mono_add_internal_call("OpenEngine.InternalCalls::"#Name, Name)
 
+#pragma region Entity
+
+	static bool Entity_HasComponent(UUID entityID, MonoReflectionType* componentType)
+	{
+		Scene* scene = ScriptEngine::GetSceneContext();
+		OE_CORE_ASSERT(scene, "");
+		Entity entity = scene->GetEntityByUUID(entityID);
+		OE_CORE_ASSERT(entity, "");
+
+		MonoType* managedType = mono_reflection_type_get_type(componentType);
+		OE_CORE_ASSERT(s_EntityHasComponentFuncs.find(managedType) != s_EntityHasComponentFuncs.end(), "");
+		return s_EntityHasComponentFuncs.at(managedType)(entity);
+	}
+
+	static uint64_t Entity_FindEntityByName(MonoString* monoName)
+	{
+		Scene* scene = ScriptEngine::GetSceneContext();
+		OE_CORE_ASSERT(scene, "");
+		std::string name = Utils::MonoStringToString(monoName);
+		Entity entity = scene->GetEntityByName(name);
+		OE_CORE_ASSERT(entity, "");
+
+		if (!entity)
+			return 0;
+
+		return entity.GetUUID();
+	}
+
+#pragma endregion
+
 #pragma region TransformComponent
 
 	static void TransformComponent_GetTranslation(UUID entityID, glm::vec3* outTranslation)
 	{
 		Scene* scene = ScriptEngine::GetSceneContext();
+		OE_CORE_ASSERT(scene, "");
 		Entity entity = scene->GetEntityByUUID(entityID);
+		OE_CORE_ASSERT(entity, "");
+
 		*outTranslation = entity.GetComponent<TransformComponent>().Translation;
 	}
 
 	static void TransformComponent_SetTranslation(UUID entityID, glm::vec3* translation)
 	{
 		Scene* scene = ScriptEngine::GetSceneContext();
+		OE_CORE_ASSERT(scene, "");
 		Entity entity = scene->GetEntityByUUID(entityID);
+		OE_CORE_ASSERT(entity, "");
+
 		entity.GetComponent<TransformComponent>().Translation = *translation;
 	}
 
 	static void TransformComponent_GetRotation(UUID entityID, glm::vec3* outRotation)
 	{
 		Scene* scene = ScriptEngine::GetSceneContext();
+		OE_CORE_ASSERT(scene, "");
 		Entity entity = scene->GetEntityByUUID(entityID);
+		OE_CORE_ASSERT(entity, "");
+
 		*outRotation = entity.GetComponent<TransformComponent>().Rotation;
 	}
 
 	static void TransformComponent_SetRotation(UUID entityID, glm::vec3* rotation)
 	{
 		Scene* scene = ScriptEngine::GetSceneContext();
+		OE_CORE_ASSERT(scene, "");
 		Entity entity = scene->GetEntityByUUID(entityID);
+		OE_CORE_ASSERT(entity, "");
+
 		entity.GetComponent<TransformComponent>().Rotation = *rotation;
 	}
 
 	static void TransformComponent_GetScale(UUID entityID, glm::vec3* outScale)
 	{
 		Scene* scene = ScriptEngine::GetSceneContext();
+		OE_CORE_ASSERT(scene, "");
 		Entity entity = scene->GetEntityByUUID(entityID);
+		OE_CORE_ASSERT(entity, "");
+
 		*outScale = entity.GetComponent<TransformComponent>().Scale;
 	}
 
 	static void TransformComponent_SetScale(UUID entityID, glm::vec3* scale)
 	{
 		Scene* scene = ScriptEngine::GetSceneContext();
+		OE_CORE_ASSERT(scene, "");
 		Entity entity = scene->GetEntityByUUID(entityID);
+		OE_CORE_ASSERT(entity, "");
+
 		entity.GetComponent<TransformComponent>().Scale = *scale;
 	}
 
@@ -103,32 +152,6 @@ namespace OpenEngine {
 		auto& rigidbody2D = entity.GetComponent<RigidBody2DComponent>();
 		b2Body* body = (b2Body*)rigidbody2D.RuntimeBody;
 		body->ApplyLinearImpulseToCenter(b2Vec2(impulse->x, impulse->y), wake);
-	}
-
-#pragma endregion
-
-#pragma region Entity
-
-	static bool Entity_HasComponent(UUID entityID, MonoReflectionType* componentType)
-	{
-		Scene* scene = ScriptEngine::GetSceneContext();
-		Entity entity = scene->GetEntityByUUID(entityID);
-
-		MonoType* managedType = mono_reflection_type_get_type(componentType);
-		OE_CORE_ASSERT(s_EntityHasComponentFuncs.find(managedType) != s_EntityHasComponentFuncs.end(), "");
-		return s_EntityHasComponentFuncs.at(managedType)(entity);
-	}
-
-	static UUID Entity_FindEntityByName(MonoString* monoName)
-	{
-		char* cStr = mono_string_to_utf8(monoName);
-		Scene* scene = ScriptEngine::GetSceneContext();
-		Entity entity = scene->GetEntityByName(cStr);
-
-		if (!entity)
-			return 0;
-
-		return entity.GetUUID();
 	}
 
 #pragma endregion
@@ -192,6 +215,9 @@ namespace OpenEngine {
 
 	void ScriptGlue::RegisterFunctions()
 	{
+		OE_ADD_INTERNAL_CALL(Entity_HasComponent);
+		OE_ADD_INTERNAL_CALL(Entity_FindEntityByName);
+
 		OE_ADD_INTERNAL_CALL(TransformComponent_GetTranslation);
 		OE_ADD_INTERNAL_CALL(TransformComponent_SetTranslation);
 		OE_ADD_INTERNAL_CALL(TransformComponent_GetRotation);
@@ -201,9 +227,6 @@ namespace OpenEngine {
 
 		OE_ADD_INTERNAL_CALL(RigidBody2DComponent_ApplyLinearImpulse);
 		OE_ADD_INTERNAL_CALL(RigidBody2DComponent_ApplyLinearImpulseToCenter);
-
-		OE_ADD_INTERNAL_CALL(Entity_HasComponent);
-		OE_ADD_INTERNAL_CALL(Entity_FindEntityByName);
 
 		OE_ADD_INTERNAL_CALL(Input_IsKeyDown);
 

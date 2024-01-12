@@ -2,6 +2,7 @@
 
 #include "OpenEngine/Renderer/Renderer2D.h"
 #include "OpenEngine/Scene/Components.h"
+#include "OpenEngine/Scripting/ScriptEngine.h"
 #include "OpenEngine/Utils/PlatformUtils.h"
 #include "OpenEngine/Math/Math.h"
 #include "OpenEngine/Renderer/Font.h"
@@ -214,7 +215,7 @@ namespace OpenEngine {
 
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
-		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused && !m_ViewportHovered);
+		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportHovered);
 
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 
@@ -301,16 +302,6 @@ namespace OpenEngine {
 
 	void EditorLayer::ScenePlay()
 	{
-		if (m_EditorScene->GetFilepath() == "assets\\Scenes\\CubeGame.openengine")
-		{
-			if (!m_EditorScene->GetEntityByName("Player").HasComponent<NativeScriptComponent>())
-				m_EditorScene->GetEntityByName("Player").AddComponent<NativeScriptComponent>().Bind<Player>();
-			if (!m_EditorScene->GetEntityByName("Camera").HasComponent<NativeScriptComponent>())
-				m_EditorScene->GetEntityByName("Camera").AddComponent<NativeScriptComponent>().Bind<FPSCameraController>();
-			if (!m_EditorScene->GetEntityByName("CubeSpawner").HasComponent<NativeScriptComponent>())
-				m_EditorScene->GetEntityByName("CubeSpawner").AddComponent<NativeScriptComponent>().Bind<CubeSpawner>();
-		}
-
 		m_SceneState = SceneState::Play;
 		m_EditorScene->CopyTo(m_RuntimeScene);
 		m_RuntimeScene->SetFilepath(m_EditorScene->GetFilepath());
@@ -375,6 +366,14 @@ namespace OpenEngine {
 
 				ImGui::MenuItem("Renderer Stats", NULL, &m_DisplayStats);
 				ImGui::MenuItem("Editor Camera UI", NULL, &m_DisplayEditorCameraUI);
+
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Scripts"))
+			{
+				if (ImGui::MenuItem("Reload Assembly", "Ctrl+R"))
+					ScriptEngine::ReloadAssembly();
 
 				ImGui::EndMenu();
 			}
@@ -587,7 +586,7 @@ namespace OpenEngine {
 				{
 					m_EditorScene->ToggleGrid();
 				}
-			}
+			}			
 
 			// Gizmo shortcuts
 			if (m_SceneState == SceneState::Edit)
@@ -602,6 +601,11 @@ namespace OpenEngine {
 					m_GizmoType = ImGuizmo::OPERATION::ROTATE;
 					break;
 				case Key::R:
+					if (control)
+					{
+						ScriptEngine::ReloadAssembly();
+						break;
+					}
 					m_GizmoType = ImGuizmo::OPERATION::SCALE;
 					break;
 			}

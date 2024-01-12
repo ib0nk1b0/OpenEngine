@@ -133,6 +133,9 @@ namespace OpenEngine {
 		MonoAssembly* AppAssembly = nullptr;
 		MonoImage* AppAssemblyImage = nullptr;
 
+		std::string CoreAssemblyPath = "Resources/Scripts/OpenEngine-ScriptCore.dll";
+		std::string AppAssemblyPath = "SandboxProject/Assets/Scripts/Binaries/Sandbox.dll";
+
 		ScriptClass EntityClass;
 
 		std::unordered_map<std::string, Ref<ScriptClass>> EntityClasses;
@@ -148,8 +151,8 @@ namespace OpenEngine {
 	{
 		s_Data = new ScriptEngineData();
 		InitMono();
-		LoadAssembly("Resources/Scripts/OpenEngine-ScriptCore.dll");
-		LoadAppAssembly("SandboxProject/Assets/Scripts/Binaries/Sandbox.dll");
+		LoadAssembly(s_Data->CoreAssemblyPath);
+		LoadAppAssembly(s_Data->AppAssemblyPath);
 		LoadAssemblyClasses();
 
 		ScriptGlue::RegisterComponents();
@@ -205,7 +208,12 @@ namespace OpenEngine {
 
 	void ScriptEngine::ShutdownMono()
 	{
+		mono_domain_set(mono_get_root_domain(), false);
+
+		mono_domain_unload(s_Data->AppDomain);
 		s_Data->AppDomain = nullptr;
+
+		mono_jit_cleanup(s_Data->RootDomain);
 		s_Data->RootDomain = nullptr;
 	}
 
@@ -230,6 +238,22 @@ namespace OpenEngine {
 	{
 		s_Data->AppAssembly = Utils::LoadMonoAssembly(filepath);
 		s_Data->AppAssemblyImage = mono_assembly_get_image(s_Data->AppAssembly);
+	}
+
+	void ScriptEngine::ReloadAssembly()
+	{
+		mono_domain_set(mono_get_root_domain(), false);
+
+		mono_domain_unload(s_Data->AppDomain);
+
+		LoadAssembly(s_Data->CoreAssemblyPath);
+		LoadAppAssembly(s_Data->AppAssemblyPath);
+
+		LoadAssemblyClasses();
+
+		s_Data->EntityClass = ScriptClass("OpenEngine", "Entity", true);
+
+		ScriptGlue::RegisterComponents();
 	}
 
 	void ScriptEngine::OnRuntimeStart(Scene* scene)
@@ -312,10 +336,7 @@ namespace OpenEngine {
 			Ref<ScriptClass> scriptClass = CreateRef<ScriptClass>(nameSpace, name);
 			s_Data->EntityClasses[fullName] = scriptClass;
 
-			mono_class_num_fields(monoClass);
-
 			void* iterator = nullptr;
-			
 			while (MonoClassField* field = mono_class_get_fields(monoClass, &iterator))
 			{
 				const char* fieldName = mono_field_get_name(field);

@@ -2,7 +2,7 @@
     "Entities": [
         {
             "ID": 17662598558537029551,
-            "Tag": "Quad",
+            "Tag": "Player",
             "ParentComponent": {
                 "ParentName": "",
                 "ParentID": 0,
@@ -14,8 +14,8 @@
             },
             "TransformComponent": {
                 "Translation": [
-                    0.0,
-                    1.6815520524978638,
+                    0.01724099926650524,
+                    0.681551992893219,
                     0.0
                 ],
                 "Rotation": [
@@ -24,9 +24,9 @@
                     0.0
                 ],
                 "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    0.5,
+                    0.5,
+                    0.5
                 ]
             },
             "ScriptComponent": {
@@ -42,7 +42,7 @@
             },
             "RigidBody2DComponent": {
                 "Type": "Dynamic",
-                "FixedRotation": true
+                "FixedRotation": false
             },
             "BoxColider2DComponent": {
                 "Offset": [
@@ -53,8 +53,8 @@
                     0.5,
                     0.5
                 ],
-                "Density": 1.0,
-                "Friction": 0.5,
+                "Density": 2.0,
+                "Friction": 0.30000001192092896,
                 "Restitution": 0.0,
                 "RestitutionThreshold": 0.5
             }
@@ -73,7 +73,7 @@
             },
             "TransformComponent": {
                 "Translation": [
-                    -1.862645149230957e-09,
+                    -0.0,
                     4.5,
                     0.0
                 ],
@@ -87,6 +87,9 @@
                     1.0,
                     1.0
                 ]
+            },
+            "ScriptComponent": {
+                "ClassName": "Sandbox.Camera"
             },
             "EditorRendererComponent": {
                 "Color": [
@@ -288,17 +291,17 @@
             },
             "TransformComponent": {
                 "Translation": [
-                    0.5,
-                    3.5,
+                    -2.0941359996795654,
+                    5.091740131378174,
                     0.0
                 ],
                 "Rotation": [
                     0.0,
                     0.0,
-                    0.0
+                    0.4124319851398468
                 ],
                 "Scale": [
-                    2.5522940158843994,
+                    6.5772809982299805,
                     0.5,
                     1.0
                 ]
@@ -467,6 +470,62 @@
                 ],
                 "Scale": [
                     28.5,
+                    0.5,
+                    1.0
+                ]
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "RigidBody2DComponent": {
+                "Type": "Static",
+                "FixedRotation": false
+            },
+            "BoxColider2DComponent": {
+                "Offset": [
+                    0.0,
+                    0.0
+                ],
+                "Size": [
+                    0.5,
+                    0.5
+                ],
+                "Density": 1.0,
+                "Friction": 0.5,
+                "Restitution": 0.0,
+                "RestitutionThreshold": 0.5
+            }
+        },
+        {
+            "ID": 15968408445745123083,
+            "Tag": "Platform",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    -8.0,
+                    2.5,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    2.5522940158843994,
                     0.5,
                     1.0
                 ]

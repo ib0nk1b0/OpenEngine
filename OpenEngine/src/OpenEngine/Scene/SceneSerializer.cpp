@@ -257,11 +257,7 @@ namespace OpenEngine {
 			jsonData["Entities"] += jsonEntities[i];
 
 		std::ofstream jsonOut(filepath);
-#ifdef OE_DIST
-		jsonOut << jsonData;
-#else
 		jsonOut << std::setw(4) << jsonData;
-#endif
 	}
 
 	void SceneSerializer::Deserialize(const std::string& filepath)

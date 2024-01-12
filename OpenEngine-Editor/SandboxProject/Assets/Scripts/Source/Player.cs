@@ -5,8 +5,10 @@ namespace Sandbox
 {
     public class Player : Entity
     {
-        public float Speed = 1.0f;
-        public float JumpSpeed = 2.0f;
+        public float Speed;
+        public float JumpSpeed;
+
+        private float m_LastFrameY = 0.0f;
         private RigidBody2DComponent m_RigidBody2D;
 
         void OnCreate()
@@ -20,14 +22,16 @@ namespace Sandbox
             Vector3 velocity = Vector3.Zero;
             
             if (Input.IsKeyDown(KeyCode.A))
-                velocity.X -= Speed * ts;
+                velocity.X -= 1 * Speed * ts;
             if (Input.IsKeyDown(KeyCode.D))
-                velocity.X += Speed * ts;
+                velocity.X += 1 * Speed * ts;
 
-            if (Input.IsKeyDown(KeyCode.Space))
-                velocity.Y += JumpSpeed * ts;
+            if (Input.IsKeyDown(KeyCode.Space) && m_LastFrameY == Translation.Y)
+                velocity.Y += 10 * JumpSpeed * ts;
 
             m_RigidBody2D.ApplyLinearImpulse(velocity.XY, true);
+
+            m_LastFrameY = Translation.Y;
         }
     }
 }

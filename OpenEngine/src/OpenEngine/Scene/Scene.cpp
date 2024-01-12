@@ -187,7 +187,7 @@ namespace OpenEngine {
 		for (auto e : view)
 		{
 			if (m_Registry.get<TagComponent>(e).Tag == name)
-				entity = { e, this };
+				return { e, this };
 		}
 
 		return{};
