@@ -312,6 +312,7 @@ namespace OpenEngine {
 	void EditorLayer::SceneStop()
 	{
 		m_SceneState = SceneState::Edit;
+		m_RuntimeScene->OnRuntimeStop();
 		m_RuntimeScene = CreateRef<Scene>();
 		m_SceneHierarchyPanel.SetContext(m_EditorScene);
 		m_EditorScene->OnEditorStart();
@@ -421,10 +422,6 @@ namespace OpenEngine {
 			ImGui::Text("%s: %f ms", timing.Name.c_str(), timing.Time);
 
 		Application::Get().ClearTimings();
-		ImGui::End();
-
-		ImGui::Begin("TextureAtlas");
-		ImGui::Image((ImTextureID)s_Font->GetAtlasTexture()->GetRendererID(), { 512, 512 }, { 0, 1 }, { 1, 0 });
 		ImGui::End();
 	}
 

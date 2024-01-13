@@ -149,6 +149,7 @@ namespace OpenEngine {
 		bool AssemblyReloadPending = false;
 
 		Scene* SceneContext = nullptr;
+		bool SceneRunning = false;
 	};
 
 	static ScriptEngineData* s_Data;
@@ -242,7 +243,7 @@ namespace OpenEngine {
 
 	static void OnAppAssemblyFileSystemEvent(const std::string& path, const filewatch::Event change_type)
 	{
-		if (!s_Data->AssemblyReloadPending && change_type == filewatch::Event::modified)
+		if (s_Data->SceneRunning == false && !s_Data->AssemblyReloadPending && change_type == filewatch::Event::modified)
 		{
 			s_Data->AssemblyReloadPending = true;
 
@@ -283,12 +284,15 @@ namespace OpenEngine {
 	void ScriptEngine::OnRuntimeStart(Scene* scene)
 	{
 		s_Data->SceneContext = scene;
+		s_Data->SceneRunning = true;
 	}
 
 	void ScriptEngine::OnRuntimeStop()
 	{
 		s_Data->SceneContext = nullptr;
 		s_Data->EntityInstances.clear();
+		s_Data->SceneRunning = false;
+		ReloadAssembly();
 	}
 
 	void ScriptEngine::OnCreateEntity(Entity entity)

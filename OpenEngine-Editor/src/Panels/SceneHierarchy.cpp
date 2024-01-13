@@ -322,69 +322,129 @@ namespace OpenEngine {
 		DrawComponent<ScriptComponent>("Script Component", entity, [entity, scene = m_Context](auto& component) mutable
 		{
 			bool scriptClassExists = ScriptEngine::EntityClassExists(component.ClassName);
-			if (scriptClassExists)
-				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.2f, 0.9f, 0.3f, 1.0f));
-			else
-				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.2f, 0.3f, 1.0f));
-
-			ImGui::InputText("##Class", &component.ClassName);
-
-			ImGui::PopStyleColor();
 			
-			if (!scene->IsRunning() && scriptClassExists)
+			auto& classes = ScriptEngine::GetEntityClasses();
+			const char* scriptName = scriptClassExists ? component.ClassName.c_str() : "Script";
+			if (ImGui::Button(scriptName))
+				ImGui::OpenPopup("ScriptPopup");
+
+			static std::string className = "";
+			if (ImGui::BeginPopup("ScriptPopup"))
 			{
-				Ref<ScriptClass> entityClass = ScriptEngine::GetEntityClass(component.ClassName);
-				const auto& fields = entityClass->GetFields();
+				ImGui::InputText("##classname", &className);
 
-				auto& entityFields = ScriptEngine::GetScriptFieldMap(entity);
-				for (const auto& [name, field] : fields)
+				static int item_current_idx = -1; // Here we store our selection data as an index.
+				if (ImGui::BeginListBox("##listbox"))
 				{
-					if (entityFields.find(name) != entityFields.end())
+					int i = 0;
+					for (auto entityClass : classes)
 					{
-						ScriptFieldInstance& scriptField = entityFields.at(name);
+						std::string name = entityClass.first;
+						std::vector<std::string> strings = Utils::SplitSting(' ', className);
+						std::vector<bool> results;
+						bool contains = true;
 
-						// Display control to set it maybe
-						if (field.Type == ScriptFieldType::Float)
+						for (std::string str : strings)
 						{
-							float data = scriptField.GetValue<float>();
-							if (UI::DragFloat(name.c_str(), &data))
-								scriptField.SetValue(data);
+							std::string lowerCaseName = name;
+							std::transform(lowerCaseName.begin(), lowerCaseName.end(), lowerCaseName.begin(), ::tolower);
+							std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+							if (lowerCaseName.find(str) != std::string::npos)
+								results.push_back(true);
+							else
+								results.push_back(false);
+
 						}
-					}
-					else
-					{
-						if (field.Type == ScriptFieldType::Float)
+						
+						for (size_t i = 0; i < results.size(); i++)
 						{
-							float data = 0.0f;
-							if (UI::DragFloat(name.c_str(), &data))
+							if (results[i] == false)
+								contains = false;
+						}
+
+						if (!contains)
+							continue;
+						
+						const bool is_selected = (item_current_idx == i);
+						if (ImGui::Selectable(name.c_str(), is_selected))
+						{
+							item_current_idx = i;
+							component.ClassName = name;
+						}
+
+						// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+						if (is_selected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+
+						i++;
+					}
+					ImGui::EndListBox();
+				}
+
+				ImGui::EndPopup();
+			}		
+
+			if (true)
+			{
+				if (!scene->IsRunning() && scriptClassExists)
+				{
+					Ref<ScriptClass> entityClass = ScriptEngine::GetEntityClass(component.ClassName);
+					const auto& fields = entityClass->GetFields();
+
+					auto& entityFields = ScriptEngine::GetScriptFieldMap(entity);
+					for (const auto& [name, field] : fields)
+					{
+						if (entityFields.find(name) != entityFields.end())
+						{
+							ScriptFieldInstance& scriptField = entityFields.at(name);
+
+							if (field.Type == ScriptFieldType::Float)
 							{
-								ScriptFieldInstance& fieldInstance = entityFields[name];
-								fieldInstance.Field = field;
-								fieldInstance.SetValue(data);
+								float data = scriptField.GetValue<float>();
+								if (UI::DragFloat(name.c_str(), &data))
+									scriptField.SetValue(data);
+							}
+						}
+						else
+						{
+							if (field.Type == ScriptFieldType::Float)
+							{
+								float data = 0.0f;
+								if (UI::DragFloat(name.c_str(), &data))
+								{
+									ScriptFieldInstance& fieldInstance = entityFields[name];
+									fieldInstance.Field = field;
+									fieldInstance.SetValue(data);
+								}
 							}
 						}
 					}
+
+					return;
 				}
 
-				return;
-			}
-
-			Ref<ScriptInstance> scriptInstance = ScriptEngine::GetEntityScriptInstance(entity.GetUUID());
-			if (scriptInstance)
-			{
-				const auto& fields = scriptInstance->GetScriptClass()->GetFields();
-				for (const auto& [name, field] : fields)
+				if (scriptClassExists)
 				{
-					if (field.Type == ScriptFieldType::Float)
+					Ref<ScriptInstance> scriptInstance = ScriptEngine::GetEntityScriptInstance(entity.GetUUID());
+					if (scriptInstance)
 					{
-						float value = scriptInstance->GetFieldValue<float>(name);
-						UI::DragFloat(name, &value);
-						scriptInstance->SetFieldValue(name, value);
-					}
-					else if (field.Type == ScriptFieldType::Int)
-					{
-						int value = 23;
-						UI::DragInt(name, &value);
+						const auto& fields = scriptInstance->GetScriptClass()->GetFields();
+						for (const auto& [name, field] : fields)
+						{
+							if (field.Type == ScriptFieldType::Float)
+							{
+								float value = scriptInstance->GetFieldValue<float>(name);
+								UI::DragFloat(name, &value);
+								scriptInstance->SetFieldValue(name, value);
+							}
+							else if (field.Type == ScriptFieldType::Int)
+							{
+								int value = 23;
+								UI::DragInt(name, &value);
+							}
+						}
 					}
 				}
 			}
