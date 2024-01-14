@@ -6,6 +6,7 @@
 #include "OpenEngine/Utils/PlatformUtils.h"
 #include "OpenEngine/ImGui/ImGuiExtended.h"
 #include "OpenEngine/ImGui/ImGuiFonts.h"
+#include "OpenEngine/Scripting/ScriptEngine.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
@@ -269,15 +270,16 @@ namespace OpenEngine {
 		if (ImGui::BeginPopup("AddComponent"))
 		{
 			AddComponentItem<TransformComponent>("Transform", entity);
+			AddComponentItem<CameraComponent>("Camera", entity);
+			AddComponentItem<ScriptComponent>("Script", entity);
 			AddComponentItem<SpriteRendererComponent>("Sprite Renderer", entity);
 			AddComponentItem<CircleRendererComponent>("Circle Renderer", entity);
 			AddComponentItem<EditorRendererComponent>("Editor Renderer", entity);
 			AddComponentItem<MeshComponent>("Mesh", entity);
-			AddComponentItem<CameraComponent>("Camera", entity);
-			AddComponentItem<RigidBody2DComponent>("RigidBody2D", entity);
-			AddComponentItem<BoxColider2DComponent>("BoxColider2D", entity);
-			AddComponentItem<CircleColider2DComponent>("CircleColider2D", entity);
-			AddComponentItem<TextComponent>("TextComponent", entity);
+			AddComponentItem<TextComponent>("Text", entity);
+			AddComponentItem<RigidBody2DComponent>("Rigid Body 2D", entity);
+			AddComponentItem<BoxColider2DComponent>("Box Colider 2D", entity);
+			AddComponentItem<CircleColider2DComponent>("Circle Colider 2D", entity);
 
 			ImGui::EndPopup();
 		}
@@ -315,6 +317,137 @@ namespace OpenEngine {
 			UI::Vec3Controls("Rotation", rotation);
 			component.Rotation = glm::radians(rotation);
 			UI::Vec3Controls("Scale", component.Scale, 1.0f);
+		});
+
+		DrawComponent<ScriptComponent>("Script Component", entity, [entity, scene = m_Context](auto& component) mutable
+		{
+			bool scriptClassExists = ScriptEngine::EntityClassExists(component.ClassName);
+			
+			auto& classes = ScriptEngine::GetEntityClasses();
+			const char* scriptName = scriptClassExists ? component.ClassName.c_str() : "Script";
+			if (ImGui::Button(scriptName))
+				ImGui::OpenPopup("ScriptPopup");
+
+			static std::string className = "";
+			if (ImGui::BeginPopup("ScriptPopup"))
+			{
+				ImGui::InputText("##classname", &className);
+
+				static int item_current_idx = -1; // Here we store our selection data as an index.
+				if (ImGui::BeginListBox("##listbox"))
+				{
+					int i = 0;
+					for (auto entityClass : classes)
+					{
+						std::string name = entityClass.first;
+						std::vector<std::string> strings = Utils::SplitSting(' ', className);
+						std::vector<bool> results;
+						bool contains = true;
+
+						for (std::string str : strings)
+						{
+							std::string lowerCaseName = name;
+							std::transform(lowerCaseName.begin(), lowerCaseName.end(), lowerCaseName.begin(), ::tolower);
+							std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+							if (lowerCaseName.find(str) != std::string::npos)
+								results.push_back(true);
+							else
+								results.push_back(false);
+
+						}
+						
+						for (size_t i = 0; i < results.size(); i++)
+						{
+							if (results[i] == false)
+								contains = false;
+						}
+
+						if (!contains)
+							continue;
+						
+						const bool is_selected = (item_current_idx == i);
+						if (ImGui::Selectable(name.c_str(), is_selected))
+						{
+							item_current_idx = i;
+							component.ClassName = name;
+						}
+
+						// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+						if (is_selected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+
+						i++;
+					}
+					ImGui::EndListBox();
+				}
+
+				ImGui::EndPopup();
+			}		
+
+			if (true)
+			{
+				if (!scene->IsRunning() && scriptClassExists)
+				{
+					Ref<ScriptClass> entityClass = ScriptEngine::GetEntityClass(component.ClassName);
+					const auto& fields = entityClass->GetFields();
+
+					auto& entityFields = ScriptEngine::GetScriptFieldMap(entity);
+					for (const auto& [name, field] : fields)
+					{
+						if (entityFields.find(name) != entityFields.end())
+						{
+							ScriptFieldInstance& scriptField = entityFields.at(name);
+
+							if (field.Type == ScriptFieldType::Float)
+							{
+								float data = scriptField.GetValue<float>();
+								if (UI::DragFloat(name.c_str(), &data))
+									scriptField.SetValue(data);
+							}
+						}
+						else
+						{
+							if (field.Type == ScriptFieldType::Float)
+							{
+								float data = 0.0f;
+								if (UI::DragFloat(name.c_str(), &data))
+								{
+									ScriptFieldInstance& fieldInstance = entityFields[name];
+									fieldInstance.Field = field;
+									fieldInstance.SetValue(data);
+								}
+							}
+						}
+					}
+
+					return;
+				}
+
+				if (scriptClassExists)
+				{
+					Ref<ScriptInstance> scriptInstance = ScriptEngine::GetEntityScriptInstance(entity.GetUUID());
+					if (scriptInstance)
+					{
+						const auto& fields = scriptInstance->GetScriptClass()->GetFields();
+						for (const auto& [name, field] : fields)
+						{
+							if (field.Type == ScriptFieldType::Float)
+							{
+								float value = scriptInstance->GetFieldValue<float>(name);
+								UI::DragFloat(name, &value);
+								scriptInstance->SetFieldValue(name, value);
+							}
+							else if (field.Type == ScriptFieldType::Int)
+							{
+								int value = 23;
+								UI::DragInt(name, &value);
+							}
+						}
+					}
+				}
+			}
 		});
 
 		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [=](auto& component)

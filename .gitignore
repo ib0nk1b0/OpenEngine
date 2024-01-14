@@ -2,7 +2,14 @@
 .vs/
 bin/
 bin-int/
+Binaries/
+Intermediates/
 
 #files
-*.user
-*.json
+**.vcxproj
+**.vcxproj.user
+**.vcxproj.filters
+**.sln
+**.json
+**.csproj
+**.csproj.user

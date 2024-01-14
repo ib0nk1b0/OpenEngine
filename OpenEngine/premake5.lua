@@ -20,7 +20,6 @@ project "OpenEngine"
     "vendor/glm/glm/**.inl",
     "vendor/ImGuizmo/ImGuizmo.h",
     "vendor/ImGuizmo/ImGuizmo.cpp",
-    
   }
 
   defines
@@ -32,6 +31,7 @@ project "OpenEngine"
   {
     "%{wks.location}/OpenEngine/src",
     "%{wks.location}/OpenEngine/vendor/spdlog/include",
+    "%{IncludeDir.Filewatch}",
     "%{IncludeDir.GLFW}",
     "%{IncludeDir.Glad}",
     "%{IncludeDir.ImGui}",
@@ -41,9 +41,10 @@ project "OpenEngine"
     "%{IncludeDir.ImGuizmo}",
     "%{IncludeDir.json}",
     "%{IncludeDir.Assimp}",
+    "%{IncludeDir.mono}",
     "%{IncludeDir.Box2D}",
     "%{IncludeDir.msdf_atlas_gen}",
-    "%{IncludeDir.msdfgen}"
+    "%{IncludeDir.msdfgen}",
     --"%{IncludeDir.VulkanSDK}"
   }
 
@@ -53,10 +54,12 @@ project "OpenEngine"
     "GLFW",
     "Glad",
     "ImGui",
-    "./vendor/Assimp/lib/x64/assimp-vc143-mt.lib",
     "msdf-atlas-gen",
+    "opengl32.lib",
+    
+    "%{Library.Assimp}",
+    "%{Library.mono}",
     --"%{Library.Vulkan}",
-    "opengl32.lib"
   }
 
   filter "files:vendor/ImGuizmo/**.cpp"
@@ -72,6 +75,14 @@ project "OpenEngine"
     {
     	"OE_PLATFORM_WINDOWS",
     	"GLFW_INCLUDE_NONE"
+    }
+
+    links
+    {
+      "%{Library.WinSock}",
+      "%{Library.WinMM}",
+      "%{Library.WinVersion}",
+      "%{Library.BCrypt}"
     }
 
   filter "configurations:Debug"

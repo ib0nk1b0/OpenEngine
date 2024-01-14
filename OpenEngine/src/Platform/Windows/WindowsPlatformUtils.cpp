@@ -92,4 +92,21 @@ namespace OpenEngine {
 		return filepath;
 	}
 
+	std::vector<std::string> Utils::SplitSting(char delimeter, std::string originalString)
+	{
+		std::vector<std::string> strings;
+
+		size_t numberOfDelimeter = (int)std::count(originalString.begin(), originalString.end(), delimeter);
+		for (size_t i = 0; i < numberOfDelimeter; i++)
+		{
+			size_t pos = originalString.find(delimeter);
+			strings.push_back(originalString.substr(0, pos));
+			originalString.erase(0, pos + 1);
+		}
+
+		strings.push_back(originalString);
+
+		return strings;
+	}
+
 }

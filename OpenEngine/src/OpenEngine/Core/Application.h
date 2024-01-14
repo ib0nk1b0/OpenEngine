@@ -55,12 +55,15 @@ namespace OpenEngine {
 		void AddTiming(const Timing& timing);
 
 		void ClearTimings() { m_Timings.clear(); }
+
+		void SubmitToMainThread(std::function<void()> func);
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
 		void UI_DrawTitlebar(float& titlebarOutHeight);
 		void UI_DrawMenubar();
 		bool IsMaximised();
+		void ExecuteMainThreadQueue();
 	private:
 		std::string m_Name;
 		ApplicationSpecification m_Specification;
@@ -78,6 +81,9 @@ namespace OpenEngine {
 		bool m_MemTracking = true;
 
 		std::vector<Timing> m_Timings;
+
+		std::vector<std::function<void()>> m_MainThreadQueues;
+		std::mutex m_MainThreadQueueMutex;
 	private:
 		static Application* s_Instance;
 	};

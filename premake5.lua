@@ -23,6 +23,7 @@ group ""
 
 group "Core"
   include "OpenEngine"
+  include "OpenEngine-ScriptCore"
 group ""
 
 group "Tools"

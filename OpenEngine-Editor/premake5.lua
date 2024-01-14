@@ -20,7 +20,8 @@ project "OpenEngine-Editor"
 		"%{wks.location}/OpenEngine/vendor",
     "%{IncludeDir.glm}",
     "%{IncludeDir.entt}",
-    "%{IncludeDir.json}"
+    "%{IncludeDir.json}",
+    "%{IncludeDir.Filewatch}"
   }
 
   links

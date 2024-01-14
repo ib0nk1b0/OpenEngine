@@ -93,6 +93,14 @@ namespace OpenEngine {
 				};
 			}
 
+			if (entity.HasComponent<ScriptComponent>())
+			{
+				auto& sc = entity.GetComponent<ScriptComponent>();
+				e["ScriptComponent"] = {
+					{ "ClassName", sc.ClassName },
+				};
+			}
+
 			if (entity.HasComponent<SpriteRendererComponent>())
 			{
 				auto& src = entity.GetComponent<SpriteRendererComponent>();
@@ -249,11 +257,7 @@ namespace OpenEngine {
 			jsonData["Entities"] += jsonEntities[i];
 
 		std::ofstream jsonOut(filepath);
-#ifdef OE_DIST
-		jsonOut << jsonData;
-#else
 		jsonOut << std::setw(4) << jsonData;
-#endif
 	}
 
 	void SceneSerializer::Deserialize(const std::string& filepath)
@@ -294,6 +298,14 @@ namespace OpenEngine {
 					Decode(ConvertFloat3(jsonTransform["Translation"]), transformComponent.Translation);
 					Decode(ConvertFloat3(jsonTransform["Rotation"]), transformComponent.Rotation);
 					Decode(ConvertFloat3(jsonTransform["Scale"]), transformComponent.Scale);
+				}
+
+				if (value.contains("ScriptComponent"))
+				{
+					auto& jsonScript = value["ScriptComponent"];
+					auto& scriptComponent = entity.AddComponent<ScriptComponent>();
+
+					scriptComponent.ClassName = jsonScript["ClassName"].get<std::string>();
 				}
 
 				if (value.contains("SpriteRendererComponent"))
@@ -381,6 +393,7 @@ namespace OpenEngine {
 					auto& rgbd2DComponent = entity.AddComponent<RigidBody2DComponent>();
 
 					rgbd2DComponent.Type = BodyTypeFromString(jsonRGBD2D["Type"].get<std::string>());
+					rgbd2DComponent.FixedRotation = jsonRGBD2D["FixedRotation"].get<bool>();
 				}
 
 				if (value.contains("BoxColider2DComponent"))

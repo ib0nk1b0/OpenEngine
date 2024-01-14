@@ -4,6 +4,7 @@
 #include "OpenEngine/Core/Random.h"
 #include "OpenEngine/Renderer/Renderer.h"
 #include "OpenEngine/Debug/Instrumentor.h"
+#include "OpenEngine/Scripting/ScriptEngine.h"
 
 #include "Input.h"
 
@@ -59,6 +60,7 @@ namespace OpenEngine {
 			std::filesystem::current_path(m_Specification.WorkingDirectory);
 
 		Renderer::Init();
+		ScriptEngine::Init();
 		Random::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
@@ -68,6 +70,8 @@ namespace OpenEngine {
 	Application::~Application()
 	{
 		OE_PROFILE_FUNCTION();
+
+		ScriptEngine::Shutdown();
 	}
 
 	void Application::PushLayer(Layer* layer)
@@ -119,6 +123,8 @@ namespace OpenEngine {
 			float time = (float)glfwGetTime(); // Platform::GetTime();
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
+
+			ExecuteMainThreadQueue();
 
 			if (!m_Minimised)
 			{
@@ -207,6 +213,13 @@ namespace OpenEngine {
 	void Application::AddTiming(const Timing& timing)
 	{
 		m_Timings.push_back(timing);
+	}
+
+	void Application::SubmitToMainThread(std::function<void()> func)
+	{
+		std::scoped_lock<std::mutex> lock(m_MainThreadQueueMutex);
+
+		m_MainThreadQueues.emplace_back(func);
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)
@@ -375,5 +388,15 @@ namespace OpenEngine {
 	bool Application::IsMaximised()
 	{
 		return (bool)glfwGetWindowAttrib((GLFWwindow*)m_Window.get(), GLFW_MAXIMIZED);
+	}
+
+	void Application::ExecuteMainThreadQueue()
+	{
+		std::scoped_lock<std::mutex> lock(m_MainThreadQueueMutex);
+
+		for (auto& func : m_MainThreadQueues)
+			func();
+
+		m_MainThreadQueues.clear();
 	}
 }
