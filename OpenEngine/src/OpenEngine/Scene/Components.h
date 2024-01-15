@@ -4,6 +4,7 @@
 #include "OpenEngine/Renderer/Renderer2D.h"
 #include "OpenEngine/Scene/SceneCamera.h"
 #include "OpenEngine/Renderer/Renderer.h"
+#include "OpenEngine/Asset/Asset.h"
 
 #include <filesystem>
 
@@ -73,15 +74,13 @@ namespace OpenEngine {
 	struct SpriteRendererComponent
 	{
 		glm::vec4 Color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		Ref<Texture2D> Texture;
+		AssetHandle Texture = 0;
 		float Scale = 1.0f;
 
 		SpriteRendererComponent() = default;
 		SpriteRendererComponent(const SpriteRendererComponent&) = default;
 		SpriteRendererComponent(const glm::vec4& color)
 			: Color(color) {}
-		SpriteRendererComponent(const Ref<Texture2D>& texture, float scale = 1.0f)
-			: Texture(texture), Scale(scale) {}
 	};
 
 	struct CircleRendererComponent
@@ -99,20 +98,17 @@ namespace OpenEngine {
 	struct EditorRendererComponent
 	{
 		glm::vec4 Color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		Ref<Texture2D> Texture;
+		AssetHandle Texture = 0;
 
 		EditorRendererComponent() = default;
 		EditorRendererComponent(const EditorRendererComponent&) = default;
 		EditorRendererComponent(const glm::vec4& color)
 			: Color(color) {}
-		EditorRendererComponent(const Ref<Texture2D>& texture)
-			: Texture(texture) {}
 	};
 
 	struct MeshComponent
 	{
-		//std::filesystem::path Filepath;
-		std::string Filepath = "null";
+		AssetHandle MeshHandle = 0;
 		int MaterialIndex = 0;
 
 		MeshComponent() = default;

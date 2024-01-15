@@ -1,9 +1,11 @@
 #pragma once
 
-#include <string>
-#include <glm/glm.hpp>
-
 #include "OpenEngine/Core/Core.h"
+#include "OpenEngine/Asset/Asset.h"
+
+#include <string>
+
+#include <glm/glm.hpp>
 
 namespace OpenEngine {
 
@@ -24,7 +26,7 @@ namespace OpenEngine {
 		bool GenerateMips = true;
 	};
 
-	class Texture
+	class Texture : public Asset
 	{
 	public:
 		virtual ~Texture() = default;
@@ -49,6 +51,9 @@ namespace OpenEngine {
 	public:
 		static Ref<Texture2D> Create(const TextureSpecification& specification);
 		static Ref<Texture2D> Create(const std::string& path);
+
+		static AssetType GetStaticType() { return AssetType::Texture2D; }
+		virtual AssetType GetType() const { return GetStaticType(); }
 	};
 
 }

@@ -1,11 +1,12 @@
 #include "EditorLayer.h"
 
+#include "OpenEngine/Asset/AssetManager.h"
+#include "OpenEngine/Math/Math.h"
 #include "OpenEngine/Renderer/Renderer2D.h"
+#include "OpenEngine/Renderer/Font.h"
 #include "OpenEngine/Scene/Components.h"
 #include "OpenEngine/Scripting/ScriptEngine.h"
 #include "OpenEngine/Utils/PlatformUtils.h"
-#include "OpenEngine/Math/Math.h"
-#include "OpenEngine/Renderer/Font.h"
 
 #include "OpenEngine/ImGui/ImGuiFonts.h"
 
@@ -15,12 +16,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <EnTT/include/entt.hpp>
-
-#include "FPSCameraController.h"
-#include "FlappyBird/Player.h"
-#include "FlappyBird/Camera.h"
-#include "FlappyBird/Ground.h"
-#include "CubeSpawner.h"
 
 namespace OpenEngine {
 
@@ -236,8 +231,8 @@ namespace OpenEngine {
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 			{
-				const wchar_t* path = (const wchar_t*)payload->Data;
-				OpenScene(Project::GetAssetFilesystemPath(path));
+				AssetHandle handle = *(AssetHandle*)payload->Data;
+				OpenScene(handle);
 			}
 			ImGui::EndDragDropTarget();
 		}
@@ -641,8 +636,9 @@ namespace OpenEngine {
 	{
 		if (Project::Load(filepath))
 		{
-			auto startScenePath = Project::GetAssetFilesystemPath(Project::GetActive()->GetConfig().StartScene);
-			OpenScene(startScenePath);
+			AssetHandle startScene = Project::GetActive()->GetConfig().StartScene;
+			if (startScene)
+				OpenScene(startScene);
 			m_ContentBrowserPanel = CreateScope<ContentBrowserPanel>();
 		}
 	}
@@ -665,20 +661,23 @@ namespace OpenEngine {
 
 	void EditorLayer::OpenScene()
 	{
-		std::string filepath = FileDialogs::OpenFile("OpenEngine Scene (*.openengine)\0*.openengine\0");
+		/*std::string filepath = FileDialogs::OpenFile("OpenEngine Scene (*.openengine)\0*.openengine\0");
 		if (!filepath.empty())
-			OpenScene(filepath);
+			OpenScene(filepath);*/
 	}
 
-	void EditorLayer::OpenScene(const std::filesystem::path& filepath)
+	void EditorLayer::OpenScene(AssetHandle handle)
 	{
-		if (FileDialogs::IsValidFile(filepath, ".openengine"))
-		{
-			NewScene(filepath.string());
+		Ref<Scene> readOnlyScene = AssetManager::GetAsset<Scene>(handle);
+		Ref<Scene> newScene;
+		readOnlyScene->CopyTo(newScene);
 
-			SceneSerializer serializer(m_EditorScene);
-			serializer.Deserialize(filepath.string());
-		}
+		m_EditorScene = newScene;
+		m_SceneHierarchyPanel.SetContext(m_EditorScene);
+
+		m_ActiveScene = m_EditorScene;
+		std::filesystem::path editorPath(Project::GetActive()->GetEditorAssetManager()->GetFilePath(handle));
+		m_EditorScene->SetFilepath(editorPath.string());
 	}
 
 	void EditorLayer::SaveScene()

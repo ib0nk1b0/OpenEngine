@@ -106,7 +106,7 @@ namespace OpenEngine {
 		if (other.HasComponent<MeshComponent>())
 		{
 			auto& mc = newEntity.AddComponent<MeshComponent>();
-			mc.Filepath = other.GetComponent<MeshComponent>().Filepath;
+			mc.MeshHandle = other.GetComponent<MeshComponent>().MeshHandle;
 			mc.MaterialIndex = other.GetComponent<MeshComponent>().MaterialIndex;
 		}
 
@@ -349,7 +349,7 @@ namespace OpenEngine {
 
 			Renderer::BeginScene(camera, lights);
 
-			auto view = m_Registry.view<TransformComponent, MeshComponent>();
+			/*auto view = m_Registry.view<TransformComponent, MeshComponent>();
 			for (auto entity : view)
 			{
 				auto [transform, meshComponent] = view.get<TransformComponent, MeshComponent>(entity);
@@ -378,7 +378,7 @@ namespace OpenEngine {
 
 					Renderer::Submit(m_Meshes[index], transform.GetTransform(), material, (int)entity);
 				}
-			}
+			}*/
 
 			Renderer::EndScene(m_Meshes);
 		}
@@ -392,9 +392,9 @@ namespace OpenEngine {
 				{
 					auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-					if (sprite.Texture)
+					/*if (sprite.Texture)
 						Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color, sprite.Scale, (int)entity);
-					else
+					else*/
 						Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color, (int)entity);
 				}
 			}
@@ -428,9 +428,9 @@ namespace OpenEngine {
 				{
 					auto [transform, sprite] = view.get<TransformComponent, EditorRendererComponent>(entity);
 
-					if (sprite.Texture)
+					/*if (sprite.Texture)
 						Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color, 1.0f, (int)entity);
-					else
+					else*/
 						Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color, (int)entity);
 				}
 			}
@@ -531,7 +531,7 @@ namespace OpenEngine {
 
 			Renderer::BeginScene(*mainCamera, cameraTransform, lights);
 
-			{
+			/*{
 				auto view = m_Registry.view<TransformComponent, MeshComponent>();
 				for (auto entity : view)
 				{
@@ -562,7 +562,7 @@ namespace OpenEngine {
 						Renderer::Submit(m_Meshes[index], transform.GetTransform(), material, (int)entity);
 					}
 				}
-			}
+			}*/
 
 			Renderer::EndScene(m_Meshes);
 
@@ -574,9 +574,9 @@ namespace OpenEngine {
 				{
 					auto [transform, sprite] = view.get<TransformComponent, SpriteRendererComponent>(entity);
 
-					if (sprite.Texture)
+					/*if (sprite.Texture)
 						Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color, sprite.Scale, (int)entity);
-					else
+					else*/
 						Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color, (int)entity);
 				}
 			}
@@ -661,7 +661,7 @@ namespace OpenEngine {
 				if (entity.HasComponent<MeshComponent>())
 				{
 					auto& mesh = newEntity.AddComponent<MeshComponent>();
-					mesh.Filepath = entity.GetComponent<MeshComponent>().Filepath;
+					mesh.MeshHandle = entity.GetComponent<MeshComponent>().MeshHandle;
 					mesh.MaterialIndex = entity.GetComponent<MeshComponent>().MaterialIndex;
 				}
 

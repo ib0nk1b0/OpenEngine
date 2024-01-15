@@ -4,6 +4,7 @@
 #include "OpenEngine/Core/UUID.h"
 #include "OpenEngine/Renderer/EditorCamera.h"
 #include "OpenEngine/Renderer/Renderer.h"
+#include "OpenEngine/Asset/Asset.h"
 
 #include "entt.hpp"
 
@@ -17,7 +18,8 @@ namespace OpenEngine {
 		Edit = 0, Play
 	};
 
-	class Scene {
+	class Scene : public Asset
+	{
 	public:
 		Scene();
 		~Scene();
@@ -25,6 +27,8 @@ namespace OpenEngine {
 		Entity CreateEntity(const std::string& name = std::string());
 		Entity CreateEntityWithUUID(UUID uuid, const std::string& name = std::string());
 		void DestroyEntity(Entity entity);
+
+		virtual AssetType GetType() const { return AssetType::Scene; }
 
 		Entity DuplicateEntity(Entity other);
 		Entity GetEntityByUUID(UUID uuid);

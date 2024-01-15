@@ -17,11 +17,11 @@ namespace OpenEngine {
 
 	void CubeSpawner::SpawnCube()
 	{
-		auto cube = CreateEntity("Cube");
+		/*auto cube = CreateEntity("Cube");
 		auto& meshComponent = cube.AddComponent<MeshComponent>();
 		meshComponent.Filepath = "assets/Models/Cube.obj";
 		auto& tranform = cube.GetComponent<TransformComponent>();
-		tranform.Translation = { Random::Float(-5.0f, 5.0f), Random::Float(0.0f, 5.0f), Random::Float(-5.0f, 5.0f) };
+		tranform.Translation = { Random::Float(-5.0f, 5.0f), Random::Float(0.0f, 5.0f), Random::Float(-5.0f, 5.0f) };*/
 	}
 
 }

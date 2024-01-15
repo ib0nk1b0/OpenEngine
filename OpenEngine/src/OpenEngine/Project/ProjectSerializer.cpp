@@ -16,8 +16,9 @@ namespace OpenEngine {
 		jsonData["Project"] =
 		{
 			{ "Name", config.Name },
-			{ "StartScene", config.StartScene },
+			{ "StartScene", (uint64_t)config.StartScene },
 			{ "AssetDirectory", config.AssetDirectory },
+			{ "AssetRegistryPath", config.AssetRegistryPath },
 			{ "ScriptModulePath", config.ScriptModulePath },
 		};
 
@@ -38,8 +39,10 @@ namespace OpenEngine {
 		if (deserializedJson.contains("Project"))
 		{
 			config.Name = deserializedJson["Project"]["Name"].get<std::string>();
-			config.StartScene = deserializedJson["Project"]["StartScene"].get<std::string>();
+			config.StartScene = deserializedJson["Project"]["StartScene"].get<uint64_t>();
 			config.AssetDirectory = deserializedJson["Project"]["AssetDirectory"].get<std::string>();
+			if (deserializedJson["Project"].contains("AssetRegistryPath"))
+				config.AssetRegistryPath = deserializedJson["Project"]["AssetRegistryPath"].get<std::string>();
 			config.ScriptModulePath = deserializedJson["Project"]["ScriptModulePath"].get<std::string>();
 
 			return true;

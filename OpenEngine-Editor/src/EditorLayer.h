@@ -39,7 +39,7 @@ namespace OpenEngine {
 
 		void NewScene(const std::string& filepath = "UntitledScene.openengine");
 		void OpenScene();
-		void OpenScene(const std::filesystem::path& filepath);
+		void OpenScene(AssetHandle handle);
 		void SaveScene();
 		void SaveSceneAs();
 

@@ -4,6 +4,7 @@
 #include "OpenEngine/Project/Project.h"
 #include "OpenEngine/Scene/Entity.h"
 #include "OpenEngine/Serialization/Serializer.h"
+#include "OpenEngine/Asset/Asset.h"
 
 namespace OpenEngine {
 
@@ -108,7 +109,7 @@ namespace OpenEngine {
 				{
 					e["SpriteRendererComponent"] = {
 						{ "Color", Encode(src.Color) },
-						{ "Texture", Utils::FormatFilepath(src.Texture->GetFilePath()) },
+						{ "TextureHandle", (uint64_t)src.Texture },
 						{ "Scale", src.Scale }
 					};
 				}
@@ -127,7 +128,7 @@ namespace OpenEngine {
 				{
 					e["EditorRendererComponent"] = {
 						{ "Color", { erc.Color.r, erc.Color.g, erc.Color.b, erc.Color.a } },
-						{ "Texture", Utils::FormatFilepath(erc.Texture->GetFilePath()) },
+						{ "TextureHandle", (uint64_t)erc.Texture },
 					};
 				}
 				else
@@ -152,7 +153,7 @@ namespace OpenEngine {
 			{
 				auto& mc = entity.GetComponent<MeshComponent>();
 				e["MeshComponent"] = {
-					{ "Filepath", Utils::FormatFilepath(mc.Filepath) },
+					{ "MeshHandle", (uint64_t)mc.MeshHandle },
 					{ "MaterialIndex", mc.MaterialIndex }
 				};
 			}
@@ -314,11 +315,9 @@ namespace OpenEngine {
 					auto& src = entity.AddComponent<SpriteRendererComponent>();
 
 					Decode(ConvertFloat4(jsonSpriteRenderer["Color"]), src.Color);
-					if (jsonSpriteRenderer.contains("Texture"))
+					if (jsonSpriteRenderer.contains("TextureHandle"))
 					{
-						std::string texturePath = jsonSpriteRenderer["Texture"].get<std::string>();
-						auto fullTexturePath = Project::GetAssetFilesystemPath(texturePath);
-						src.Texture = Texture2D::Create(fullTexturePath.string());
+						src.Texture = jsonSpriteRenderer["TextureHandle"].get<uint64_t>();
 						src.Scale = jsonSpriteRenderer["Scale"].get<float>();
 					}
 				}
@@ -329,11 +328,9 @@ namespace OpenEngine {
 					auto& erc = entity.AddComponent<EditorRendererComponent>();
 
 					Decode(ConvertFloat4(jsonEditotRenderer["Color"]), erc.Color);
-					if (jsonEditotRenderer.contains("Texture"))
+					if (jsonEditotRenderer.contains("TextureHandle"))
 					{
-						std::string texturePath = jsonEditotRenderer["Texture"].get<std::string>();
-						auto fullTexturePath = Project::GetAssetFilesystemPath(texturePath);
-						erc.Texture = Texture2D::Create(fullTexturePath.string());
+						erc.Texture = jsonEditotRenderer["TextureHandle"].get<uint64_t>();
 					}
 				}
 
@@ -352,7 +349,7 @@ namespace OpenEngine {
 					auto& jsonMeshComponent = value["MeshComponent"];
 					auto& mc = entity.AddComponent<MeshComponent>();
 
-					mc.Filepath = jsonMeshComponent["Filepath"].get<std::string>();
+					mc.MeshHandle = jsonMeshComponent["MeshHandle"].get<uint64_t>();
 					mc.MaterialIndex = jsonMeshComponent["MaterialIndex"].get<int>();
 				}
 
