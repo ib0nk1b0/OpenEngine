@@ -1,8 +1,9 @@
 #include "oepch.h"
 #include "SceneSerializer.h"
 
-#include "OpenEngine/Serialization/Serializer.h"
+#include "OpenEngine/Project/Project.h"
 #include "OpenEngine/Scene/Entity.h"
+#include "OpenEngine/Serialization/Serializer.h"
 
 namespace OpenEngine {
 
@@ -59,7 +60,6 @@ namespace OpenEngine {
 	{
 		using namespace Serializer;
 		std::string text;
-
 
 		nlohmann::ordered_json jsonData;
 		jsonData["Entities"] = {};
@@ -316,7 +316,9 @@ namespace OpenEngine {
 					Decode(ConvertFloat4(jsonSpriteRenderer["Color"]), src.Color);
 					if (jsonSpriteRenderer.contains("Texture"))
 					{
-						src.Texture = Texture2D::Create(jsonSpriteRenderer["Texture"].get<std::string>());
+						std::string texturePath = jsonSpriteRenderer["Texture"].get<std::string>();
+						auto fullTexturePath = Project::GetAssetFilesystemPath(texturePath);
+						src.Texture = Texture2D::Create(fullTexturePath.string());
 						src.Scale = jsonSpriteRenderer["Scale"].get<float>();
 					}
 				}
@@ -329,7 +331,9 @@ namespace OpenEngine {
 					Decode(ConvertFloat4(jsonEditotRenderer["Color"]), erc.Color);
 					if (jsonEditotRenderer.contains("Texture"))
 					{
-						erc.Texture = Texture2D::Create(jsonEditotRenderer["Texture"].get<std::string>());
+						std::string texturePath = jsonEditotRenderer["Texture"].get<std::string>();
+						auto fullTexturePath = Project::GetAssetFilesystemPath(texturePath);
+						erc.Texture = Texture2D::Create(fullTexturePath.string());
 					}
 				}
 

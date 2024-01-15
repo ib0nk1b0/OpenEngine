@@ -16,8 +16,6 @@
 
 namespace OpenEngine {
 
-	extern const std::filesystem::path g_AssetPath;
-
 	static float GetImGuiLineHeight()
 	{
 		return GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
@@ -74,13 +72,11 @@ namespace OpenEngine {
 						{
 							Entity pointLight = m_Context->CreateEntity("Point Light");
 							pointLight.AddComponent<PointLightComponent>();
-							pointLight.AddComponent<EditorRendererComponent>().Texture = Texture2D::Create("assets/textures/Lightbulb.png");
 						}
 						if (ImGui::MenuItem("Directional Light"))
 						{
 							Entity directionalLight = m_Context->CreateEntity("Directional Light");
 							directionalLight.AddComponent<DirectionalLightComponent>();
-							directionalLight.GetComponent<TransformComponent>().Translation = { -0.2f, 0.5f, 0.3f };
 						}
 
 						ImGui::EndMenu();
@@ -94,13 +90,11 @@ namespace OpenEngine {
 						{
 							auto camera = m_Context->CreateEntity("Perspective Camera");
 							camera.AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Perspective);
-							camera.AddComponent<EditorRendererComponent>().Texture = Texture2D::Create("assets/textures/camera.png");
 						}
 						if (ImGui::MenuItem("Orthographic"))
 						{
 							auto camera = m_Context->CreateEntity("Orthographic Camera");
 							camera.AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Orthographic);
-							camera.AddComponent<EditorRendererComponent>().Texture = Texture2D::Create("assets/textures/camera.png");
 						}
 
 						ImGui::EndMenu();
@@ -472,7 +466,7 @@ namespace OpenEngine {
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 				{
 					const wchar_t* path = (const wchar_t*)payload->Data;
-					std::filesystem::path fullPath = std::filesystem::path(g_AssetPath) / path;
+					std::filesystem::path fullPath(path);
 					if (FileDialogs::IsValidFile(fullPath, ".png"))
 						component.Texture = Texture2D::Create(fullPath.string());
 				}
@@ -510,7 +504,7 @@ namespace OpenEngine {
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 				{
 					const wchar_t* path = (const wchar_t*)payload->Data;
-					std::filesystem::path fullPath = std::filesystem::path(g_AssetPath) / path;
+					std::filesystem::path fullPath(path);
 					if (FileDialogs::IsValidFile(fullPath, ".png"))
 						component.Texture = Texture2D::Create(fullPath.string());
 				}
@@ -536,7 +530,7 @@ namespace OpenEngine {
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 				{
 					const wchar_t* path = (const wchar_t*)payload->Data;
-					std::filesystem::path fullPath = std::filesystem::path(g_AssetPath) / path;
+					std::filesystem::path fullPath(path);
 					if (FileDialogs::IsValidFile(fullPath, ".obj") || FileDialogs::IsValidFile(fullPath, ".fbx"))
 						component.Filepath = Utils::FormatFilepath(fullPath.string());
 				}

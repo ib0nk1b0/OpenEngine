@@ -8,10 +8,8 @@
 
 namespace OpenEngine {
 
-	extern const std::filesystem::path g_AssetPath = "assets";
-
 	ContentBrowserPanel::ContentBrowserPanel()
-		: m_CurrentDirectory(g_AssetPath)
+		: m_BaseDirectory(Project::GetAssetDirectory()), m_CurrentDirectory(m_BaseDirectory)
 	{
 		m_ForlderIcon = Texture2D::Create("assets/icons/Folder.png");
 		m_FileIcon = Texture2D::Create("assets/icons/Icon.png");
@@ -27,7 +25,7 @@ namespace OpenEngine {
 		
 		{
 			UI::ScopedFont boldLarge(UI::Fonts::Get("BoldLarge"));
-			if (ImGui::Button("<") && m_CurrentDirectory != std::filesystem::path(g_AssetPath))
+			if (ImGui::Button("<") && m_CurrentDirectory != m_BaseDirectory)
 			{
 				m_PreviousDirectory = m_CurrentDirectory;
 				m_CurrentDirectory = m_CurrentDirectory.parent_path();
@@ -68,7 +66,7 @@ namespace OpenEngine {
 			ImGui::PushID(i++);
 
 			const auto& path = directoryEntry.path();
-			auto relativePath = std::filesystem::relative(path, g_AssetPath);
+			std::filesystem::path relativePath(path);
 			std::string filenameString = relativePath.filename().string();
 			Ref<Texture2D> icon = directoryEntry.is_directory() ? m_ForlderIcon : m_FileIcon;
 

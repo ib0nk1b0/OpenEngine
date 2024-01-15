@@ -24,8 +24,6 @@
 
 namespace OpenEngine {
 
-	extern const std::filesystem::path g_AssetPath;
-
 	static Ref<Font> s_Font;
 
 	EditorLayer::EditorLayer()
@@ -52,6 +50,8 @@ namespace OpenEngine {
 
 		m_SceneHierarchyPanel.SetContext(m_EditorScene);
 		m_MaterialPanel.SetContext(m_EditorScene);
+
+		OpenProject("SandboxProject/Sandbox.oeproj");
 
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
@@ -202,7 +202,7 @@ namespace OpenEngine {
 			UI_EditorCameraPanel();
 
 		m_SceneHierarchyPanel.OnImGuiRender();
-		m_ContentBrowserPanel.OnImGuiRender();
+		m_ContentBrowserPanel->OnImGuiRender();
 		m_MaterialPanel.OnImGuiRender();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
@@ -237,7 +237,7 @@ namespace OpenEngine {
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 			{
 				const wchar_t* path = (const wchar_t*)payload->Data;
-				OpenScene(std::filesystem::path(g_AssetPath) / path);
+				OpenScene(Project::GetAssetFilesystemPath(path));
 			}
 			ImGui::EndDragDropTarget();
 		}
@@ -633,7 +633,23 @@ namespace OpenEngine {
 
 	void EditorLayer::NewProject()
 	{
-		OE_WARN("Projects are not yet developed."); // TODO: <- do this
+		OE_WARN("Projects are not fully developed."); // TODO: <- do this
+		// Project::New();
+	}
+
+	void EditorLayer::OpenProject(const std::filesystem::path& filepath)
+	{
+		if (Project::Load(filepath))
+		{
+			auto startScenePath = Project::GetAssetFilesystemPath(Project::GetActive()->GetConfig().StartScene);
+			OpenScene(startScenePath);
+			m_ContentBrowserPanel = CreateScope<ContentBrowserPanel>();
+		}
+	}
+
+	void EditorLayer::SaveProject()
+	{
+		// Project::SaveActive();
 	}
 
 	void EditorLayer::NewScene(const std::string& filepath)

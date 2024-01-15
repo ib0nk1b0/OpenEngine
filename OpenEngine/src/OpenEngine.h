@@ -21,6 +21,8 @@
 #include "OpenEngine/Scene/Entity.h"
 #include "OpenEngine/Scene/ScriptableEntity.h"
 
+#include "OpenEngine/Project/Project.h"
+
 // -- Renderer -- //
 
 #include "OpenEngine/Renderer/Renderer.h"

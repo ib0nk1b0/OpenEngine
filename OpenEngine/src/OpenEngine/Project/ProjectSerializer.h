@@ -1,5 +1,6 @@
 #pragma once
 
+#include "OpenEngine/Project/Project.h"
 #include "OpenEngine/Serialization/Serializer.h"
 
 namespace OpenEngine {
@@ -7,19 +8,12 @@ namespace OpenEngine {
 	class ProjectSerializer
 	{
 	public:
-		ProjectSerializer()
-		{
-			//using namespace Serializer;
-			std::string text;
+		ProjectSerializer(Ref<Project> project);
 
-			/*Serializer::BeginFile();
-			Serailizer::EndFile();*/
-
-			std::ofstream file;
-			file.open("assets/Test.json");
-			file << text;
-			file.close();
-		}
+		bool Serialize(const std::filesystem::path& filepath);
+		bool Deserialize(const std::filesystem::path& filepath);
+	private:
+		Ref<Project> m_Project;
 	};
 
 }

@@ -34,6 +34,9 @@ namespace OpenEngine {
 		Entity GetHoveredEntity();
 
 		void NewProject();
+		void OpenProject(const std::filesystem::path& filepath);
+		void SaveProject();
+
 		void NewScene(const std::string& filepath = "UntitledScene.openengine");
 		void OpenScene();
 		void OpenScene(const std::filesystem::path& filepath);
@@ -78,7 +81,7 @@ namespace OpenEngine {
 
 		// Panels
 		SceneHierarchyPanel m_SceneHierarchyPanel;
-		ContentBrowserPanel m_ContentBrowserPanel;
+		Scope<ContentBrowserPanel> m_ContentBrowserPanel;
 		MaterialPanel m_MaterialPanel;
 
 		Ref<Texture2D> m_PlayIcon, m_StopIcon;
