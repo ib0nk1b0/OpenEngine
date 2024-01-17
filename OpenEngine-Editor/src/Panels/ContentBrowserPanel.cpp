@@ -1,6 +1,7 @@
 #include "oepch.h"
 #include "ContentBrowserPanel.h"
 
+#include "OpenEngine/Asset/TextureImporter.h"
 #include "OpenEngine/Utils/PlatformUtils.h"
 #include "OpenEngine/ImGui/ImGuiFonts.h"
 
@@ -11,8 +12,9 @@ namespace OpenEngine {
 	ContentBrowserPanel::ContentBrowserPanel()
 		: m_BaseDirectory(Project::GetAssetDirectory()), m_CurrentDirectory(m_BaseDirectory)
 	{
-		m_ForlderIcon = Texture2D::Create("assets/icons/Folder.png");
-		m_FileIcon = Texture2D::Create("assets/icons/Icon.png");
+		m_FolderIcon = TextureImporter::LoadTexture2D("Resources/Icons/FolderIcon.png");
+		m_FileIcon = TextureImporter::LoadTexture2D("Resources/Icons/FileIcon.png");
+		m_RefreshIcon = TextureImporter::LoadTexture2D("Resources/Icons/RefreshIcon.png");
 
 		LoadAssets();
 	}
@@ -39,6 +41,11 @@ namespace OpenEngine {
 			{
 				m_CurrentDirectory = m_PreviousDirectory;
 				m_PreviousDirectory.clear();
+			}
+
+			if (ImGui::ImageButton((ImTextureID)m_RefreshIcon->GetRendererID(), { 32, 32 }, { 0, 1 }, { 1, 0 }))
+			{
+				LoadAssets();
 			}
 
 			ImGui::PopStyleVar();
@@ -68,9 +75,9 @@ namespace OpenEngine {
 			ImGui::PushID(i++);
 
 			const auto& path = directoryEntry.path();
-			std::filesystem::path relativePath(path);
+			std::filesystem::path relativePath = path.lexically_relative(Project::GetActiveAssetDirectory());
 			std::string filenameString = relativePath.filename().string();
-			Ref<Texture2D> icon = directoryEntry.is_directory() ? m_ForlderIcon : m_FileIcon;
+			Ref<Texture2D> icon = directoryEntry.is_directory() ? m_FolderIcon : m_FileIcon;
 
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
 			ImGui::ImageButton((ImTextureID)icon->GetRendererID(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
@@ -78,8 +85,8 @@ namespace OpenEngine {
 
 			if (ImGui::BeginDragDropSource())
 			{
-				const wchar_t* itemPath = relativePath.c_str();
-				ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t), ImGuiCond_Once);
+				AssetHandle handle = m_AssetMap[relativePath];
+				ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", &handle, sizeof(handle), ImGuiCond_Once);
 
 				ImGui::EndDragDropSource();
 			}
@@ -104,7 +111,7 @@ namespace OpenEngine {
 	{
 		auto registryPath = Project::GetActiveAssetRegistryPath();
 		if (std::filesystem::exists(registryPath))
-			Project::GetActive()->GetAssetManager()->DeserializeAssetRegistry();
+			m_AssetMap = Project::GetActive()->GetAssetManager()->DeserializeAssetRegistry();
 
 		for (auto& directoryEntry : std::filesystem::recursive_directory_iterator(m_BaseDirectory))
 		{
@@ -113,8 +120,11 @@ namespace OpenEngine {
 
 			std::filesystem::path filepath = directoryEntry.path().lexically_relative(Project::GetActiveAssetDirectory());
 
-			if (Project::GetActive()->GetAssetManager()->IsFileValidAsset(filepath))
-				Project::GetActive()->GetAssetManager()->AddToRegistry(filepath);
+			if (Project::GetActive()->GetAssetManager()->IsFileValidAsset(filepath) && m_AssetMap.find(filepath) == m_AssetMap.end())
+			{
+				UUID handle = Project::GetActive()->GetAssetManager()->AddToRegistry(filepath);
+				m_AssetMap[filepath] = handle;
+			}
 		}
 	}
 

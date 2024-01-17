@@ -31,10 +31,10 @@ namespace OpenEngine {
 
 		const bool IsFileValidAsset(const std::filesystem::path& filepath);
 
-		void AddToRegistry(const std::filesystem::path& filepath);
+		AssetHandle AddToRegistry(const std::filesystem::path& filepath);
 
 		void SerializeAssetRegistry();
-		bool DeserializeAssetRegistry();
+		std::map<std::filesystem::path, AssetHandle> DeserializeAssetRegistry();
 	private:
 		AssetRegistry m_AssetRegistry;
 		AssetMap m_LoadedAssets;

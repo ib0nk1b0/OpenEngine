@@ -1,7 +1,7 @@
 {
     "Project": {
         "Name": "Sandbox",
-        "StartScene": 20826806880480246066,
+        "StartScene": 10654564083840397950,
         "AssetDirectory": "Assets",
         "AssetRegistryPath": "AssetRegistry.oear",
         "ScriptModulePath": "Scripts/Binaries/Sandbox.dll"

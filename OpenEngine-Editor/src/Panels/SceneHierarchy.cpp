@@ -1,8 +1,11 @@
 #include "oepch.h"
 #include "SceneHierarchy.h"
 
-#include "OpenEngine/Scene/Components.h"
 #include "ContentBrowserPanel.h"
+
+#include "OpenEngine/Asset/AssetManager.h"
+#include "OpenEngine/Asset/TextureImporter.h"
+#include "OpenEngine/Scene/Components.h"
 #include "OpenEngine/Utils/PlatformUtils.h"
 #include "OpenEngine/ImGui/ImGuiExtended.h"
 #include "OpenEngine/ImGui/ImGuiFonts.h"
@@ -450,11 +453,10 @@ namespace OpenEngine {
 			Ref<Texture2D> texturePreview;
 
 			if (!component.Texture)
-				texturePreview = Texture2D::Create("assets/icons/BlankTexture.png");
+				texturePreview = TextureImporter::LoadTexture2D("Resources/Textures/BlankTexture.png");
 			else
 			{
-				/*texturePreview = component.Texture;
-				ImGui::Text("%s", component.Texture->GetFilePath().c_str());*/
+				texturePreview = AssetManager::GetAsset<Texture2D>(component.Texture);
 				ImGui::SameLine();
 			}
 
@@ -464,18 +466,16 @@ namespace OpenEngine {
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 				{
-					const wchar_t* path = (const wchar_t*)payload->Data;
-					std::filesystem::path fullPath(path);
-					/*if (FileDialogs::IsValidFile(fullPath, ".png"))
-						component.Texture = Texture2D::Create(fullPath.string());*/
+					AssetHandle handle = *(AssetHandle*)payload->Data;
+					component.Texture = handle;
 				}
 				ImGui::EndDragDropTarget();
 			}
 
 			ImGui::SameLine();
 
-			/*if (ImGui::Button("Clear"))
-				component.Texture = nullptr;*/
+			if (ImGui::Button("Clear"))
+				component.Texture = 0;
 
 			UI::DragFloat("Scale", &component.Scale, 0.1f, 1.0f, 50.0f, 150.0f);
 
@@ -487,33 +487,30 @@ namespace OpenEngine {
 
 			Ref<Texture2D> texturePreview;
 
-			/*if (!component.Texture)
-				texturePreview = Texture2D::Create("assets/icons/BlankTexture.png");
+			if (!component.Texture)
+				texturePreview = TextureImporter::LoadTexture2D("Resources/Textures/BlankTexture.png");
 			else
 			{
-				texturePreview = component.Texture;
-				ImGui::Text("%s", component.Texture->GetFilePath().c_str());
+				texturePreview = AssetManager::GetAsset<Texture2D>(component.Texture);
 				ImGui::SameLine();
-			}*/
+			}
 
 			ImGuiID id = 1;
-			ImGui::ImageButtonEx(id, (ImTextureID)texturePreview->GetRendererID(), { 64, 64 }, { 0, 1 }, { 1, 0 }, { 1, 1, 1, 1 }, { 1, 1, 1, 1 });
+			ImGui::ImageButtonEx(id, (ImTextureID)texturePreview->GetRendererID(), { 32, 32 }, { 0, 1 }, { 1, 0 }, { 1, 1, 1, 1 }, { 1, 1, 1, 1, });
 			if (ImGui::BeginDragDropTarget())
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 				{
-					const wchar_t* path = (const wchar_t*)payload->Data;
-					std::filesystem::path fullPath(path);
-					/*if (FileDialogs::IsValidFile(fullPath, ".png"))
-						component.Texture = Texture2D::Create(fullPath.string());*/
+					AssetHandle handle = *(AssetHandle*)payload->Data;
+					component.Texture = handle;
 				}
 				ImGui::EndDragDropTarget();
 			}
 
 			ImGui::SameLine();
 
-			/*if (ImGui::Button("Clear"))
-				component.Texture = nullptr;*/
+			if (ImGui::Button("Clear"))
+				component.Texture = 0;
 		});
 
 		DrawComponent<MeshComponent>("Mesh", entity, [=](auto& component)
@@ -523,15 +520,14 @@ namespace OpenEngine {
 			ImGui::Text("Mesh");
 			ImGui::NextColumn();
 			
-			//ImGui::Button(Utils::GetFileNameFromPath(component.Filepath).c_str());
+			std::string meshName = Project::GetActive()->GetAssetManager()->GetFilePath(component.MeshHandle).filename().string();
+			ImGui::Button(meshName.c_str());
 			if (ImGui::BeginDragDropTarget())
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 				{
-					const wchar_t* path = (const wchar_t*)payload->Data;
-					std::filesystem::path fullPath(path);
-					/*if (FileDialogs::IsValidFile(fullPath, ".obj") || FileDialogs::IsValidFile(fullPath, ".fbx"))
-						component.Filepath = Utils::FormatFilepath(fullPath.string());*/
+					AssetHandle handle = *(AssetHandle*)payload->Data;
+					component.MeshHandle = handle;
 				}
 				ImGui::EndDragDropTarget();
 			}

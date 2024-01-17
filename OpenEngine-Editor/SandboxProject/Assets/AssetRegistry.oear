@@ -26,6 +26,11 @@
             "Type": "Texture2D"
         },
         {
+            "Handle": 10234051530288796438,
+            "FilePath": "Textures\\Texture.png",
+            "Type": "Texture2D"
+        },
+        {
             "Handle": 10654564083840397950,
             "FilePath": "Scenes\\ExampleScene.openengine",
             "Type": "Scene"

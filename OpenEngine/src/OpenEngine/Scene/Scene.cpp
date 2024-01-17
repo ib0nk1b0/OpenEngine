@@ -10,6 +10,8 @@
 #include "OpenEngine/Scripting/ScriptEngine.h"
 #include "OpenEngine/Renderer/Renderer.h"
 #include "OpenEngine/Renderer/Mesh.h"
+#include "OpenEngine/Asset/AssetManager.h"
+#include "OpenEngine/Project/Project.h"
 
 #include "box2d/b2_world.h"
 #include "box2d/b2_body.h"
@@ -392,9 +394,12 @@ namespace OpenEngine {
 				{
 					auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-					/*if (sprite.Texture)
-						Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color, sprite.Scale, (int)entity);
-					else*/
+					if (Project::GetActive()->GetAssetManager()->IsAssetHandleValid(sprite.Texture))
+					{
+						Ref<Texture2D> texture = AssetManager::GetAsset<Texture2D>(sprite.Texture);
+						Renderer2D::DrawQuad(transform.GetTransform(), texture, sprite.Color, sprite.Scale, (int)entity);
+					}
+					else
 						Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color, (int)entity);
 				}
 			}

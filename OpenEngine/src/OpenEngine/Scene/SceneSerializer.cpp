@@ -57,7 +57,7 @@ namespace OpenEngine {
 		return RigidBody2DComponent::BodyType::Static;
 	}
 
-	void SceneSerializer::Serialize(const std::string& filepath)
+	void SceneSerializer::Serialize(const std::filesystem::path& filepath)
 	{
 		using namespace Serializer;
 		std::string text;
@@ -261,7 +261,7 @@ namespace OpenEngine {
 		jsonOut << std::setw(4) << jsonData;
 	}
 
-	void SceneSerializer::Deserialize(const std::string& filepath)
+	void SceneSerializer::Deserialize(const std::filesystem::path& filepath)
 	{
 		using namespace Serializer;
 

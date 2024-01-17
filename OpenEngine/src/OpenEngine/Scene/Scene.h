@@ -8,6 +8,8 @@
 
 #include "entt.hpp"
 
+#include <filesystem>
+
 class b2World;
 
 namespace OpenEngine {
@@ -52,8 +54,8 @@ namespace OpenEngine {
 		void OnUpdateRuntime(Timestep ts);
 		void OnViewportResize(uint32_t width, uint32_t height);
 
-		std::string GetFilepath() const { return m_Filepath; }
-		void SetFilepath(const std::string& filepath) { m_Filepath = filepath; }
+		std::filesystem::path GetFilepath() const { return m_Filepath; }
+		void SetFilepath(const std::filesystem::path& filepath) { m_Filepath = filepath; }
 
 		void CopyTo(Ref<Scene> other); 
 
@@ -71,7 +73,7 @@ namespace OpenEngine {
 		entt::registry m_Registry;
 		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 
-		std::string m_Filepath;
+		std::filesystem::path m_Filepath;
 
 		bool m_IsRunning = false;
 		bool m_CursorEnabled = true;

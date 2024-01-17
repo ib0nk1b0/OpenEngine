@@ -1,6 +1,7 @@
 #include "EditorLayer.h"
 
 #include "OpenEngine/Asset/AssetManager.h"
+#include "OpenEngine/Asset/TextureImporter.h"
 #include "OpenEngine/Math/Math.h"
 #include "OpenEngine/Renderer/Renderer2D.h"
 #include "OpenEngine/Renderer/Font.h"
@@ -31,8 +32,8 @@ namespace OpenEngine {
 	{
 		OE_PROFILE_FUNCTION();
 
-		m_PlayIcon = Texture2D::Create("assets/icons/Play.png");
-		m_StopIcon = Texture2D::Create("assets/icons/Stop.png");
+		m_PlayIcon = TextureImporter::LoadTexture2D("Resources/Icons/PlayButton.png");
+		m_StopIcon = TextureImporter::LoadTexture2D("Resources/Icons/StopButton.png");
 
 		FramebufferSpecification fbSpec;
 		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
@@ -466,7 +467,7 @@ namespace OpenEngine {
 
 		{
 			UI::ScopedFont bold(UI::Fonts::Get("Bold"));
-			ImGui::Text("%s", Utils::GetFileNameFromPath(m_EditorScene->GetFilepath()).c_str());
+			ImGui::Text("%s", m_EditorScene->GetFilepath().filename().string().c_str());
 			ImGui::SameLine();
 		}
 
@@ -637,10 +638,10 @@ namespace OpenEngine {
 	{
 		if (Project::Load(filepath))
 		{
+			m_ContentBrowserPanel = CreateScope<ContentBrowserPanel>();
 			AssetHandle startScene = Project::GetActive()->GetConfig().StartScene;
 			if (startScene)
 				OpenScene(startScene);
-			m_ContentBrowserPanel = CreateScope<ContentBrowserPanel>();
 		}
 	}
 
@@ -669,24 +670,21 @@ namespace OpenEngine {
 
 	void EditorLayer::OpenScene(AssetHandle handle)
 	{
-		/*Ref<Scene> readOnlyScene = AssetManager::GetAsset<Scene>(handle);
-		Ref<Scene> newScene;
-		readOnlyScene->CopyTo(newScene);*/
-		/*Ref<Scene> newScene;
+		Ref<Scene> newScene = AssetManager::GetAsset<Scene>(handle);
 		SceneSerializer serializer(newScene);
-		serializer.Deserialize("SandboxProject/Assets/Scenes/ExampleScene.openengine");
+		auto filepath = Project::GetActiveAssetDirectory() / Project::GetActive()->GetAssetManager()->GetFilePath(handle);
+		serializer.Deserialize(filepath);
 
 		m_EditorScene = newScene;
 		m_SceneHierarchyPanel.SetContext(m_EditorScene);
 
 		m_ActiveScene = m_EditorScene;
-		std::filesystem::path editorPath(Project::GetActive()->GetAssetManager()->GetFilePath(handle));
-		m_EditorScene->SetFilepath("SandboxProject/Assets/Scenes/ExampleScene.openengine");*/
+		m_EditorScene->SetFilepath(filepath);
 	}
 
 	void EditorLayer::SaveScene()
 	{
-		const std::string filepath = m_EditorScene->GetFilepath();
+		const std::string filepath = m_EditorScene->GetFilepath().string();
 		if (filepath == "UntitledScene.openengine")
 			SaveSceneAs();
 		else

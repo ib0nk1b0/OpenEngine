@@ -19,9 +19,9 @@ namespace OpenEngine {
 		std::filesystem::path m_CurrentDirectory;
 		std::filesystem::path m_PreviousDirectory;
 
-		std::vector<std::filesystem::directory_entry> m_Directories;
+		std::map<std::filesystem::path, AssetHandle> m_AssetMap;
 
-		Ref<Texture2D> m_ForlderIcon, m_FileIcon;
+		Ref<Texture2D> m_FolderIcon, m_FileIcon, m_RefreshIcon;
 	};
 
 }

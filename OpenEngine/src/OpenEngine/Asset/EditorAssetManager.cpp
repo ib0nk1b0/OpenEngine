@@ -128,7 +128,7 @@ namespace OpenEngine {
 		return s_AssetExtensionMap.find(filepath.extension()) != s_AssetExtensionMap.end();
 	}
 
-	void EditorAssetManager::AddToRegistry(const std::filesystem::path& filepath)
+	AssetHandle EditorAssetManager::AddToRegistry(const std::filesystem::path& filepath)
 	{
 		AssetHandle handle;
 		AssetMetadata metadata;
@@ -137,6 +137,8 @@ namespace OpenEngine {
 		OE_CORE_ASSERT(metadata.Type != AssetType::None, "");
 
 		m_AssetRegistry[handle] = metadata;
+		SerializeAssetRegistry();
+		return handle;
 	}
 
 	void EditorAssetManager::SerializeAssetRegistry()
@@ -161,8 +163,10 @@ namespace OpenEngine {
 		jsonOut << std::setw(4) << jsonData;
 	}
 
-	bool EditorAssetManager::DeserializeAssetRegistry()
+	std::map<std::filesystem::path, AssetHandle> EditorAssetManager::DeserializeAssetRegistry()
 	{
+		m_AssetRegistry.clear();
+		std::map<std::filesystem::path, AssetHandle> assetsInRegistry;
 		auto path = Project::GetActiveAssetRegistryPath();
 
 		std::ifstream file(path);
@@ -176,17 +180,20 @@ namespace OpenEngine {
 			for (auto& [key, value] : assets.items())
 			{
 				AssetHandle handle = value["Handle"].get<uint64_t>();
-				auto& metadata = m_AssetRegistry[handle];
+				AssetMetadata metadata;
 
 				metadata.FilePath = value["FilePath"].get<std::string>();
 				metadata.Type = AssetTypeFromString(value["Type"].get<std::string>());
 
-				m_AssetRegistry[handle] = metadata;
+				if (std::filesystem::exists(Project::GetActiveAssetDirectory() / metadata.FilePath))
+				{
+					m_AssetRegistry[handle] = metadata;
+					assetsInRegistry[metadata.FilePath] = handle;
+				}
 			}
-			return true;
 		}
 
-		return false;
+		return assetsInRegistry;
 	}
 
 }
