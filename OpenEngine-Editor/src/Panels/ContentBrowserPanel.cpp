@@ -13,6 +13,8 @@ namespace OpenEngine {
 	{
 		m_ForlderIcon = Texture2D::Create("assets/icons/Folder.png");
 		m_FileIcon = Texture2D::Create("assets/icons/Icon.png");
+
+		LoadAssets();
 	}
 
 	void ContentBrowserPanel::OnImGuiRender()
@@ -96,6 +98,24 @@ namespace OpenEngine {
 		}
 
 		ImGui::End();
+	}
+
+	void ContentBrowserPanel::LoadAssets()
+	{
+		auto registryPath = Project::GetActiveAssetRegistryPath();
+		if (std::filesystem::exists(registryPath))
+			Project::GetActive()->GetAssetManager()->DeserializeAssetRegistry();
+
+		for (auto& directoryEntry : std::filesystem::recursive_directory_iterator(m_BaseDirectory))
+		{
+			if (directoryEntry.is_directory())
+				continue;
+
+			std::filesystem::path filepath = directoryEntry.path().lexically_relative(Project::GetActiveAssetDirectory());
+
+			if (Project::GetActive()->GetAssetManager()->IsFileValidAsset(filepath))
+				Project::GetActive()->GetAssetManager()->AddToRegistry(filepath);
+		}
 	}
 
 }

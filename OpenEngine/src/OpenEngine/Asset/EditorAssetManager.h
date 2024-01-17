@@ -9,9 +9,11 @@ namespace OpenEngine {
 
 	using AssetRegistry = std::map<AssetHandle, AssetMetadata>;
 
-	class EditorAssetManager : AssetManagerBase
+	class EditorAssetManager : public AssetManagerBase
 	{
 	public:
+		EditorAssetManager();
+
 		virtual Ref<Asset> GetAsset(AssetHandle handle) override;
 
 		virtual bool IsAssetHandleValid(AssetHandle handle) const override;
@@ -24,6 +26,12 @@ namespace OpenEngine {
 		const std::filesystem::path& GetFilePath(AssetHandle handle) const;
 
 		const AssetRegistry& GetAssetRegistry() const { return m_AssetRegistry; }
+
+		std::vector<UUID> GetAllAssetHandles();
+
+		const bool IsFileValidAsset(const std::filesystem::path& filepath);
+
+		void AddToRegistry(const std::filesystem::path& filepath);
 
 		void SerializeAssetRegistry();
 		bool DeserializeAssetRegistry();

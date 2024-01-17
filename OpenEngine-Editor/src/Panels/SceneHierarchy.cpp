@@ -347,7 +347,6 @@ namespace OpenEngine {
 								results.push_back(true);
 							else
 								results.push_back(false);
-
 						}
 						
 						for (size_t i = 0; i < results.size(); i++)

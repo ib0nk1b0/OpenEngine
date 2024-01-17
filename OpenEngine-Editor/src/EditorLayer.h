@@ -5,6 +5,7 @@
 #include "Panels/SceneHierarchy.h"
 #include "Panels/ContentBrowserPanel.h"
 #include "Panels/MaterialPanel.h"
+#include "Panels/AssetManagerPanel.h"
 
 #include "OpenEngine/Scene/SceneSerializer.h"
 #include "OpenEngine/Serialization/Serializer.h"
@@ -83,6 +84,7 @@ namespace OpenEngine {
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		Scope<ContentBrowserPanel> m_ContentBrowserPanel;
 		MaterialPanel m_MaterialPanel;
+		AssetManagerPanel m_AssetManagerPanel;
 
 		Ref<Texture2D> m_PlayIcon, m_StopIcon;
 		SceneState m_SceneState = SceneState::Edit;

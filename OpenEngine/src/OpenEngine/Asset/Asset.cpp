@@ -7,19 +7,19 @@ namespace OpenEngine {
 	{
 		switch (type)
 		{
-			case AssetType::None:      return "AssetType::None";
-			case AssetType::Scene:     return "AssetType::Scene";
-			case AssetType::Texture2D: return "AssetType::Texture2D";
+			case AssetType::None:      return "None";
+			case AssetType::Scene:     return "Scene";
+			case AssetType::Texture2D: return "Texture2D";
 		}
 
-		return "AssetType::<Invalid>";
+		return "<Invalid>";
 	}
 
 	AssetType AssetTypeFromString(std::string_view assetType)
 	{
-		if (assetType == "AssetType::None")      return AssetType::None;
-		if (assetType == "AssetType::Scene")     return AssetType::Scene;
-		if (assetType == "AssetType::Texture2D") return AssetType::Texture2D;
+		if (assetType == "None")      return AssetType::None;
+		if (assetType == "Scene")     return AssetType::Scene;
+		if (assetType == "Texture2D") return AssetType::Texture2D;
 
 		return AssetType::None;
 	}

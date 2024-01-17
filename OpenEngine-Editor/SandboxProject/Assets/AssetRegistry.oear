@@ -1,0 +1,39 @@
+{
+    "AssetRegsitry": [
+        {
+            "Handle": 1644563413748354619,
+            "FilePath": "Textures\\camera.png",
+            "Type": "Texture2D"
+        },
+        {
+            "Handle": 3486277044206322090,
+            "FilePath": "Textures\\Tilesheet.png",
+            "Type": "Texture2D"
+        },
+        {
+            "Handle": 8299213830472035946,
+            "FilePath": "Textures\\untitled.png",
+            "Type": "Texture2D"
+        },
+        {
+            "Handle": 9698835595719350553,
+            "FilePath": "Textures\\Checkerboard.png",
+            "Type": "Texture2D"
+        },
+        {
+            "Handle": 10004831508880254343,
+            "FilePath": "Textures\\OpenEngineLogo.png",
+            "Type": "Texture2D"
+        },
+        {
+            "Handle": 10654564083840397950,
+            "FilePath": "Scenes\\ExampleScene.openengine",
+            "Type": "Scene"
+        },
+        {
+            "Handle": 16388727074385513640,
+            "FilePath": "Textures\\Lightbulb.png",
+            "Type": "Texture2D"
+        }
+    ]
+}

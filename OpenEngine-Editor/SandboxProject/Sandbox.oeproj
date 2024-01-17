@@ -1,8 +1,9 @@
 {
     "Project": {
         "Name": "Sandbox",
-        "StartScene": "Scenes/ExampleScene.openengine",
+        "StartScene": 20826806880480246066,
         "AssetDirectory": "Assets",
+        "AssetRegistryPath": "AssetRegistry.oear",
         "ScriptModulePath": "Scripts/Binaries/Sandbox.dll"
     }
 }

@@ -59,9 +59,7 @@ namespace OpenEngine {
 
 		ProjectConfig& GetConfig() { return m_Config; }
 
-		std::shared_ptr<AssetManagerBase> GetAssetManager() { return m_AssetManager; }
-		std::shared_ptr<RuntimeAssetManager> GetRuntimeAssetManager() { return std::static_pointer_cast<RuntimeAssetManager>(m_AssetManager); }
-		std::shared_ptr<EditorAssetManager> GetEditorAssetManager() { return std::static_pointer_cast<EditorAssetManager>(m_AssetManager); }
+		Ref<EditorAssetManager> GetAssetManager() { return m_AssetManager; }
 
 		static Ref<Project> New();
 		static Ref<Project> Load(const std::filesystem::path& filepath);
@@ -69,7 +67,7 @@ namespace OpenEngine {
 	private:
 		ProjectConfig m_Config;
 		std::filesystem::path m_ProjectDirectory;
-		std::shared_ptr<AssetManagerBase> m_AssetManager;
+		Ref<EditorAssetManager> m_AssetManager = CreateRef<EditorAssetManager>();
 
 		inline static Ref<Project> s_ActiveProject;
 	};

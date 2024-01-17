@@ -39,10 +39,12 @@ namespace OpenEngine {
 			break;
 		}
 
-		stbi_image_free(data);
 
 		Ref<Texture2D> texture = Texture2D::Create(spec);
 		texture->SetData(data, width * height * channels);
+		
+		stbi_image_free(data);
+
 		return texture;
     }
 

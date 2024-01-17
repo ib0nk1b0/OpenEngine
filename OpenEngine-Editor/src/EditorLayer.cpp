@@ -199,6 +199,7 @@ namespace OpenEngine {
 		m_SceneHierarchyPanel.OnImGuiRender();
 		m_ContentBrowserPanel->OnImGuiRender();
 		m_MaterialPanel.OnImGuiRender();
+		m_AssetManagerPanel.OnImGuiRender();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
@@ -668,16 +669,19 @@ namespace OpenEngine {
 
 	void EditorLayer::OpenScene(AssetHandle handle)
 	{
-		Ref<Scene> readOnlyScene = AssetManager::GetAsset<Scene>(handle);
+		/*Ref<Scene> readOnlyScene = AssetManager::GetAsset<Scene>(handle);
 		Ref<Scene> newScene;
-		readOnlyScene->CopyTo(newScene);
+		readOnlyScene->CopyTo(newScene);*/
+		/*Ref<Scene> newScene;
+		SceneSerializer serializer(newScene);
+		serializer.Deserialize("SandboxProject/Assets/Scenes/ExampleScene.openengine");
 
 		m_EditorScene = newScene;
 		m_SceneHierarchyPanel.SetContext(m_EditorScene);
 
 		m_ActiveScene = m_EditorScene;
-		std::filesystem::path editorPath(Project::GetActive()->GetEditorAssetManager()->GetFilePath(handle));
-		m_EditorScene->SetFilepath(editorPath.string());
+		std::filesystem::path editorPath(Project::GetActive()->GetAssetManager()->GetFilePath(handle));
+		m_EditorScene->SetFilepath("SandboxProject/Assets/Scenes/ExampleScene.openengine");*/
 	}
 
 	void EditorLayer::SaveScene()

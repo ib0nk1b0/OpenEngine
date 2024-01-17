@@ -26,31 +26,28 @@ namespace OpenEngine {
 		return s_AssetExtensionMap.at(extension);
 	}
 
-    Ref<Asset> EditorAssetManager::GetAsset(AssetHandle handle)
+	EditorAssetManager::EditorAssetManager()
+	{
+	}
+
+	Ref<Asset> EditorAssetManager::GetAsset(AssetHandle handle)
     {
-		// 1. check if handle is valid
 		if (!IsAssetHandleValid(handle))
 			return nullptr;
 
-		// 2. check if asset needs load (and if so, load)
 		Ref<Asset> asset;
 		if (IsAssetLoaded(handle))
-		{
 			asset = m_LoadedAssets.at(handle);
-		}
 		else
 		{
-			// load asset
 			const AssetMetadata& metadata = GetMetadata(handle);
 			asset = AssetImporter::ImportAsset(handle, metadata);
 			if (!asset)
-			{
-				// import failed
 				OE_CORE_ERROR("EditorAssetManager::GetAsset - asset import failed!");
-			}
+
 			m_LoadedAssets[handle] = asset;
 		}
-		// 3. return asset
+
 		return asset;
     }
 
@@ -74,6 +71,19 @@ namespace OpenEngine {
 
 	void EditorAssetManager::ImportAsset(const std::filesystem::path& filepath)
 	{
+		for (auto [h, a] : m_AssetRegistry)
+		{
+			auto path = GetMetadata(h).FilePath;
+			if (path == filepath)
+			{
+				Ref<Asset> asset = AssetImporter::ImportAsset(h, GetMetadata(h));
+				if (asset)
+					m_LoadedAssets[h] = asset;
+
+				return;
+			}
+		}
+
 		AssetHandle handle; // generate new handle
 		AssetMetadata metadata;
 		metadata.FilePath = filepath;
@@ -104,6 +114,31 @@ namespace OpenEngine {
 		return GetMetadata(handle).FilePath;
 	}
 
+	std::vector<UUID> EditorAssetManager::GetAllAssetHandles()
+	{
+		std::vector<UUID> assetHandles;
+		for (auto [handle, asset] : m_AssetRegistry)
+			assetHandles.push_back(handle);
+		return assetHandles;
+	}
+
+	const bool EditorAssetManager::IsFileValidAsset(const std::filesystem::path& filepath)
+	{
+		std::string extension = filepath.extension().string();
+		return s_AssetExtensionMap.find(filepath.extension()) != s_AssetExtensionMap.end();
+	}
+
+	void EditorAssetManager::AddToRegistry(const std::filesystem::path& filepath)
+	{
+		AssetHandle handle;
+		AssetMetadata metadata;
+		metadata.FilePath = filepath;
+		metadata.Type = GetAssetTypeFromFileExtension(filepath.extension());
+		OE_CORE_ASSERT(metadata.Type != AssetType::None, "");
+
+		m_AssetRegistry[handle] = metadata;
+	}
+
 	void EditorAssetManager::SerializeAssetRegistry()
 	{
 		auto path = Project::GetActiveAssetRegistryPath();
@@ -116,8 +151,8 @@ namespace OpenEngine {
 		{
 			nlohmann::ordered_json asset;
 			asset["Handle"] = (uint64_t)handle;
-			asset["Filepath"] = metadata.FilePath;
-			asset["Type"] = metadata.Type;
+			asset["FilePath"] = metadata.FilePath;
+			asset["Type"] = AssetTypeToString(metadata.Type);
 
 			jsonData["AssetRegsitry"] += asset;
 		};
@@ -145,6 +180,8 @@ namespace OpenEngine {
 
 				metadata.FilePath = value["FilePath"].get<std::string>();
 				metadata.Type = AssetTypeFromString(value["Type"].get<std::string>());
+
+				m_AssetRegistry[handle] = metadata;
 			}
 			return true;
 		}
