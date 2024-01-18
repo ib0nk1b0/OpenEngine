@@ -433,9 +433,12 @@ namespace OpenEngine {
 				{
 					auto [transform, sprite] = view.get<TransformComponent, EditorRendererComponent>(entity);
 
-					/*if (sprite.Texture)
-						Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color, 1.0f, (int)entity);
-					else*/
+					if (Project::GetActive()->GetAssetManager()->IsAssetHandleValid(sprite.Texture))
+					{
+						Ref<Texture2D> texture = AssetManager::GetAsset<Texture2D>(sprite.Texture);
+						Renderer2D::DrawQuad(transform.GetTransform(), texture, sprite.Color, 1.0f, (int)entity);
+					}
+					else
 						Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color, (int)entity);
 				}
 			}
@@ -579,9 +582,12 @@ namespace OpenEngine {
 				{
 					auto [transform, sprite] = view.get<TransformComponent, SpriteRendererComponent>(entity);
 
-					/*if (sprite.Texture)
-						Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color, sprite.Scale, (int)entity);
-					else*/
+					if (Project::GetActive()->GetAssetManager()->IsAssetHandleValid(sprite.Texture))
+					{
+						Ref<Texture2D> texture = AssetManager::GetAsset<Texture2D>(sprite.Texture);
+						Renderer2D::DrawQuad(transform.GetTransform(), texture, sprite.Color, sprite.Scale, (int)entity);
+					}
+					else
 						Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color, (int)entity);
 				}
 			}

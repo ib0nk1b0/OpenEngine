@@ -108,7 +108,7 @@ namespace OpenEngine {
 				if (src.Texture)
 				{
 					e["SpriteRendererComponent"] = {
-						{ "Color", Encode(src.Color) },
+						{ "Color", { src.Color.r, src.Color.g, src.Color.b, src.Color.a } },
 						{ "TextureHandle", (uint64_t)src.Texture },
 						{ "Scale", src.Scale }
 					};

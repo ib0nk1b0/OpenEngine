@@ -1,6 +1,11 @@
 {
     "AssetRegsitry": [
         {
+            "Handle": 1312955805112909383,
+            "FilePath": "Textures\\Player.png",
+            "Type": "Texture2D"
+        },
+        {
             "Handle": 1644563413748354619,
             "FilePath": "Textures\\camera.png",
             "Type": "Texture2D"
@@ -26,13 +31,13 @@
             "Type": "Texture2D"
         },
         {
-            "Handle": 10234051530288796438,
-            "FilePath": "Textures\\Texture.png",
-            "Type": "Texture2D"
-        },
-        {
             "Handle": 10654564083840397950,
             "FilePath": "Scenes\\ExampleScene.openengine",
+            "Type": "Scene"
+        },
+        {
+            "Handle": 14884098052852876239,
+            "FilePath": "Scenes\\TestScene.openengine",
             "Type": "Scene"
         },
         {

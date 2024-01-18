@@ -670,15 +670,15 @@ namespace OpenEngine {
 
 	void EditorLayer::OpenScene(AssetHandle handle)
 	{
-		Ref<Scene> newScene = AssetManager::GetAsset<Scene>(handle);
-		SceneSerializer serializer(newScene);
-		auto filepath = Project::GetActiveAssetDirectory() / Project::GetActive()->GetAssetManager()->GetFilePath(handle);
-		serializer.Deserialize(filepath);
+		Ref<Scene> readOnlyScene = AssetManager::GetAsset<Scene>(handle);
+		Ref<Scene> newScene = CreateRef<Scene>();
+		readOnlyScene->CopyTo(newScene);
 
 		m_EditorScene = newScene;
 		m_SceneHierarchyPanel.SetContext(m_EditorScene);
 
 		m_ActiveScene = m_EditorScene;
+		auto filepath = Project::GetActiveAssetDirectory() / Project::GetActive()->GetAssetManager()->GetFilePath(handle);
 		m_EditorScene->SetFilepath(filepath);
 	}
 
