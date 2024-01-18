@@ -44,7 +44,7 @@ namespace OpenEngine {
 
 		std::string fileString = filepath.string();
 
-		// TODO(Yan): msdfgen::loadFontData loads from memory buffer which we'll need 
+		// TODO: msdfgen::loadFontData loads from memory buffer which we'll need 
 		msdfgen::FontHandle* font = msdfgen::loadFont(ft, fileString.c_str());
 		if (!font)
 		{
@@ -79,7 +79,6 @@ namespace OpenEngine {
 		double emSize = 40.0;
 
 		msdf_atlas::TightAtlasPacker atlasPacker;
-		// atlasPacker.setDimensionsConstraint()
 		atlasPacker.setPixelRange(2.0);
 		atlasPacker.setMiterLimit(1.0);
 		atlasPacker.setPadding(0);
@@ -95,7 +94,6 @@ namespace OpenEngine {
 #define LCG_MULTIPLIER 6364136223846793005ull
 #define LCG_INCREMENT 1442695040888963407ull
 #define THREAD_COUNT 8
-		// if MSDF || MTSDF
 
 		uint64_t coloringSeed = 0;
 		bool expensiveColoring = false;
@@ -116,24 +114,7 @@ namespace OpenEngine {
 			}
 		}
 
-
 		m_AtlasTexture = CreateAndCacheAtlas<uint8_t, float, 3, msdf_atlas::msdfGenerator>("Test", (float)emSize, m_Data->Glyphs, m_Data->FontGeometry, width, height);
-
-
-#if 0
-		msdfgen::Shape shape;
-		if (msdfgen::loadGlyph(shape, font, 'C'))
-		{
-			shape.normalize();
-			//                      max. angle
-			msdfgen::edgeColoringSimple(shape, 3.0);
-			//           image width, height
-			msdfgen::Bitmap<float, 3> msdf(32, 32);
-			//                     range, scale, translation
-			msdfgen::generateMSDF(msdf, shape, 4.0, 1.0, msdfgen::Vector2(4.0, 4.0));
-			msdfgen::savePng(msdf, "output.png");
-		}
-#endif
 
 		msdfgen::destroyFont(font);
 		msdfgen::deinitializeFreetype(ft);
@@ -149,7 +130,7 @@ namespace OpenEngine {
 	{
 		static Ref<Font> DefaultFont;
 		if (!DefaultFont)
-			DefaultFont = CreateRef<Font>("assets/fonts/Open_Sans/static/OpenSans/OpenSans-Regular.ttf");
+			DefaultFont = CreateRef<Font>("Resources/Fonts/OpenSans/OpenSans-Regular.ttf");
 
 		return DefaultFont;
 	}

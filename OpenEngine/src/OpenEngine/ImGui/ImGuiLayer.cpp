@@ -40,25 +40,25 @@ namespace OpenEngine {
 
 		UI::FontConfiguration OpenSans;
 		OpenSans.Name = "OpenSans";
-		OpenSans.Filepath = "assets/fonts/Open_Sans/static/OpenSans/OpenSans-Regular.ttf";
+		OpenSans.Filepath = "Resources/Fonts/OpenSans/OpenSans-Regular.ttf";
 		OpenSans.Size = 16.0f;
 		UI::Fonts::Add(OpenSans, true);
 
 		UI::FontConfiguration Bold;
 		Bold.Name = "Bold";
-		Bold.Filepath = "assets/fonts/Open_Sans/static/OpenSans/OpenSans-Bold.ttf";
+		Bold.Filepath = "Resources/Fonts/OpenSans/OpenSans-Bold.ttf";
 		Bold.Size = 16.0f;
 		UI::Fonts::Add(Bold);
 
 		UI::FontConfiguration BoldLarge;
 		BoldLarge.Name = "BoldLarge";
-		BoldLarge.Filepath = "assets/fonts/Open_Sans/static/OpenSans/OpenSans-Bold.ttf";
+		BoldLarge.Filepath = "Resources/Fonts/OpenSans/OpenSans-Bold.ttf";
 		BoldLarge.Size = 24.0f;
 		UI::Fonts::Add(BoldLarge);
 
-		/*io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/static/OpenSans/OpenSans-Bold.ttf", 16.0f);
-		io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/static/OpenSans/OpenSans-Bold.ttf", 24.0f);
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/static/OpenSans/OpenSans-Regular.ttf", 16.0f);*/
+		/*io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/OpenSans-Bold.ttf", 16.0f);
+		io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/OpenSans-Bold.ttf", 24.0f);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/OpenSans-Regular.ttf", 16.0f);*/
 
 		// Setup styles
 		//ImGui::StyleColorsClassic();

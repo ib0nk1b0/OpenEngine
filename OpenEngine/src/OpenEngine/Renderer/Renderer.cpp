@@ -58,7 +58,7 @@ namespace OpenEngine {
 		RenderCommand::Init();
 		Renderer2D::Init();
 
-		s_SceneData.CubeShader = Shader::Create("assets/shaders/PBR_Shader.glsl");
+		s_SceneData.CubeShader = Shader::Create("Resources/Shaders/PBR_Shader.glsl");
 
 		s_SceneData.CubeVertexBufferPtr = s_SceneData.CubeVertexBufferBase;
 	}
