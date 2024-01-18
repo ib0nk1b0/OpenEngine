@@ -3,7 +3,7 @@
         "Name": "Sandbox",
         "StartScene": 10654564083840397950,
         "AssetDirectory": "Assets",
-        "AssetRegistryPath": "AssetRegistry.oear",
+        "AssetRegistryPath": "AssetRegistry.oer",
         "ScriptModulePath": "Scripts/Binaries/Sandbox.dll"
     }
 }
