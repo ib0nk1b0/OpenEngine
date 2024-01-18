@@ -12,8 +12,8 @@ namespace OpenEngine {
 		ContentBrowserPanel();
 		
 		void OnImGuiRender();
-	private:
 		void LoadAssets();
+	private:
 	private:
 		std::filesystem::path m_BaseDirectory;
 		std::filesystem::path m_CurrentDirectory;

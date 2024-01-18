@@ -56,10 +56,6 @@ namespace OpenEngine {
 		BoldLarge.Size = 24.0f;
 		UI::Fonts::Add(BoldLarge);
 
-		/*io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/OpenSans-Bold.ttf", 16.0f);
-		io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/OpenSans-Bold.ttf", 24.0f);
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/OpenSans/OpenSans-Regular.ttf", 16.0f);*/
-
 		// Setup styles
 		//ImGui::StyleColorsClassic();
 		ImGui::StyleColorsDark();

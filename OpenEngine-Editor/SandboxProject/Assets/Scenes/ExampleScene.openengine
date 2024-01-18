@@ -1,6 +1,48 @@
 {
     "Entities": [
         {
+            "ID": 6847632655207618363,
+            "Tag": "Text",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    -14.600000381469727,
+                    3.200000047683716,
+                    -0.30000001192092896
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "TextComponent": {
+                "Text": "Text",
+                "Color": [
+                    0.6793249845504761,
+                    0.18917900323867798,
+                    0.18917900323867798,
+                    1.0
+                ],
+                "Kerning": 0.0,
+                "LineSpacing": 0.0,
+                "ScreenSpace": true
+            }
+        },
+        {
             "ID": 5747130823482501996,
             "Tag": "Orthographic Camera",
             "ParentComponent": {
@@ -544,7 +586,7 @@
                     0.5,
                     0.5
                 ],
-                "Density": 2.0,
+                "Density": 1.0,
                 "Friction": 0.30000001192092896,
                 "Restitution": 0.0,
                 "RestitutionThreshold": 0.5
@@ -589,454 +631,6 @@
                 "Far": 1.0,
                 "Primary": true,
                 "FixedAspectRatio": false
-            }
-        },
-        {
-            "ID": 14979383610850610293,
-            "Tag": "Roof",
-            "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
-            },
-            "TransformComponent": {
-                "Translation": [
-                    0.0,
-                    10.934083938598633,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    28.5,
-                    0.5,
-                    1.0
-                ]
-            },
-            "SpriteRendererComponent": {
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "RigidBody2DComponent": {
-                "Type": "Static",
-                "FixedRotation": false
-            },
-            "BoxColider2DComponent": {
-                "Offset": [
-                    0.0,
-                    0.0
-                ],
-                "Size": [
-                    0.5,
-                    0.5
-                ],
-                "Density": 1.0,
-                "Friction": 0.5,
-                "Restitution": 0.0,
-                "RestitutionThreshold": 0.5
-            }
-        },
-        {
-            "ID": 11794546194653272627,
-            "Tag": "Platform",
-            "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
-            },
-            "TransformComponent": {
-                "Translation": [
-                    -3.0,
-                    1.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    2.5522940158843994,
-                    0.5,
-                    1.0
-                ]
-            },
-            "SpriteRendererComponent": {
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "RigidBody2DComponent": {
-                "Type": "Static",
-                "FixedRotation": false
-            },
-            "BoxColider2DComponent": {
-                "Offset": [
-                    0.0,
-                    0.0
-                ],
-                "Size": [
-                    0.5,
-                    0.5
-                ],
-                "Density": 1.0,
-                "Friction": 0.5,
-                "Restitution": 0.0,
-                "RestitutionThreshold": 0.5
-            }
-        },
-        {
-            "ID": 15211516604326270798,
-            "Tag": "Platform",
-            "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
-            },
-            "TransformComponent": {
-                "Translation": [
-                    2.5,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    2.5522940158843994,
-                    0.5,
-                    1.0
-                ]
-            },
-            "SpriteRendererComponent": {
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "RigidBody2DComponent": {
-                "Type": "Static",
-                "FixedRotation": false
-            },
-            "BoxColider2DComponent": {
-                "Offset": [
-                    0.0,
-                    0.0
-                ],
-                "Size": [
-                    0.5,
-                    0.5
-                ],
-                "Density": 1.0,
-                "Friction": 0.5,
-                "Restitution": 0.0,
-                "RestitutionThreshold": 0.5
-            }
-        },
-        {
-            "ID": 3247439353661535272,
-            "Tag": "Platform",
-            "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
-            },
-            "TransformComponent": {
-                "Translation": [
-                    -2.0941359996795654,
-                    5.091740131378174,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.4124319851398468
-                ],
-                "Scale": [
-                    6.5772809982299805,
-                    0.5,
-                    1.0
-                ]
-            },
-            "SpriteRendererComponent": {
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "RigidBody2DComponent": {
-                "Type": "Static",
-                "FixedRotation": false
-            },
-            "BoxColider2DComponent": {
-                "Offset": [
-                    0.0,
-                    0.0
-                ],
-                "Size": [
-                    0.5,
-                    0.5
-                ],
-                "Density": 1.0,
-                "Friction": 0.5,
-                "Restitution": 0.0,
-                "RestitutionThreshold": 0.5
-            }
-        },
-        {
-            "ID": 9600812815803887589,
-            "Tag": "Wall",
-            "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
-            },
-            "TransformComponent": {
-                "Translation": [
-                    13.5,
-                    4.5,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    13.75,
-                    1.0
-                ]
-            },
-            "SpriteRendererComponent": {
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "RigidBody2DComponent": {
-                "Type": "Static",
-                "FixedRotation": false
-            },
-            "BoxColider2DComponent": {
-                "Offset": [
-                    0.0,
-                    0.0
-                ],
-                "Size": [
-                    0.5,
-                    0.5
-                ],
-                "Density": 1.0,
-                "Friction": 0.5,
-                "Restitution": 0.0,
-                "RestitutionThreshold": 0.5
-            }
-        },
-        {
-            "ID": 14651729524829624405,
-            "Tag": "Wall",
-            "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
-            },
-            "TransformComponent": {
-                "Translation": [
-                    -13.5,
-                    4.5,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    13.75,
-                    1.0
-                ]
-            },
-            "SpriteRendererComponent": {
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "RigidBody2DComponent": {
-                "Type": "Static",
-                "FixedRotation": false
-            },
-            "BoxColider2DComponent": {
-                "Offset": [
-                    0.0,
-                    0.0
-                ],
-                "Size": [
-                    0.5,
-                    0.5
-                ],
-                "Density": 1.0,
-                "Friction": 0.5,
-                "Restitution": 0.0,
-                "RestitutionThreshold": 0.5
-            }
-        },
-        {
-            "ID": 16864069208166129113,
-            "Tag": "Floor",
-            "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
-            },
-            "TransformComponent": {
-                "Translation": [
-                    0.0,
-                    -2.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    28.5,
-                    0.5,
-                    1.0
-                ]
-            },
-            "SpriteRendererComponent": {
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "RigidBody2DComponent": {
-                "Type": "Static",
-                "FixedRotation": false
-            },
-            "BoxColider2DComponent": {
-                "Offset": [
-                    0.0,
-                    0.0
-                ],
-                "Size": [
-                    0.5,
-                    0.5
-                ],
-                "Density": 1.0,
-                "Friction": 0.5,
-                "Restitution": 0.0,
-                "RestitutionThreshold": 0.5
-            }
-        },
-        {
-            "ID": 15968408445745123083,
-            "Tag": "Platform",
-            "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
-            },
-            "TransformComponent": {
-                "Translation": [
-                    -8.0,
-                    2.5,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    2.5522940158843994,
-                    0.5,
-                    1.0
-                ]
-            },
-            "SpriteRendererComponent": {
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "RigidBody2DComponent": {
-                "Type": "Static",
-                "FixedRotation": false
-            },
-            "BoxColider2DComponent": {
-                "Offset": [
-                    0.0,
-                    0.0
-                ],
-                "Size": [
-                    0.5,
-                    0.5
-                ],
-                "Density": 1.0,
-                "Friction": 0.5,
-                "Restitution": 0.0,
-                "RestitutionThreshold": 0.5
             }
         }
     ]

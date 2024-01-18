@@ -61,6 +61,12 @@ namespace OpenEngine {
 						Entity quad = m_Context->CreateEntity("Quad");
 						quad.AddComponent<SpriteRendererComponent>();
 					}
+
+					if (ImGui::MenuItem("Text"))
+					{
+						Entity quad = m_Context->CreateEntity("Text");
+						quad.AddComponent<TextComponent>().Text = "Text";
+					}
 					ImGui::Separator();
 					
 					if (ImGui::MenuItem("Mesh"))
@@ -669,6 +675,9 @@ namespace OpenEngine {
 			UI::ColorEdit4("Color", glm::value_ptr(component.Color));
 			UI::DragFloat("Kerning", &component.Kerning, 0.01f);
 			UI::DragFloat("Line Spacing", &component.LineSpacing, 0.05f);
+			UI::DragFloat("Max Width", &component.MaxWidth, 1.0f, 0.0f, 1000.0f);
+
+			ImGui::Checkbox("Screen Space", &component.ScreenSpace);
 		});
 	}
 

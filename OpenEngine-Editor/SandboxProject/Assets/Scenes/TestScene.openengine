@@ -91,14 +91,6 @@
             "ScriptComponent": {
                 "ClassName": "Sandbox.Camera"
             },
-            "EditorRendererComponent": {
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
             "CameraComponent": {
                 "ProjectionType": "Orthographic",
                 "Size": 15.0,
@@ -122,7 +114,7 @@
             },
             "TransformComponent": {
                 "Translation": [
-                    0.0,
+                    -2.109731674194336,
                     0.0,
                     0.0
                 ],

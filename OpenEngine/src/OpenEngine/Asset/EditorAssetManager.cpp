@@ -166,6 +166,7 @@ namespace OpenEngine {
 	std::map<std::filesystem::path, AssetHandle> EditorAssetManager::DeserializeAssetRegistry()
 	{
 		m_AssetRegistry.clear();
+		m_LoadedAssets.clear();
 		std::map<std::filesystem::path, AssetHandle> assetsInRegistry;
 		auto path = Project::GetActiveAssetRegistryPath();
 

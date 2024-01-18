@@ -247,7 +247,8 @@ namespace OpenEngine {
 					{ "Text", tc.Text },
 					{ "Color", { tc.Color.r, tc.Color.g, tc.Color.b, tc.Color.a } },
 					{ "Kerning",tc.Kerning },
-					{ "LineSpacing", tc.LineSpacing }
+					{ "LineSpacing", tc.LineSpacing },
+					{ "ScreenSpace", tc.ScreenSpace }
 				};
 			}
 
@@ -432,6 +433,8 @@ namespace OpenEngine {
 					Decode(ConvertFloat4(jsonTc["Color"]), tc.Color);
 					tc.Kerning = jsonTc["Kerning"].get<float>();
 					tc.LineSpacing = jsonTc["LineSpacing"].get<float>();
+					if (jsonTc.contains("ScreenSpace"))
+						tc.ScreenSpace = jsonTc["ScreenSpace"].get<bool>();
 				}
 
 			}

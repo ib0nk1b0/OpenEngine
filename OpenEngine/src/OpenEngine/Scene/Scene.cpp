@@ -419,11 +419,14 @@ namespace OpenEngine {
 				for (auto entity : view)
 				{
 					auto [transform, text] = view.get<TransformComponent, TextComponent>(entity);
-					Renderer2D::TextParams textParams;
-					textParams.Color = text.Color;
-					textParams.Kerning = text.Kerning;
-					textParams.LineSpacing = text.LineSpacing;
-					Renderer2D::DrawString(text.Text, text.TextFont, transform.GetTransform(), textParams, (int)entity);
+					if (!text.ScreenSpace)
+					{
+						Renderer2D::TextParams textParams;
+						textParams.Color = text.Color;
+						textParams.Kerning = text.Kerning;
+						textParams.LineSpacing = text.LineSpacing;
+						Renderer2D::DrawString(text.Text, text.TextFont, transform.GetTransform(), textParams, (int)entity);
+					}
 				}
 			}
 
@@ -451,6 +454,31 @@ namespace OpenEngine {
 					{
 						Renderer2D::DrawLine({ -m_GridSize, 0, i - m_GridSize }, { m_GridSize, 0, i - m_GridSize }, { 0.8f, 0.8f, 0.9f, 1.0f });
 						Renderer2D::DrawLine({ i - m_GridSize, 0, -m_GridSize }, { i - m_GridSize, 0, m_GridSize }, { 0.8f, 0.8f, 0.9f, 1.0f });
+					}
+				}
+			}
+
+			Renderer2D::EndScene();
+		}
+
+		// Screen space rendering
+		{
+			OrthographicCamera camera(-16.0f, 16.0f, -9.0f, 9.0f);
+
+			Renderer2D::BeginScene(camera);
+
+			{
+				auto view = m_Registry.view<TransformComponent, TextComponent>();
+				for (auto entity : view)
+				{
+					auto [transform, text] = view.get<TransformComponent, TextComponent>(entity);
+					if (text.ScreenSpace)
+					{
+						Renderer2D::TextParams textParams;
+						textParams.Color = text.Color;
+						textParams.Kerning = text.Kerning;
+						textParams.LineSpacing = text.LineSpacing;
+						Renderer2D::DrawString(text.Text, text.TextFont, transform.GetTransform(), textParams);
 					}
 				}
 			}
@@ -607,11 +635,39 @@ namespace OpenEngine {
 				for (auto entity : view)
 				{
 					auto [transform, text] = view.get<TransformComponent, TextComponent>(entity);
-					Renderer2D::TextParams textParams;
-					textParams.Color = text.Color;
-					textParams.Kerning = text.Kerning;
-					textParams.LineSpacing = text.LineSpacing;
-					Renderer2D::DrawString(text.Text, text.TextFont, transform.GetTransform(), textParams, (int)entity);
+					if (!text.ScreenSpace)
+					{
+						Renderer2D::TextParams textParams;
+						textParams.Color = text.Color;
+						textParams.Kerning = text.Kerning;
+						textParams.LineSpacing = text.LineSpacing;
+						Renderer2D::DrawString(text.Text, text.TextFont, transform.GetTransform(), textParams, (int)entity);
+					}
+				}
+			}
+
+			Renderer2D::EndScene();
+		}
+
+		// Screen space rendering
+		{
+			OrthographicCamera camera(-16.0f, 16.0f, -9.0f, 9.0f);
+
+			Renderer2D::BeginScene(camera);
+
+			{
+				auto view = m_Registry.view<TransformComponent, TextComponent>();
+				for (auto entity : view)
+				{
+					auto [transform, text] = view.get<TransformComponent, TextComponent>(entity);
+					if (text.ScreenSpace)
+					{
+						Renderer2D::TextParams textParams;
+						textParams.Color = text.Color;
+						textParams.Kerning = text.Kerning;
+						textParams.LineSpacing = text.LineSpacing;
+						Renderer2D::DrawString(text.Text, text.TextFont, transform.GetTransform(), textParams);
+					}
 				}
 			}
 

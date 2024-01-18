@@ -193,8 +193,12 @@ namespace OpenEngine {
 		std::string Text;
 		Ref<Font> TextFont = Font::GetDefault();
 		glm::vec4 Color{ 1.0f };
+
 		float Kerning = 0.0f;
 		float LineSpacing = 0.0f;
+		float MaxWidth = 100.0f;
+
+		bool ScreenSpace = false;
 
 		TextComponent() = default;
 		TextComponent(const TextComponent&) = default;

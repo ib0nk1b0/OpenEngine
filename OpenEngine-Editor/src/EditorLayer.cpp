@@ -685,23 +685,24 @@ namespace OpenEngine {
 	void EditorLayer::SaveScene()
 	{
 		const std::string filepath = m_EditorScene->GetFilepath().string();
-		if (filepath == "UntitledScene.openengine")
-			SaveSceneAs();
-		else
+		if (filepath != "UntitledScene.openengine")
 		{
 			SceneSerializer serializer(m_EditorScene);
 			serializer.Serialize(filepath);
+			m_ContentBrowserPanel->LoadAssets();
+			return;
 		}
+		SaveSceneAs();
 	}
 
 	void EditorLayer::SaveSceneAs()
 	{
-		std::string filepath = FileDialogs::SaveFile("OpenEngine Scene (*.openengine)\0*.openengine\0");
-		if (!filepath.empty())
+		std::string path = FileDialogs::SaveFile("OpenEngine Scene (*.openengine)\0*.openengine\0");
+		if (!path.empty())
 		{
-			SceneSerializer serializer(m_EditorScene);
-			serializer.Serialize(filepath);
-			m_EditorScene->SetFilepath(filepath);
+			std::filesystem::path filepath(path);
+			m_EditorScene->SetFilepath(filepath.lexically_relative(Project::GetActiveAssetDirectory()));
+			SaveScene();
 		}
 	}
 
