@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Panel.h"
+
 #include "OpenEngine/Core/Core.h"
 #include "OpenEngine/Core/Log.h"
 #include "OpenEngine/Scene/Scene.h"
@@ -8,7 +10,7 @@
 
 namespace OpenEngine {
 
-	class SceneHierarchyPanel
+	class SceneHierarchyPanel : public Panel
 	{
 	public:
 		SceneHierarchyPanel() = default;
@@ -18,7 +20,8 @@ namespace OpenEngine {
 		void DisplaySceneHierarchy(bool display) { m_DisplaySceneHierarchy = display; }
 		void DisplayProperties(bool display) { m_DisplayProperties = display; }
 
-		void OnImGuiRender();
+		static std::string GetName() { return "SceneHierarchyPanel"; }
+		void OnImGuiRender() override;
 
 		Entity GetSelectedEntity() const { return m_SelectionContext; }
 		void SetSelectedEntity(Entity entity) { m_SelectionContext = entity; }

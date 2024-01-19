@@ -1,13 +1,16 @@
 #pragma once
 
+#include "Panel.h"
+
 namespace OpenEngine {
 
-	class AssetManagerPanel
+	class AssetManagerPanel : public Panel
 	{
 	public:
 		AssetManagerPanel();
 
-		void OnImGuiRender();
+		static std::string GetName() { return "AssetManagerPanel"; }
+		void OnImGuiRender() override;
 	};
 
 }

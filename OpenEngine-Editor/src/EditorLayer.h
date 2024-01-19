@@ -2,6 +2,7 @@
 
 #include "OpenEngine.h"
 
+#include "Panels/PanelManager.h"
 #include "Panels/SceneHierarchy.h"
 #include "Panels/ContentBrowserPanel.h"
 #include "Panels/MaterialPanel.h"
@@ -81,10 +82,7 @@ namespace OpenEngine {
 		int m_GizmoType = -1;
 
 		// Panels
-		SceneHierarchyPanel m_SceneHierarchyPanel;
-		Scope<ContentBrowserPanel> m_ContentBrowserPanel;
-		MaterialPanel m_MaterialPanel;
-		AssetManagerPanel m_AssetManagerPanel;
+		Scope<PanelManager> m_PanelManager;
 
 		Ref<Texture2D> m_PlayIcon, m_StopIcon;
 		SceneState m_SceneState = SceneState::Edit;

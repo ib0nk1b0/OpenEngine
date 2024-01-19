@@ -1,17 +1,19 @@
 #pragma once
 
+#include "Panel.h"
 #include "OpenEngine.h"
 
 #include <filesystem>
 
 namespace OpenEngine {
 
-	class ContentBrowserPanel
+	class ContentBrowserPanel : public Panel
 	{
 	public:
 		ContentBrowserPanel();
-		
-		void OnImGuiRender();
+
+		static std::string GetName() { return "ContentBrowserPanel"; }
+		void OnImGuiRender() override;
 		void LoadAssets();
 	private:
 	private:

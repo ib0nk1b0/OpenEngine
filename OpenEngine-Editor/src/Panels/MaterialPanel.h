@@ -1,11 +1,13 @@
 #pragma once
 
+#include "Panel.h"
+
 #include "OpenEngine/Core/Core.h"
 #include "OpenEngine/Scene/Scene.h"
 
 namespace OpenEngine {
 
-	class MaterialPanel
+	class MaterialPanel : public Panel
 	{
 	public:
 		MaterialPanel() = default;
@@ -14,7 +16,8 @@ namespace OpenEngine {
 		void Display(bool display) { m_Display = display; }
 
 		void SetContext(const Ref<Scene>& scene);
-		void OnImGuiRender();
+		static std::string GetName() { return "MaterialPanel"; }
+		void OnImGuiRender() override;
 	private:
 		bool m_Display = true;
 
