@@ -1,4 +1,4 @@
-project "Sandbox"
+project "OpenEngine-Runtime"
   kind "ConsoleApp"
   language "C++"
   cppdialect "C++17"

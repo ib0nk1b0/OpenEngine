@@ -30,6 +30,6 @@ group "Tools"
 include "OpenEngine-Editor"
 group ""
 
-group "Projects"
-include "Sandbox"
+group "Runtime"
+include "OpenEngine-Runtime"
 group ""
