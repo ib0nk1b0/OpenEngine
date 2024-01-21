@@ -53,6 +53,7 @@ namespace OpenEngine {
 		void UI_EditorCameraPanel();
 		void UI_Toolbar();
 		void UI_ColorScheme();
+		void UI_NewProject();
 	private:
 		Timestep m_FrameTime;
 
@@ -62,6 +63,7 @@ namespace OpenEngine {
 		bool m_DisplayProperties = true;
 		bool m_DisplayMaterials = true;
 		bool m_DisplayPhysicsColliders = true;
+		bool m_DisplayProjectPopup = false;
 
 		Ref<Scene> m_ActiveScene;
 		Ref<Scene> m_EditorScene;

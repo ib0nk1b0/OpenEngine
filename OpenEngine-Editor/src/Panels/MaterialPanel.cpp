@@ -9,36 +9,41 @@
 #include <glm/gtc/type_ptr.hpp>
 
 namespace OpenEngine {
-
-	MaterialPanel::MaterialPanel(const Ref<Scene>& scene)
+	
+	void MaterialPanel::Init()
 	{
-		SetContext(scene);
+		s_Display = true;
 	}
 
 	void MaterialPanel::SetContext(const Ref<Scene>& scene)
 	{
-		m_Context = scene;
+		s_Context = scene;
+	}
+
+	void MaterialPanel::ToggleDisplay()
+	{
+		s_Display = !s_Display;
 	}
 
 	void OpenEngine::MaterialPanel::OnImGuiRender()
 	{
-		if (!m_Display)
+		if (!s_Display)
 			return;
 
 		ImGui::Begin("Materials");
 
 		if (ImGui::Button("Add Material"))
 		{
-			m_Context->m_Materials.emplace_back();
+			s_Context->m_Materials.emplace_back();
 		}
 
-		for (size_t i = 0; i < m_Context->m_Materials.size(); i++)
+		for (size_t i = 0; i < s_Context->m_Materials.size(); i++)
 		{
 			ImGui::PushID(i);
 
 			ImGui::Text("Material index: %d", i);
 
-			Material& material = m_Context->m_Materials[i];
+			Material& material = s_Context->m_Materials[i];
 			UI::ColorEdit3("Albedo", glm::value_ptr(material.Albedo));
 			UI::DragFloat("Roughness", &material.Roughness, 0.05f, 0.0f, 1.0f);
 			UI::DragFloat("Metalic", &material.Metalic, 0.05f, 0.0f, 1.0f);

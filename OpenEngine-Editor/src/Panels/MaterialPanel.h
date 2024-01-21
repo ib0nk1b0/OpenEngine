@@ -7,21 +7,17 @@
 
 namespace OpenEngine {
 
-	class MaterialPanel : public Panel
+	class MaterialPanel
 	{
 	public:
-		MaterialPanel() = default;
-		MaterialPanel(const Ref<Scene>& scene);
-
-		void Display(bool display) { m_Display = display; }
-
-		void SetContext(const Ref<Scene>& scene);
-		static std::string GetName() { return "MaterialPanel"; }
-		void OnImGuiRender() override;
+		static void Init();
+		static void SetContext(const Ref<Scene>& scene);
+		static void ToggleDisplay();
+		static void OnImGuiRender();
 	private:
-		bool m_Display = true;
+		inline static bool s_Display;
 
-		Ref<Scene> m_Context;
+		inline static Ref<Scene> s_Context;
 	};
 
 }

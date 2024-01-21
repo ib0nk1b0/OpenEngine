@@ -36,7 +36,8 @@ namespace OpenEngine {
 
 		m_PanelManager->Add<AssetManagerPanel>();
 		m_PanelManager->Add<SceneHierarchyPanel>();
-		m_PanelManager->Add<MaterialPanel>();
+		//m_PanelManager->Add<MaterialPanel>();
+		MaterialPanel::Init();
 
 		FramebufferSpecification fbSpec;
 		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
@@ -47,8 +48,9 @@ namespace OpenEngine {
 		m_EditorScene = CreateRef<Scene>();
 		m_RuntimeScene = CreateRef<Scene>();
 
-		m_PanelManager->Get<SceneHierarchyPanel>()->SetContext(m_EditorScene);
-		m_PanelManager->Get<MaterialPanel>()->SetContext(m_EditorScene);
+		//m_PanelManager->Get<SceneHierarchyPanel>()->SetContext(m_EditorScene);
+		//m_PanelManager->Get<MaterialPanel>()->SetContext(m_EditorScene);
+		//MaterialPanel::SetContext(m_EditorScene);
 
 		OpenProject("SandboxProject/Sandbox.oeproj");
 
@@ -199,8 +201,13 @@ namespace OpenEngine {
 
 		if (m_DisplayEditorCameraUI)
 			UI_EditorCameraPanel();
+
+		if (m_DisplayProjectPopup)
+			UI_NewProject();
 		
 		m_PanelManager->OnImGuiRender();
+
+		MaterialPanel::OnImGuiRender();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
@@ -360,7 +367,7 @@ namespace OpenEngine {
 					m_PanelManager->Get<SceneHierarchyPanel>()->DisplayProperties(m_DisplayProperties);
 
 				if (ImGui::MenuItem("Materials", NULL, &m_DisplayMaterials))
-					m_PanelManager->Get<MaterialPanel>()->Display(m_DisplayMaterials);
+					MaterialPanel::ToggleDisplay();
 
 				ImGui::MenuItem("Renderer Stats", NULL, &m_DisplayStats);
 				ImGui::MenuItem("Editor Camera UI", NULL, &m_DisplayEditorCameraUI);
@@ -514,6 +521,25 @@ namespace OpenEngine {
 
 	}
 
+	void EditorLayer::UI_NewProject()
+	{
+		ImGui::OpenPopup("ProjectPopup");
+
+		ImVec2 viewportCenter = ImGui::GetMainViewport()->GetWorkCenter();
+		glm::vec2 center = { viewportCenter.x, viewportCenter.y };
+		glm::vec2 size = { 400.0f, 300.0f };
+		center -= size;
+		ImGui::PushStyleVar(ImGuiStyleVar_PopupRounding, 5.0f);
+		ImGui::SetNextWindowSize({ size.x, size.y });
+		ImGui::SetNextWindowPos({ center.x, center.y });
+		if (ImGui::BeginPopupModal("ProjectPopup", &m_DisplayProjectPopup, ImGuiWindowFlags_NoResize))
+		{
+			ImGui::Text("New Projects isn't implemented yet");
+			ImGui::EndPopup();
+		}
+		ImGui::PopStyleVar();
+	}
+
 	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
 	{
 		if (e.GetRepeatCount() > 0)
@@ -632,6 +658,8 @@ namespace OpenEngine {
 	{
 		OE_WARN("Projects are not fully developed."); // TODO: <- do this
 		// Project::New();
+
+		m_DisplayProjectPopup = true;
 	}
 
 	void EditorLayer::OpenProject(const std::filesystem::path& filepath)
@@ -658,7 +686,8 @@ namespace OpenEngine {
 		m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		m_EditorScene->SetMaterials(materials);
 		m_PanelManager->Get<SceneHierarchyPanel>()->SetContext(m_EditorScene);
-		m_PanelManager->Get<MaterialPanel>()->SetContext(m_EditorScene);
+		//m_PanelManager->Get<MaterialPanel>()->SetContext(m_EditorScene);
+		MaterialPanel::SetContext(m_EditorScene);
 	}
 
 	void EditorLayer::OpenScene()
@@ -676,6 +705,7 @@ namespace OpenEngine {
 
 		m_EditorScene = newScene;
 		m_PanelManager->Get<SceneHierarchyPanel>()->SetContext(m_EditorScene);
+		MaterialPanel::SetContext(m_EditorScene);
 
 		m_ActiveScene = m_EditorScene;
 		auto filepath = Project::GetActiveAssetDirectory() / Project::GetActive()->GetAssetManager()->GetFilePath(handle);
