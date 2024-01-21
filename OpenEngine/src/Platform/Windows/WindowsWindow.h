@@ -3,7 +3,7 @@
 #include "OpenEngine/Core/Window.h"
 #include "OpenEngine/Renderer/GraphicsContext.h"
 
-#include <GLFW/glfw3.h>
+struct GLFWwindow;
 
 namespace OpenEngine {
 	class WindowsWindow : public Window

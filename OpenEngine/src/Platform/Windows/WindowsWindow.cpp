@@ -7,6 +7,7 @@
 #include "OpenEngine/Events/KeyEvent.h"
 
 #include "Platform/OpenGL/OpenGLContext.h"
+#include <GLFW/glfw3.h>
 
 namespace OpenEngine {
 

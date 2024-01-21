@@ -27,6 +27,10 @@ project "OpenEngine-Runtime"
     "OpenEngine"
   }
 
+  postbuildcommands {
+    "{COPY} %{Library.Assimp} %{cfg.targetdir}"
+  }
+
   filter "system:windows"
     systemversion "latest"
 
