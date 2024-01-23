@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Panel.h"
-
 #include "OpenEngine/Core/Core.h"
 #include "OpenEngine/Core/Log.h"
 #include "OpenEngine/Scene/Scene.h"
@@ -10,37 +8,33 @@
 
 namespace OpenEngine {
 
-	class SceneHierarchyPanel : public Panel
+	class SceneHierarchyPanel
 	{
 	public:
-		SceneHierarchyPanel() = default;
-		SceneHierarchyPanel(const Ref<Scene>& scene);
+		static void Init();
 
-		void SetContext(const Ref<Scene>& scene);
-		void DisplaySceneHierarchy(bool display) { m_DisplaySceneHierarchy = display; }
-		void DisplayProperties(bool display) { m_DisplayProperties = display; }
+		static void SetContext(const Ref<Scene>& scene);
+		static void ToggleSceneHierarchy() { m_DisplaySceneHierarchy = !m_DisplaySceneHierarchy; }
+		static void ToggleProperties() { m_DisplayProperties = !m_DisplayProperties; }
 
-		static std::string GetName() { return "SceneHierarchyPanel"; }
-		void OnImGuiRender() override;
+		static void OnImGuiRender();
 
-		Entity GetSelectedEntity() const { return m_SelectionContext; }
-		void SetSelectedEntity(Entity entity) { m_SelectionContext = entity; }
+		static Entity GetSelectedEntity() { return m_SelectionContext; }
+		static void SetSelectedEntity(Entity entity) { m_SelectionContext = entity; }
 
-		void SetSceneState(SceneState state) { m_SceneState = state; }
-		SceneState GetSceneState() { return m_SceneState; }
+		static bool DisplaySceneHirerarchy() { return m_DisplaySceneHierarchy; }
+		static bool DisplayProperties() { return m_DisplayProperties; }
 	private:
-		void DrawEntityNode(Entity entity);
-		void DrawComponents(Entity entity);
+		static void DrawEntityNode(Entity entity);
+		static void DrawComponents(Entity entity);
 	private:
-		bool m_DisplaySceneHierarchy = true;
-		bool m_DisplayProperties = true;
+		inline static bool m_DisplaySceneHierarchy;
+		inline static bool m_DisplayProperties;
 
-		Ref<Scene> m_Context;
-		Entity m_SelectionContext;
+		inline static Ref<Scene> m_Context;
+		inline static Entity m_SelectionContext;
 
-		Ref<Texture2D> m_ClearTextureImage;
-
-		SceneState m_SceneState = SceneState::Edit;
+		inline static Ref<Texture2D> m_ClearTextureImage;
 	};
 
 }

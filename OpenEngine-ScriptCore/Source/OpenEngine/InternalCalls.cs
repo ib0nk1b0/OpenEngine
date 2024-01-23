@@ -72,7 +72,10 @@ namespace OpenEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static bool Input_IsKeyDown(KeyCode keyCode);
-        
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void Input_GetMousePosition(out Vector2 mousePosition);
+
         #endregion
     }
 }

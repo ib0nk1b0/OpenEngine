@@ -9,9 +9,10 @@
 
 namespace OpenEngine {
 
-	ContentBrowserPanel::ContentBrowserPanel()
-		: m_BaseDirectory(Project::GetAssetDirectory()), m_CurrentDirectory(m_BaseDirectory)
+	void ContentBrowserPanel::Init()
 	{
+		m_BaseDirectory = Project::GetAssetDirectory();
+		m_CurrentDirectory = m_BaseDirectory;
 		m_FolderIcon = TextureImporter::LoadTexture2D("Resources/Icons/FolderIcon.png");
 		m_FileIcon = TextureImporter::LoadTexture2D("Resources/Icons/FileIcon.png");
 		m_RefreshIcon = TextureImporter::LoadTexture2D("Resources/Icons/RefreshIcon.png");
@@ -22,8 +23,6 @@ namespace OpenEngine {
 	void ContentBrowserPanel::OnImGuiRender()
 	{
 		ImGui::Begin("Content Browser");
-
-		ImGuiIO& io = ImGui::GetIO();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 0));
 		

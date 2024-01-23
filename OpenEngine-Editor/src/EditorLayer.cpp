@@ -32,11 +32,7 @@ namespace OpenEngine {
 		m_PlayIcon = TextureImporter::LoadTexture2D("Resources/Icons/PlayButton.png");
 		m_StopIcon = TextureImporter::LoadTexture2D("Resources/Icons/StopButton.png");
 
-		m_PanelManager = CreateScope<PanelManager>();
-
-		m_PanelManager->Add<AssetManagerPanel>();
-		m_PanelManager->Add<SceneHierarchyPanel>();
-		//m_PanelManager->Add<MaterialPanel>();
+		SceneHierarchyPanel::Init();
 		MaterialPanel::Init();
 
 		FramebufferSpecification fbSpec;
@@ -48,9 +44,8 @@ namespace OpenEngine {
 		m_EditorScene = CreateRef<Scene>();
 		m_RuntimeScene = CreateRef<Scene>();
 
-		//m_PanelManager->Get<SceneHierarchyPanel>()->SetContext(m_EditorScene);
-		//m_PanelManager->Get<MaterialPanel>()->SetContext(m_EditorScene);
-		//MaterialPanel::SetContext(m_EditorScene);
+		SceneHierarchyPanel::SetContext(m_EditorScene);
+		MaterialPanel::SetContext(m_EditorScene);
 
 		OpenProject("SandboxProject/Sandbox.oeproj");
 
@@ -125,7 +120,7 @@ namespace OpenEngine {
 		{
 			int pixelData = m_Framebuffer->ReadPixel(1, m_MouseX, m_MouseY);
 			m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_EditorScene.get());
-			m_PanelManager->Get<SceneHierarchyPanel>()->SetSelectedEntity(m_HoveredEntity);
+			SceneHierarchyPanel::SetSelectedEntity(m_HoveredEntity);
 		}
 
 		RenderOverlay();
@@ -204,10 +199,11 @@ namespace OpenEngine {
 
 		if (m_DisplayProjectPopup)
 			UI_NewProject();
-		
-		m_PanelManager->OnImGuiRender();
 
 		MaterialPanel::OnImGuiRender();
+		SceneHierarchyPanel::OnImGuiRender();
+		AssetManagerPanel::OnImGuiRender();
+		ContentBrowserPanel::OnImGuiRender();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
@@ -246,7 +242,7 @@ namespace OpenEngine {
 			ImGui::EndDragDropTarget();
 		}
 
-		Entity selectedEntity = m_PanelManager->Get<SceneHierarchyPanel>()->GetSelectedEntity();
+		Entity selectedEntity = SceneHierarchyPanel::GetSelectedEntity();
 		if (selectedEntity && m_GizmoType != -1 && m_SceneState != SceneState::Play)
 		{
 			ImGuizmo::SetOrthographic(false);
@@ -309,7 +305,7 @@ namespace OpenEngine {
 		m_SceneState = SceneState::Play;
 		m_EditorScene->CopyTo(m_RuntimeScene);
 		m_RuntimeScene->SetFilepath(m_EditorScene->GetFilepath());
-		m_PanelManager->Get<SceneHierarchyPanel>()->SetContext(m_RuntimeScene);
+		SceneHierarchyPanel::SetContext(m_RuntimeScene);
 		m_RuntimeScene->OnRuntimeStart();
 	}
 
@@ -318,7 +314,7 @@ namespace OpenEngine {
 		m_SceneState = SceneState::Edit;
 		m_RuntimeScene->OnRuntimeStop();
 		m_RuntimeScene = CreateRef<Scene>();
-		m_PanelManager->Get<SceneHierarchyPanel>()->SetContext(m_EditorScene);
+		SceneHierarchyPanel::SetContext(m_RuntimeScene);
 		m_EditorScene->OnEditorStart();
 	}
 
@@ -360,11 +356,11 @@ namespace OpenEngine {
 
 			if (ImGui::BeginMenu("Menus"))
 			{
-				if (ImGui::MenuItem("Scene Hierarchy", NULL, &m_DisplaySceneHierarchy))
-					m_PanelManager->Get<SceneHierarchyPanel>()->DisplaySceneHierarchy(m_DisplaySceneHierarchy);
+				if (ImGui::MenuItem("Scene Hierarchy", NULL, SceneHierarchyPanel::DisplaySceneHirerarchy()))
+					SceneHierarchyPanel::ToggleSceneHierarchy();
 
-				if (ImGui::MenuItem("Properties", NULL, &m_DisplayProperties))
-					m_PanelManager->Get<SceneHierarchyPanel>()->DisplayProperties(m_DisplayProperties);
+				if (ImGui::MenuItem("Properties", NULL, SceneHierarchyPanel::DisplayProperties()))
+					SceneHierarchyPanel::ToggleProperties();
 
 				if (ImGui::MenuItem("Materials", NULL, &m_DisplayMaterials))
 					MaterialPanel::ToggleDisplay();
@@ -666,7 +662,7 @@ namespace OpenEngine {
 	{
 		if (Project::Load(filepath))
 		{
-			m_PanelManager->Add<ContentBrowserPanel>();
+			ContentBrowserPanel::Init();
 			AssetHandle startScene = Project::GetActive()->GetConfig().StartScene;
 			if (startScene)
 				OpenScene(startScene);
@@ -685,8 +681,7 @@ namespace OpenEngine {
 		m_EditorScene->SetFilepath(filepath);
 		m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		m_EditorScene->SetMaterials(materials);
-		m_PanelManager->Get<SceneHierarchyPanel>()->SetContext(m_EditorScene);
-		//m_PanelManager->Get<MaterialPanel>()->SetContext(m_EditorScene);
+		SceneHierarchyPanel::SetContext(m_EditorScene);
 		MaterialPanel::SetContext(m_EditorScene);
 	}
 
@@ -704,7 +699,7 @@ namespace OpenEngine {
 		readOnlyScene->CopyTo(newScene);
 
 		m_EditorScene = newScene;
-		m_PanelManager->Get<SceneHierarchyPanel>()->SetContext(m_EditorScene);
+		SceneHierarchyPanel::SetContext(m_EditorScene);
 		MaterialPanel::SetContext(m_EditorScene);
 
 		m_ActiveScene = m_EditorScene;
@@ -719,8 +714,7 @@ namespace OpenEngine {
 		{
 			SceneSerializer serializer(m_EditorScene);
 			serializer.Serialize(filepath);
-			m_PanelManager->Get<ContentBrowserPanel>()->LoadAssets();
-			//m_ContentBrowserPanel->LoadAssets();
+			ContentBrowserPanel::LoadAssets();
 			return;
 		}
 		SaveSceneAs();

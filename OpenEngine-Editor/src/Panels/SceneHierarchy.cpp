@@ -19,14 +19,10 @@
 
 namespace OpenEngine {
 
-	static float GetImGuiLineHeight()
+	void SceneHierarchyPanel::Init()
 	{
-		return GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
-	}
-
-	SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& scene)
-	{
-		SetContext(scene);
+		m_DisplaySceneHierarchy = true;
+		m_DisplayProperties = true;
 	}
 
 	void SceneHierarchyPanel::SetContext(const Ref<Scene>& scene)

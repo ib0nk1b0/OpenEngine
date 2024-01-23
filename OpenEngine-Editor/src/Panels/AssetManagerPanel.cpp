@@ -10,10 +10,6 @@
 
 namespace OpenEngine {
 
-	AssetManagerPanel::AssetManagerPanel()
-	{
-	}
-
 	void AssetManagerPanel::OnImGuiRender()
 	{
 		auto assetHandles = Project::GetActive()->GetAssetManager()->GetAllAssetHandles();

@@ -1,29 +1,26 @@
 #pragma once
 
-#include "Panel.h"
 #include "OpenEngine.h"
 
 #include <filesystem>
 
 namespace OpenEngine {
 
-	class ContentBrowserPanel : public Panel
+	class ContentBrowserPanel
 	{
 	public:
-		ContentBrowserPanel();
+		static void Init();
 
-		static std::string GetName() { return "ContentBrowserPanel"; }
-		void OnImGuiRender() override;
-		void LoadAssets();
+		static void OnImGuiRender();
+		static void LoadAssets();
 	private:
-	private:
-		std::filesystem::path m_BaseDirectory;
-		std::filesystem::path m_CurrentDirectory;
-		std::filesystem::path m_PreviousDirectory;
+		inline static std::filesystem::path m_BaseDirectory;
+		inline static std::filesystem::path m_CurrentDirectory;
+		inline static std::filesystem::path m_PreviousDirectory;
 
-		std::map<std::filesystem::path, AssetHandle> m_AssetMap;
+		inline static std::map<std::filesystem::path, AssetHandle> m_AssetMap;
 
-		Ref<Texture2D> m_FolderIcon, m_FileIcon, m_RefreshIcon;
+		inline static Ref<Texture2D> m_FolderIcon, m_FileIcon, m_RefreshIcon;
 	};
 
 }

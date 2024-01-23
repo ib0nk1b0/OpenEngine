@@ -13,5 +13,11 @@ namespace OpenEngine
         {
             return InternalCalls.Input_IsKeyDown(keyCode);
         }
+
+        public static Vector2 GetMousePosition()
+        {
+            InternalCalls.Input_GetMousePosition(out Vector2 mousePosition);
+            return mousePosition;
+        }
     }
 }

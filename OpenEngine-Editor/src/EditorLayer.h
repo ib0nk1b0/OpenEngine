@@ -2,7 +2,6 @@
 
 #include "OpenEngine.h"
 
-#include "Panels/PanelManager.h"
 #include "Panels/SceneHierarchy.h"
 #include "Panels/ContentBrowserPanel.h"
 #include "Panels/MaterialPanel.h"
@@ -59,10 +58,8 @@ namespace OpenEngine {
 
 		bool m_DisplayStats = true;
 		bool m_DisplayEditorCameraUI = true;
-		bool m_DisplaySceneHierarchy = true;
-		bool m_DisplayProperties = true;
 		bool m_DisplayMaterials = true;
-		bool m_DisplayPhysicsColliders = true;
+		bool m_DisplayPhysicsColliders = false;
 		bool m_DisplayProjectPopup = false;
 
 		Ref<Scene> m_ActiveScene;
@@ -82,9 +79,6 @@ namespace OpenEngine {
 		bool m_CursorEnabled = true;
 
 		int m_GizmoType = -1;
-
-		// Panels
-		Scope<PanelManager> m_PanelManager;
 
 		Ref<Texture2D> m_PlayIcon, m_StopIcon;
 		SceneState m_SceneState = SceneState::Edit;

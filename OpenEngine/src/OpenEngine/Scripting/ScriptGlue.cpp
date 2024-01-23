@@ -163,6 +163,11 @@ namespace OpenEngine {
 		return Input::IsKeyPressed(keyCode);
 	}
 
+	static void Input_GetMousePosition(glm::vec2* outPosition)
+	{
+		*outPosition = glm::vec2(Input::GetMouseX(), Input::GetMouseY());
+	}
+
 #pragma endregion
 
 #pragma region Log
@@ -229,6 +234,7 @@ namespace OpenEngine {
 		OE_ADD_INTERNAL_CALL(RigidBody2DComponent_ApplyLinearImpulseToCenter);
 
 		OE_ADD_INTERNAL_CALL(Input_IsKeyDown);
+		OE_ADD_INTERNAL_CALL(Input_GetMousePosition);
 
 		OE_ADD_INTERNAL_CALL(Log_Trace);
 		OE_ADD_INTERNAL_CALL(Log_Info);
