@@ -14,8 +14,8 @@
             },
             "TransformComponent": {
                 "Translation": [
-                    0.01724099926650524,
-                    0.681551992893219,
+                    0.0,
+                    0.0,
                     0.0
                 ],
                 "Rotation": [
@@ -30,7 +30,7 @@
                 ]
             },
             "ScriptComponent": {
-                "ClassName": "Sandbox.Player"
+                "ClassName": "Sandbox.FpsController"
             },
             "SpriteRendererComponent": {
                 "Color": [
@@ -39,29 +39,11 @@
                     1.0,
                     1.0
                 ]
-            },
-            "RigidBody2DComponent": {
-                "Type": "Dynamic",
-                "FixedRotation": false
-            },
-            "BoxColider2DComponent": {
-                "Offset": [
-                    0.0,
-                    0.0
-                ],
-                "Size": [
-                    0.5,
-                    0.5
-                ],
-                "Density": 2.0,
-                "Friction": 0.30000001192092896,
-                "Restitution": 0.0,
-                "RestitutionThreshold": 0.5
             }
         },
         {
             "ID": 5747130823482501996,
-            "Tag": "Orthographic Camera",
+            "Tag": "Camera",
             "ParentComponent": {
                 "ParentName": "",
                 "ParentID": 0,
@@ -73,8 +55,8 @@
             },
             "TransformComponent": {
                 "Translation": [
-                    -0.0,
-                    4.5,
+                    0.0,
+                    0.0,
                     0.0
                 ],
                 "Rotation": [
@@ -88,14 +70,11 @@
                     1.0
                 ]
             },
-            "ScriptComponent": {
-                "ClassName": "Sandbox.Camera"
-            },
             "CameraComponent": {
-                "ProjectionType": "Orthographic",
-                "Size": 15.0,
-                "Near": -1.0,
-                "Far": 1.0,
+                "ProjectionType": "Perspective",
+                "VerticalFOV": 0.7853981852531433,
+                "Near": 0.009999999776482582,
+                "Far": 1000.0,
                 "Primary": true,
                 "FixedAspectRatio": false
             }
@@ -114,9 +93,9 @@
             },
             "TransformComponent": {
                 "Translation": [
-                    -2.109731674194336,
+                    0.17822399735450745,
                     0.0,
-                    0.0
+                    -3.860158920288086
                 ],
                 "Rotation": [
                     0.0,
@@ -131,9 +110,9 @@
             },
             "SpriteRendererComponent": {
                 "Color": [
-                    1.0,
-                    1.0,
-                    1.0,
+                    0.05458499863743782,
+                    0.6160339713096619,
+                    0.580498993396759,
                     1.0
                 ]
             }

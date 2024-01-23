@@ -50,7 +50,7 @@ namespace OpenEngine {
 		return s_EntityHasComponentFuncs.at(managedType)(entity);
 	}
 
-	static uint64_t Entity_FindEntityByName(MonoString* monoName)
+	static uint64_t Entity_GetEntityByName(MonoString* monoName)
 	{
 		Scene* scene = ScriptEngine::GetSceneContext();
 		OE_CORE_ASSERT(scene, "");
@@ -184,6 +184,16 @@ namespace OpenEngine {
 		*outDirection = glm::rotate(GetOrientation(*inDirection), glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 
+	static void Math_GetForwardDirection(glm::vec3* inDirection, glm::vec3* outDirection)
+	{
+		*outDirection = glm::rotate(GetOrientation(*inDirection), glm::vec3(0.0f, 0.0f, -1.0f));
+	}
+
+	static void Math_GetRightDirection(glm::vec3* inDirection, glm::vec3* outDirection)
+	{
+		*outDirection = glm::rotate(GetOrientation(*inDirection), glm::vec3(1.0f, 0.0f, 0.0f));
+	}
+
 #pragma endregion
 
 #pragma region Log
@@ -237,7 +247,7 @@ namespace OpenEngine {
 	void ScriptGlue::RegisterFunctions()
 	{
 		OE_ADD_INTERNAL_CALL(Entity_HasComponent);
-		OE_ADD_INTERNAL_CALL(Entity_FindEntityByName);
+		OE_ADD_INTERNAL_CALL(Entity_GetEntityByName);
 
 		OE_ADD_INTERNAL_CALL(TransformComponent_GetTranslation);
 		OE_ADD_INTERNAL_CALL(TransformComponent_SetTranslation);
@@ -253,6 +263,8 @@ namespace OpenEngine {
 		OE_ADD_INTERNAL_CALL(Input_GetMousePosition);
 
 		OE_ADD_INTERNAL_CALL(Math_GetUpDirection);
+		OE_ADD_INTERNAL_CALL(Math_GetForwardDirection);
+		OE_ADD_INTERNAL_CALL(Math_GetRightDirection);
 
 		OE_ADD_INTERNAL_CALL(Log_Trace);
 		OE_ADD_INTERNAL_CALL(Log_Info);

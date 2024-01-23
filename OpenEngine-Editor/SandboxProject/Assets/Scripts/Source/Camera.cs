@@ -13,7 +13,7 @@ namespace Sandbox
 
         public void OnCreate()
         {
-            Player = FindEntityByName("Player");
+            Player = GetEntityByName("Player");
         }
 
         public void OnUpdate(float ts)

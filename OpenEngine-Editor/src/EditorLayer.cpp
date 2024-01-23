@@ -314,7 +314,7 @@ namespace OpenEngine {
 		m_SceneState = SceneState::Edit;
 		m_RuntimeScene->OnRuntimeStop();
 		m_RuntimeScene = CreateRef<Scene>();
-		SceneHierarchyPanel::SetContext(m_RuntimeScene);
+		SceneHierarchyPanel::SetContext(m_EditorScene);
 		m_EditorScene->OnEditorStart();
 	}
 
@@ -594,7 +594,7 @@ namespace OpenEngine {
 			}
 			case Key::Escape:
 			{
-				m_RuntimeScene->ToggleCursor();
+				Application::Get().GetWindow().ReleaseCursor();
 			}
 			case Key::G:
 			{
@@ -634,6 +634,12 @@ namespace OpenEngine {
 	{
 		/*if (e.GetMouseButton() == Mouse::ButtonLeft && m_ViewportHovered && !ImGuizmo::IsOver() && !Input::IsKeyPressed(Key::LeftAlt))
 			m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);*/
+
+		if (m_SceneState == SceneState::Edit)
+			return false;
+
+		if (e.GetMouseButton() == Mouse::ButtonLeft && m_ViewportHovered)
+			Application::Get().GetWindow().CaptureCursor();
 
 		return false;
 	}

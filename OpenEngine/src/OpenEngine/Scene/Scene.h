@@ -59,7 +59,6 @@ namespace OpenEngine {
 
 		void CopyTo(Ref<Scene> other); 
 
-		void ToggleCursor();
 		void ToggleGrid() { m_GridEnabled = !m_GridEnabled; };
 		void SetGridSize(int gridSize) { m_GridSize = gridSize; }
 		int GetGridSize() { return m_GridSize; }

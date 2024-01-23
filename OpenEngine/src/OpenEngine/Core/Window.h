@@ -37,6 +37,9 @@ namespace OpenEngine {
 		virtual bool IsVSync() const = 0;
 		virtual void SetCustomTitlebar() = 0;
 
+		virtual void CaptureCursor() const = 0;
+		virtual void ReleaseCursor() const = 0;
+
 		virtual void* GetNativeWindow() const = 0;
 
 		static Scope<Window> Create(const WindowProps& props = WindowProps());

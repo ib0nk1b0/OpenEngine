@@ -1,10 +1,5 @@
-﻿using OpenEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenEngine
 {
@@ -64,7 +59,7 @@ namespace OpenEngine
         internal extern static bool Entity_HasComponent(ulong entityID, Type type);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static ulong Entity_FindEntityByName(string name);
+        internal extern static ulong Entity_GetEntityByName(string name);
 
         #endregion
 
@@ -82,6 +77,12 @@ namespace OpenEngine
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static void Math_GetUpDirection(ref Vector3 inDirection, out Vector3 outDirection);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void Math_GetForwardDirection(ref Vector3 inDirection, out Vector3 outDirection);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void Math_GetRightDirection(ref Vector3 inDirection, out Vector3 outDirection);
 
         #endregion
     }

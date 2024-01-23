@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Panel.h"
-
 #include "OpenEngine/Core/Core.h"
 #include "OpenEngine/Scene/Scene.h"
 

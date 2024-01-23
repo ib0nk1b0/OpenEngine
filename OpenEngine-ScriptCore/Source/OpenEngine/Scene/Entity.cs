@@ -28,6 +28,32 @@ namespace OpenEngine
             }
         }
 
+        public Vector3 Rotation
+        {
+            get
+            {
+                InternalCalls.TransformComponent_GetRotation(ID, out Vector3 rotation);
+                return rotation;
+            }
+            set
+            {
+                InternalCalls.TransformComponent_SetRotation(ID, ref value);
+            }
+        }
+
+        public Vector3 Scale
+        {
+            get
+            {
+                InternalCalls.TransformComponent_GetScale(ID, out Vector3 scale);
+                return scale;
+            }
+            set
+            {
+                InternalCalls.TransformComponent_SetScale(ID, ref value);
+            }
+        }
+
         public bool HasComponent<T>() where T : Component, new()
         {
             Type type = typeof(T);
@@ -42,9 +68,9 @@ namespace OpenEngine
             return new T() { Entity = this };
         }
 
-        public Entity FindEntityByName(string name)
+        public Entity GetEntityByName(string name)
         {
-            ulong entityID = InternalCalls.Entity_FindEntityByName(name);
+            ulong entityID = InternalCalls.Entity_GetEntityByName(name);
             
             if (entityID == 0)
                 return null;

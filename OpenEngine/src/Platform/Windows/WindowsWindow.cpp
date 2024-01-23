@@ -201,8 +201,19 @@ namespace OpenEngine {
 	{
 		return m_Data.VSync;
 	}
+
 	void WindowsWindow::SetCustomTitlebar()
 	{
 		glfwWindowHint(GLFW_TITLEBAR, false);
+	}
+
+	void WindowsWindow::CaptureCursor() const
+	{
+		glfwSetInputMode((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
+
+	void WindowsWindow::ReleaseCursor() const
+	{
+		glfwSetInputMode((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 }

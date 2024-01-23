@@ -20,7 +20,6 @@
 #include "box2d/b2_circle_shape.h"
 
 #include <glm/glm.hpp>
-#include <GLFW/glfw3.h>
 
 namespace OpenEngine {
 
@@ -213,8 +212,7 @@ namespace OpenEngine {
 
 	void Scene::OnEditorStart()
 	{
-		m_CursorEnabled = true;
-		glfwSetInputMode((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		
 	}
 
 	void Scene::OnRuntimeStart()
@@ -232,12 +230,7 @@ namespace OpenEngine {
 			}
 		}
 
-		m_IsRunning = true;
-
-		// TODO:
-		m_CursorEnabled = false;
-		if (m_Filepath == "assets\\Scenes\\CubeGame.openengine")
-			glfwSetInputMode((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		m_IsRunning = true;			
 	}
 
 	void Scene::OnRuntimeStop()
@@ -796,16 +789,6 @@ namespace OpenEngine {
 					sc = oldSc;
 				}
 		});
-	}
-
-	void Scene::ToggleCursor()
-	{
-		if (m_CursorEnabled)
-			glfwSetInputMode((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		else
-			glfwSetInputMode((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-
-		m_CursorEnabled = !m_CursorEnabled;
 	}
 
 	std::vector<entt::entity> Scene::GetEntitiesWithParents()
