@@ -77,5 +77,12 @@ namespace OpenEngine
         internal extern static void Input_GetMousePosition(out Vector2 mousePosition);
 
         #endregion
+
+        #region Maths
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void Math_GetUpDirection(ref Vector3 inDirection, out Vector3 outDirection);
+
+        #endregion
     }
 }

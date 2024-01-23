@@ -12,6 +12,8 @@
 #include <mono/metadata/reflection.h>
 
 #include <glm/glm.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
 
 #include <box2d/box2d.h>
 
@@ -170,6 +172,20 @@ namespace OpenEngine {
 
 #pragma endregion
 
+#pragma region Maths
+
+	static glm::quat GetOrientation(const glm::vec3& input)
+	{
+		return glm::quat(input);
+	}
+
+	static void Math_GetUpDirection(glm::vec3* inDirection, glm::vec3* outDirection)
+	{
+		*outDirection = glm::rotate(GetOrientation(*inDirection), glm::vec3(0.0f, 1.0f, 0.0f));
+	}
+
+#pragma endregion
+
 #pragma region Log
 
 	static void Log_Trace(MonoString* message)
@@ -235,6 +251,8 @@ namespace OpenEngine {
 
 		OE_ADD_INTERNAL_CALL(Input_IsKeyDown);
 		OE_ADD_INTERNAL_CALL(Input_GetMousePosition);
+
+		OE_ADD_INTERNAL_CALL(Math_GetUpDirection);
 
 		OE_ADD_INTERNAL_CALL(Log_Trace);
 		OE_ADD_INTERNAL_CALL(Log_Info);

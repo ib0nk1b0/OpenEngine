@@ -28,15 +28,10 @@ namespace Sandbox
 
         void MouseRotate(Vector2 delta)
         {
-            Vector3 upDirection = GetUpDirection();
+            Vector3 upDirection = Mathf.GetUpDirection(new Vector3(m_Pitch, -m_Yaw, 0.0f));
             float yawSign = upDirection.Y < 0 ? -1.0f : 1.0f;
             m_Yaw -= yawSign * delta.X * (Sensitivity * 0.025f);
             m_Pitch -= delta.Y * (Sensitivity * 0.025f);
-        }
-
-        Vector3 GetUpDirection()
-        {
-            return new Vector3(0.0f, 1.0f, 0.0f);
         }
     }
 }
