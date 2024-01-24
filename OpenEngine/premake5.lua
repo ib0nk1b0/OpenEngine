@@ -20,6 +20,9 @@ project "OpenEngine"
     "vendor/glm/glm/**.inl",
     "vendor/ImGuizmo/ImGuizmo.h",
     "vendor/ImGuizmo/ImGuizmo.cpp",
+    "vendor/NFD_Extended/src/nfd_win.cpp",
+    "vendor/NFD_Extended/src/include/**.h",
+    "vendor/NFD_Extended/src/include/**.hpp"
   }
 
   defines
@@ -45,6 +48,7 @@ project "OpenEngine"
     "%{IncludeDir.Box2D}",
     "%{IncludeDir.msdf_atlas_gen}",
     "%{IncludeDir.msdfgen}",
+    "%{IncludeDir.NFD_Extended}",
     --"%{IncludeDir.VulkanSDK}"
   }
 
@@ -54,6 +58,7 @@ project "OpenEngine"
     "GLFW",
     "Glad",
     "ImGui",
+    "NFD_Extended",
     "msdf-atlas-gen",
     "opengl32.lib",
     
@@ -66,6 +71,9 @@ project "OpenEngine"
   flags { "NoPCH" }
 
   filter "files:vendor/Assimp/**.cpp"
+  flags { "NoPCH" }
+
+  filter "files:vendor/NFD_Extended/**.cpp"
   flags { "NoPCH" }
 
   filter "system:windows"

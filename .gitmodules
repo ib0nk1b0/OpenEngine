@@ -19,3 +19,6 @@
 [submodule "OpenEngine/vendor/msdf-atlas-gen"]
 	path = OpenEngine/vendor/msdf-atlas-gen
 	url = https://github.com/ib0nk1b0/msdf-atlas-gen
+[submodule "OpenEngine/vendor/NFD_Extended"]
+	path = OpenEngine/vendor/NFD_Extended
+	url = https://github.com/ib0nk1b0/nativefiledialog-extended

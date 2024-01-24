@@ -226,4 +226,16 @@ namespace OpenEngine::UI {
 		ImGui::PopID();
 	}
 
+	void BeginDisabled(bool disabled)
+	{
+		if (disabled)
+			ImGui::BeginDisabled(true);
+	}
+
+	void EndDisabled()
+	{
+		if (GImGui->DisabledStackSize > 0)
+			ImGui::EndDisabled();
+	}
+
 }

@@ -18,4 +18,7 @@ namespace OpenEngine::UI {
 	void ColorEdit4(const char* label, float* value);
 	void ColorEdit3(const char* label, float* value);
 
+	void BeginDisabled(bool disabled = true);
+	void EndDisabled();
+
 }

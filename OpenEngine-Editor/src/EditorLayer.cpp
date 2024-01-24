@@ -12,11 +12,14 @@
 #include "OpenEngine/ImGui/ImGuiFonts.h"
 
 #include <imgui/imgui.h>
+#include <imgui/misc/cpp/imgui_stdlib.h>
 #include <ImGuizmo/ImGuizmo.h>
 
 #include <glm/gtc/type_ptr.hpp>
 
 #include <EnTT/include/entt.hpp>
+
+#include <nfd.hpp>
 
 namespace OpenEngine {
 
@@ -31,6 +34,8 @@ namespace OpenEngine {
 
 		m_PlayIcon = TextureImporter::LoadTexture2D("Resources/Icons/PlayButton.png");
 		m_StopIcon = TextureImporter::LoadTexture2D("Resources/Icons/StopButton.png");
+
+		NFD::Init();
 
 		SceneHierarchyPanel::Init();
 		MaterialPanel::Init();
@@ -78,6 +83,7 @@ namespace OpenEngine {
 	void EditorLayer::OnDetach()
 	{
 		OE_PROFILE_FUNCTION();
+		NFD::Quit();
 	}
 
 	void EditorLayer::OnUpdate(Timestep ts)
@@ -175,20 +181,6 @@ namespace OpenEngine {
 		}
 		style.WindowMinSize.x = windowMinSizeX;
 
-		/*ImGui::Begin("Popups");
-		
-		if (ImGui::Button("Popup"))
-			ImGui::OpenPopup("popup1");
-
-		bool open = true;
-		if (ImGui::BeginPopupModal("popup1", &open))
-		{
-			ImGui::Text("This is a popup!");
-			ImGui::EndPopup();
-		}
-
-		ImGui::End();*/
-
 		UI_MenuBar();
 
 		if (m_DisplayStats)
@@ -197,8 +189,13 @@ namespace OpenEngine {
 		if (m_DisplayEditorCameraUI)
 			UI_EditorCameraPanel();
 
+		UI_NewProject();
+
 		if (m_DisplayProjectPopup)
-			UI_NewProject();
+		{
+			ImGui::OpenPopup("ProjectPopup");
+			m_DisplayProjectPopup = false;
+		}
 
 		MaterialPanel::OnImGuiRender();
 		SceneHierarchyPanel::OnImGuiRender();
@@ -519,21 +516,69 @@ namespace OpenEngine {
 
 	void EditorLayer::UI_NewProject()
 	{
-		ImGui::OpenPopup("ProjectPopup");
+		static std::string s_ProjectName = "";
+		static std::string s_ProjectLocation = "";
 
-		ImVec2 viewportCenter = ImGui::GetMainViewport()->GetWorkCenter();
-		glm::vec2 center = { viewportCenter.x, viewportCenter.y };
-		glm::vec2 size = { 400.0f, 300.0f };
-		center -= size;
-		ImGui::PushStyleVar(ImGuiStyleVar_PopupRounding, 5.0f);
-		ImGui::SetNextWindowSize({ size.x, size.y });
-		ImGui::SetNextWindowPos({ center.x, center.y });
-		if (ImGui::BeginPopupModal("ProjectPopup", &m_DisplayProjectPopup, ImGuiWindowFlags_NoResize))
+		if (ImGui::BeginPopupModal("ProjectPopup", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
 		{
-			ImGui::Text("New Projects isn't implemented yet");
+			bool isValidLocation = !s_ProjectLocation.empty() && !s_ProjectName.empty() && !std::filesystem::exists(std::filesystem::path(s_ProjectLocation) / s_ProjectName);
+			ImGui::InputTextWithHint("##NewProjectName", "Project Name", &s_ProjectName);
+			
+			if (isValidLocation)
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+			ImGui::InputTextWithHint("##NewProjectLocation", "Project Location", &s_ProjectLocation);
+			if (isValidLocation)
+				ImGui::PopStyleColor();
+
+			bool openFolderDialogue = ImGui::IsItemClicked(ImGuiMouseButton_Left);
+			ImGui::SameLine();
+			openFolderDialogue |= ImGui::Button("Open...");
+
+			if (openFolderDialogue)
+			{
+				NFD::UniquePath projectLocation;
+				nfdresult_t result = NFD::PickFolder(projectLocation);
+
+				switch (result)
+				{
+					case NFD_OKAY:
+					{
+						s_ProjectLocation = projectLocation.get();
+						break;
+					}
+					case NFD_CANCEL:
+						break;
+					case NFD_ERROR:
+					{
+						OE_ERROR("NFD_Extended threw an error: {}", NFD::GetError());
+						break;
+					}
+				}
+			}
+
+			ImGui::Separator();
+
+			UI::BeginDisabled(!isValidLocation);
+			if (ImGui::Button("Create"))
+			{
+				ProjectConfig config;
+				config.Name = s_ProjectName;
+				config.AssetDirectory = "Assets";
+				std::filesystem::path path(s_ProjectLocation);
+
+				Project::Create(config, path);
+				ImGui::CloseCurrentPopup();
+			}
+			UI::EndDisabled();
+			
+			ImGui::SameLine();
+			
+			if (ImGui::Button("Cancel"))
+				ImGui::CloseCurrentPopup();
+			
 			ImGui::EndPopup();
 		}
-		ImGui::PopStyleVar();
+		//ImGui::PopStyleVar();
 	}
 
 	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
@@ -659,8 +704,6 @@ namespace OpenEngine {
 	void EditorLayer::NewProject()
 	{
 		OE_WARN("Projects are not fully developed."); // TODO: <- do this
-		// Project::New();
-
 		m_DisplayProjectPopup = true;
 	}
 

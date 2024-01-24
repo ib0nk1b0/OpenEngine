@@ -3,7 +3,25 @@
 
 #include "OpenEngine/Project/ProjectSerializer.h"
 
+#include <nfd.hpp>
+
 namespace OpenEngine {
+
+    void Project::Create(const ProjectConfig& config, const std::filesystem::path& folderLocation)
+    {
+        Ref<Project> project = CreateRef<Project>();
+        ProjectConfig& projectConfig = project->GetConfig();
+        projectConfig = config;
+
+        std::filesystem::path fullPath = folderLocation / config.Name;
+
+        std::filesystem::create_directories(fullPath);
+        std::filesystem::create_directories(fullPath / projectConfig.AssetDirectory);
+        std::filesystem::path filename(projectConfig.Name + ".oeproj");
+        std::filesystem::path projectSerializerPath = fullPath / filename;
+        ProjectSerializer serializer(project);
+        serializer.Serialize(projectSerializerPath);
+    }
 
     Ref<Project> Project::New()
     {

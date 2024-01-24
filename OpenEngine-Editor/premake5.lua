@@ -21,6 +21,7 @@ project "OpenEngine-Editor"
     "%{IncludeDir.glm}",
     "%{IncludeDir.entt}",
     "%{IncludeDir.json}",
+    "%{IncludeDir.NFD_Extended}",
     "%{IncludeDir.Filewatch}"
   }
 

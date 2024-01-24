@@ -61,6 +61,7 @@ namespace OpenEngine {
 
 		Ref<EditorAssetManager> GetAssetManager() { return m_AssetManager; }
 
+		static void Create(const ProjectConfig& config, const std::filesystem::path& folderLocation);
 		static Ref<Project> New();
 		static Ref<Project> Load(const std::filesystem::path& filepath);
 		static bool SaveActive(const std::filesystem::path& filepath);
