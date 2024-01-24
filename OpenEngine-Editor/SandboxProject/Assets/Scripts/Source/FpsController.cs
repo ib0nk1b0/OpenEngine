@@ -66,7 +66,10 @@ namespace Sandbox
             Vector2 delta = (mouse - m_InitialMousePosition) * ts;
             m_InitialMousePosition = mouse;
             MouseRotate(delta);
-            rotation.X = m_Pitch;
+
+            float rotationInDegrees = Mathf.Degrees(m_Pitch);
+            float clamped = Mathf.Clamp(rotationInDegrees, -45.0f, 45.0f);
+            rotation.X = Mathf.Radians(clamped);
             rotation.Y = m_Yaw;
 
             m_Camera.Rotation = rotation;

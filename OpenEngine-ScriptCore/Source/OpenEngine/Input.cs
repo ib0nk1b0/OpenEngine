@@ -1,12 +1,12 @@
-﻿using OpenEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OpenEngine
+﻿namespace OpenEngine
 {
+    public enum CursorMode
+    {
+        Normal,
+        Locked,
+        Hidden
+    }
+
     public class Input
     {
         public static bool IsKeyDown(KeyCode keyCode)
@@ -18,6 +18,11 @@ namespace OpenEngine
         {
             InternalCalls.Input_GetMousePosition(out Vector2 mousePosition);
             return mousePosition;
+        }
+
+        public static void SetCursorMode(CursorMode cursorMode)
+        {
+            // TODO
         }
     }
 }
