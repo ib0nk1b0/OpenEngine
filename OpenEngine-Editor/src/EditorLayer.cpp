@@ -9,6 +9,7 @@
 #include "OpenEngine/Scripting/ScriptEngine.h"
 #include "OpenEngine/Utils/PlatformUtils.h"
 
+#include "OpenEngine/ImGui/ImGuiExtended.h"
 #include "OpenEngine/ImGui/ImGuiFonts.h"
 
 #include <imgui/imgui.h>
@@ -523,16 +524,11 @@ namespace OpenEngine {
 		{
 			bool isValidLocation = !s_ProjectLocation.empty() && !s_ProjectName.empty() && !std::filesystem::exists(std::filesystem::path(s_ProjectLocation) / s_ProjectName);
 			ImGui::InputTextWithHint("##NewProjectName", "Project Name", &s_ProjectName);
-			
-			if (isValidLocation)
-				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
 			ImGui::InputTextWithHint("##NewProjectLocation", "Project Location", &s_ProjectLocation);
-			if (isValidLocation)
-				ImGui::PopStyleColor();
 
 			bool openFolderDialogue = ImGui::IsItemClicked(ImGuiMouseButton_Left);
 			ImGui::SameLine();
-			openFolderDialogue |= ImGui::Button("Open...");
+			openFolderDialogue |= ImGui::Button("...");
 
 			if (openFolderDialogue)
 			{
@@ -567,6 +563,7 @@ namespace OpenEngine {
 				std::filesystem::path path(s_ProjectLocation);
 
 				Project::Create(config, path);
+				OpenProject();
 				ImGui::CloseCurrentPopup();
 			}
 			UI::EndDisabled();
@@ -707,14 +704,21 @@ namespace OpenEngine {
 		m_DisplayProjectPopup = true;
 	}
 
+	void EditorLayer::OpenProject()
+	{
+		ContentBrowserPanel::Init();
+		AssetHandle startScene = Project::GetActive()->GetConfig().StartScene;
+		if (startScene)
+			OpenScene(startScene);
+		else
+			NewScene();
+	}
+
 	void EditorLayer::OpenProject(const std::filesystem::path& filepath)
 	{
 		if (Project::Load(filepath))
 		{
-			ContentBrowserPanel::Init();
-			AssetHandle startScene = Project::GetActive()->GetConfig().StartScene;
-			if (startScene)
-				OpenScene(startScene);
+			OpenProject();
 		}
 	}
 
@@ -762,7 +766,8 @@ namespace OpenEngine {
 		if (filepath != "UntitledScene.openengine")
 		{
 			SceneSerializer serializer(m_EditorScene);
-			serializer.Serialize(filepath);
+			std::filesystem::path fullpath = Project::GetActiveAssetFileSystemPath(filepath);
+			serializer.Serialize(fullpath.string());
 			ContentBrowserPanel::LoadAssets();
 			return;
 		}
@@ -775,7 +780,9 @@ namespace OpenEngine {
 		if (!path.empty())
 		{
 			std::filesystem::path filepath(path);
-			m_EditorScene->SetFilepath(filepath.lexically_relative(Project::GetActiveAssetDirectory()));
+			std::filesystem::path assetpath = Project::GetActiveAssetDirectory();
+			std::filesystem::path p = std::filesystem::relative(filepath, assetpath);
+			m_EditorScene->SetFilepath(p);
 			SaveScene();
 		}
 	}

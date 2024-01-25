@@ -15,10 +15,10 @@ namespace OpenEngine {
 	{
 		std::string Name = "Untitled";
 
-		AssetHandle StartScene;
+		AssetHandle StartScene = 0;
 
-		std::filesystem::path AssetDirectory;
-		std::filesystem::path AssetRegistryPath;
+		std::filesystem::path AssetDirectory = "Assets";
+		std::filesystem::path AssetRegistryPath = "AssetRegistry.oer";
 		std::filesystem::path ScriptModulePath;
 	};
 

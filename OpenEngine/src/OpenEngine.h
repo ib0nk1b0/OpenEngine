@@ -14,6 +14,7 @@
 
 #include "OpenEngine/ImGui/ImGuiLayer.h"
 #include "OpenEngine/ImGui/ImGuiExtended.h"
+#include "OpenEngine/ImGui/ImGuiFonts.h"
 #include "OpenEngine/Renderer/OrthographicCameraController.h"
 
 #include "OpenEngine/Scene/SceneCamera.h"

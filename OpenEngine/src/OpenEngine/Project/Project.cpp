@@ -21,6 +21,9 @@ namespace OpenEngine {
         std::filesystem::path projectSerializerPath = fullPath / filename;
         ProjectSerializer serializer(project);
         serializer.Serialize(projectSerializerPath);
+
+        project->m_ProjectDirectory = fullPath;
+        s_ActiveProject = project;
     }
 
     Ref<Project> Project::New()

@@ -35,6 +35,7 @@ namespace OpenEngine {
 		Entity GetHoveredEntity();
 
 		void NewProject();
+		void OpenProject();
 		void OpenProject(const std::filesystem::path& filepath);
 		void SaveProject();
 

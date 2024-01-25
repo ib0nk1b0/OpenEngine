@@ -689,105 +689,105 @@ namespace OpenEngine {
 
 		m_Registry.each([&](auto entityID)
 		{
-				// TODO: Somehow link Duplicate to this
-				//       The problem with Duplicate is that it only duplicates the entity in the current scene
-				Entity entity{ entityID, this };
-				Entity newEntity = other->CreateEntityWithUUID(entity.GetUUID(), entity.GetComponent<TagComponent>().Tag);
+			// TODO: Somehow link Duplicate to this
+			//       The problem with Duplicate is that it only duplicates the entity in the current scene
+			Entity entity{ entityID, this };
+			Entity newEntity = other->CreateEntityWithUUID(entity.GetUUID(), entity.GetComponent<TagComponent>().Tag);
 
-				newEntity.GetComponent<ParentComponent>().ParentName = entity.GetComponent<ParentComponent>().ParentName;
-				newEntity.GetComponent<ParentComponent>().ParentID = entity.GetComponent<ParentComponent>().ParentID;
-				newEntity.GetComponent<ParentComponent>().Offset = entity.GetComponent<ParentComponent>().Offset;
+			newEntity.GetComponent<ParentComponent>().ParentName = entity.GetComponent<ParentComponent>().ParentName;
+			newEntity.GetComponent<ParentComponent>().ParentID = entity.GetComponent<ParentComponent>().ParentID;
+			newEntity.GetComponent<ParentComponent>().Offset = entity.GetComponent<ParentComponent>().Offset;
 
-				newEntity.GetComponent<TransformComponent>().Translation = entity.GetComponent<TransformComponent>().Translation;
-				newEntity.GetComponent<TransformComponent>().Rotation = entity.GetComponent<TransformComponent>().Rotation;
-				newEntity.GetComponent<TransformComponent>().Scale = entity.GetComponent<TransformComponent>().Scale;
+			newEntity.GetComponent<TransformComponent>().Translation = entity.GetComponent<TransformComponent>().Translation;
+			newEntity.GetComponent<TransformComponent>().Rotation = entity.GetComponent<TransformComponent>().Rotation;
+			newEntity.GetComponent<TransformComponent>().Scale = entity.GetComponent<TransformComponent>().Scale;
 
-				if (entity.HasComponent<SpriteRendererComponent>())
-				{
-					auto& src = newEntity.AddComponent<SpriteRendererComponent>();
-					src.Color = entity.GetComponent<SpriteRendererComponent>().Color;
-					src.Texture = entity.GetComponent<SpriteRendererComponent>().Texture;
-					src.Scale = entity.GetComponent<SpriteRendererComponent>().Scale;
-				}
+			if (entity.HasComponent<SpriteRendererComponent>())
+			{
+				auto& src = newEntity.AddComponent<SpriteRendererComponent>();
+				src.Color = entity.GetComponent<SpriteRendererComponent>().Color;
+				src.Texture = entity.GetComponent<SpriteRendererComponent>().Texture;
+				src.Scale = entity.GetComponent<SpriteRendererComponent>().Scale;
+			}
 
-				if (entity.HasComponent<CircleRendererComponent>())
-				{
-					auto& crc = newEntity.AddComponent<CircleRendererComponent>();
-					crc.Color = entity.GetComponent<CircleRendererComponent>().Color;
-					crc.Thickness = entity.GetComponent<CircleRendererComponent>().Thickness;
-					crc.Fade = entity.GetComponent<CircleRendererComponent>().Fade;
-				}
+			if (entity.HasComponent<CircleRendererComponent>())
+			{
+				auto& crc = newEntity.AddComponent<CircleRendererComponent>();
+				crc.Color = entity.GetComponent<CircleRendererComponent>().Color;
+				crc.Thickness = entity.GetComponent<CircleRendererComponent>().Thickness;
+				crc.Fade = entity.GetComponent<CircleRendererComponent>().Fade;
+			}
 
-				if (entity.HasComponent<MeshComponent>())
-				{
-					auto& mesh = newEntity.AddComponent<MeshComponent>();
-					mesh.MeshHandle = entity.GetComponent<MeshComponent>().MeshHandle;
-					mesh.MaterialIndex = entity.GetComponent<MeshComponent>().MaterialIndex;
-				}
+			if (entity.HasComponent<MeshComponent>())
+			{
+				auto& mesh = newEntity.AddComponent<MeshComponent>();
+				mesh.MeshHandle = entity.GetComponent<MeshComponent>().MeshHandle;
+				mesh.MaterialIndex = entity.GetComponent<MeshComponent>().MaterialIndex;
+			}
 
-				if (entity.HasComponent<PointLightComponent>())
-				{
-					auto& pl = newEntity.AddComponent<PointLightComponent>();
-					pl.Color = entity.GetComponent<PointLightComponent>().Color;
-					pl.AmbientIntensity = entity.GetComponent<PointLightComponent>().AmbientIntensity;
-				}
+			if (entity.HasComponent<PointLightComponent>())
+			{
+				auto& pl = newEntity.AddComponent<PointLightComponent>();
+				pl.Color = entity.GetComponent<PointLightComponent>().Color;
+				pl.AmbientIntensity = entity.GetComponent<PointLightComponent>().AmbientIntensity;
+			}
 				
-				if (entity.HasComponent<DirectionalLightComponent>())
-				{
-					auto& drl = newEntity.AddComponent<DirectionalLightComponent>();
-					drl.Color = entity.GetComponent<DirectionalLightComponent>().Color;
-					drl.AmbientIntensity = entity.GetComponent<DirectionalLightComponent>().AmbientIntensity;
-				}
+			if (entity.HasComponent<DirectionalLightComponent>())
+			{
+				auto& drl = newEntity.AddComponent<DirectionalLightComponent>();
+				drl.Color = entity.GetComponent<DirectionalLightComponent>().Color;
+				drl.AmbientIntensity = entity.GetComponent<DirectionalLightComponent>().AmbientIntensity;
+			}
 
-				if (entity.HasComponent<CameraComponent>())
-				{
-					auto& cc = newEntity.AddComponent<CameraComponent>();
-					cc.Camera = entity.GetComponent<CameraComponent>().Camera;
-					cc.FixedAspectRatio = entity.GetComponent<CameraComponent>().FixedAspectRatio;
-					cc.Primary = entity.GetComponent<CameraComponent>().Primary;
-				}
+			if (entity.HasComponent<CameraComponent>())
+			{
+				auto& cc = newEntity.AddComponent<CameraComponent>();
+				cc.Camera = entity.GetComponent<CameraComponent>().Camera;
+				cc.FixedAspectRatio = entity.GetComponent<CameraComponent>().FixedAspectRatio;
+				cc.Primary = entity.GetComponent<CameraComponent>().Primary;
+			}
 
-				if (entity.HasComponent<NativeScriptComponent>())
-				{
-					auto oldNsc = entity.GetComponent<NativeScriptComponent>();
-					auto& nsc = newEntity.AddComponent<NativeScriptComponent>();
-					nsc = oldNsc;
-				}
+			if (entity.HasComponent<NativeScriptComponent>())
+			{
+				auto oldNsc = entity.GetComponent<NativeScriptComponent>();
+				auto& nsc = newEntity.AddComponent<NativeScriptComponent>();
+				nsc = oldNsc;
+			}
 
-				if (entity.HasComponent<RigidBody2DComponent>())
-				{
-					auto oldRb2d = entity.GetComponent<RigidBody2DComponent>();
-					auto& rb2d = newEntity.AddComponent<RigidBody2DComponent>();
-					rb2d = oldRb2d;
-				}
+			if (entity.HasComponent<RigidBody2DComponent>())
+			{
+				auto oldRb2d = entity.GetComponent<RigidBody2DComponent>();
+				auto& rb2d = newEntity.AddComponent<RigidBody2DComponent>();
+				rb2d = oldRb2d;
+			}
 
-				if (entity.HasComponent<BoxColider2DComponent>())
-				{
-					auto oldBc2d = entity.GetComponent<BoxColider2DComponent>();
-					auto& bc2d = newEntity.AddComponent<BoxColider2DComponent>();
-					bc2d = oldBc2d;
-				}
+			if (entity.HasComponent<BoxColider2DComponent>())
+			{
+				auto oldBc2d = entity.GetComponent<BoxColider2DComponent>();
+				auto& bc2d = newEntity.AddComponent<BoxColider2DComponent>();
+				bc2d = oldBc2d;
+			}
 
-				if (entity.HasComponent<CircleColider2DComponent>())
-				{
-					auto oldCc2d = entity.GetComponent<CircleColider2DComponent>();
-					auto& cc2d = newEntity.AddComponent<CircleColider2DComponent>();
-					cc2d = oldCc2d;
-				}
+			if (entity.HasComponent<CircleColider2DComponent>())
+			{
+				auto oldCc2d = entity.GetComponent<CircleColider2DComponent>();
+				auto& cc2d = newEntity.AddComponent<CircleColider2DComponent>();
+				cc2d = oldCc2d;
+			}
 
-				if (entity.HasComponent<TextComponent>())
-				{
-					auto oldTc = entity.GetComponent<TextComponent>();
-					auto& tc = newEntity.AddComponent<TextComponent>();
-					tc = oldTc;
-				}
+			if (entity.HasComponent<TextComponent>())
+			{
+				auto oldTc = entity.GetComponent<TextComponent>();
+				auto& tc = newEntity.AddComponent<TextComponent>();
+				tc = oldTc;
+			}
 
-				if (entity.HasComponent<ScriptComponent>())
-				{
-					auto oldSc = entity.GetComponent<ScriptComponent>();
-					auto& sc = newEntity.AddComponent<ScriptComponent>();
-					sc = oldSc;
-				}
+			if (entity.HasComponent<ScriptComponent>())
+			{
+				auto oldSc = entity.GetComponent<ScriptComponent>();
+				auto& sc = newEntity.AddComponent<ScriptComponent>();
+				sc = oldSc;
+			}
 		});
 	}
 

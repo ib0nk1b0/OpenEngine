@@ -2,6 +2,7 @@
 #include "ContentBrowserPanel.h"
 
 #include "OpenEngine/Asset/TextureImporter.h"
+#include "OpenEngine/Asset/AssetManager.h"
 #include "OpenEngine/Utils/PlatformUtils.h"
 #include "OpenEngine/ImGui/ImGuiFonts.h"
 
@@ -94,6 +95,33 @@ namespace OpenEngine {
 			{
 				if (directoryEntry.is_directory())
 					m_CurrentDirectory /= path.filename();
+			}
+
+			if (!directoryEntry.is_directory() && ImGui::IsItemHovered())
+			{
+				std::filesystem::path relativePath = std::filesystem::relative(directoryEntry.path(), Project::GetActiveAssetDirectory());
+				if (Project::GetActive()->GetAssetManager()->IsFileValidAsset(relativePath)
+					&& m_AssetMap.find(relativePath) != m_AssetMap.end())
+				{
+					auto handle = m_AssetMap[relativePath];
+					auto type = Project::GetActive()->GetAssetManager()->GetMetadata(handle).Type;
+					if (type == AssetType::Scene)
+					{
+						if (ImGui::BeginPopupContextWindow(0))
+						{
+							if (ImGui::MenuItem("Set Start up scene."))
+							{
+								/*auto& config = Project::GetActive()->GetConfig();
+								config.StartScene = handle;
+								std::filesystem::path filename(config.Name + ".oeproj");
+								std::filesystem::path filepath(Project::GetActiveProjectDirectory() / filename);
+								Project::SaveActive(filepath);*/
+							}
+
+							ImGui::EndPopup();
+						}
+					}
+				}
 			}
 
 			ImGui::TextWrapped(filenameString.c_str());
