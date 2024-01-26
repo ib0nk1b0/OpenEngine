@@ -5,6 +5,7 @@
 #include "OpenEngine/Scene/Entity.h"
 #include "OpenEngine/Serialization/Serializer.h"
 #include "OpenEngine/Asset/Asset.h"
+#include "OpenEngine/Scripting/ScriptEngine.h"
 
 namespace OpenEngine {
 
@@ -97,9 +98,37 @@ namespace OpenEngine {
 			if (entity.HasComponent<ScriptComponent>())
 			{
 				auto& sc = entity.GetComponent<ScriptComponent>();
+				bool scriptClassExists = ScriptEngine::EntityClassExists(sc.ClassName);
+				Ref<ScriptClass> scriptClass;
+				if (scriptClassExists)
+					scriptClass = ScriptEngine::GetEntityClass(sc.ClassName);
+
+				auto& entityFields = ScriptEngine::GetScriptFieldMap(entity);
+
 				e["ScriptComponent"] = {
 					{ "ClassName", sc.ClassName },
 				};
+				auto fields = scriptClass->GetFields();
+				if (fields.size() > 0)
+					e["ScriptComponent"]["Fields"] = {};
+
+				for (auto [name, field] : fields)
+				{
+					if (entityFields.find(name) != entityFields.end())
+					{
+						ScriptFieldInstance& scriptField = entityFields.at(name);
+						if (field.Type == ScriptFieldType::Float)
+							e["ScriptComponent"]["Fields"][name] = scriptField.GetValue<float>();
+					}
+					else
+					{
+						if (field.Type == ScriptFieldType::Float)
+						{
+							float data = 0.0f;
+							e["ScriptComponent"]["Fields"][name] = data;
+						}
+					}
+				}
 			}
 
 			if (entity.HasComponent<SpriteRendererComponent>())
@@ -306,8 +335,31 @@ namespace OpenEngine {
 				{
 					auto& jsonScript = value["ScriptComponent"];
 					auto& scriptComponent = entity.AddComponent<ScriptComponent>();
+					if (jsonScript.contains("Fields"))
+					{
+						auto& jsonScriptFields = jsonScript["Fields"];
+						scriptComponent.ClassName = jsonScript["ClassName"].get<std::string>();
 
-					scriptComponent.ClassName = jsonScript["ClassName"].get<std::string>();
+						Ref<ScriptClass> entityClass = ScriptEngine::GetEntityClass(scriptComponent.ClassName);
+						const auto& fields = entityClass->GetFields();
+
+						auto& entityFields = ScriptEngine::GetScriptFieldMap(entity);
+						for (const auto& [name, field] : fields)
+						{
+							if (field.Type == ScriptFieldType::Float)
+							{
+								for (auto& el : jsonScriptFields.items())
+								{
+									if (el.key() == name)
+									{
+										ScriptFieldInstance& fieldInstance = entityFields[name];
+										fieldInstance.Field = field;
+										fieldInstance.SetValue(el.value().get<float>());
+									}
+								}
+							}
+						}
+					}
 				}
 
 				if (value.contains("SpriteRendererComponent"))

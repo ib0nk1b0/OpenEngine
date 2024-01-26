@@ -72,7 +72,8 @@
                 ]
             },
             "ScriptComponent": {
-                "ClassName": "Sandbox.Camera"
+                "ClassName": "Sandbox.Camera",
+                "Fields": null
             },
             "CameraComponent": {
                 "ProjectionType": "Orthographic",
@@ -546,7 +547,7 @@
             "TransformComponent": {
                 "Translation": [
                     0.0,
-                    0.681551992893219,
+                    0.0,
                     0.0
                 ],
                 "Rotation": [
@@ -561,7 +562,11 @@
                 ]
             },
             "ScriptComponent": {
-                "ClassName": "Sandbox.Player"
+                "ClassName": "Sandbox.Player",
+                "Fields": {
+                    "Speed": 10.0,
+                    "JumpSpeed": 45.0
+                }
             },
             "SpriteRendererComponent": {
                 "Color": [
@@ -590,47 +595,6 @@
                 "Friction": 0.30000001192092896,
                 "Restitution": 0.0,
                 "RestitutionThreshold": 0.5
-            }
-        },
-        {
-            "ID": 5747130823482501996,
-            "Tag": "Orthographic Camera",
-            "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
-            },
-            "TransformComponent": {
-                "Translation": [
-                    -0.0,
-                    4.5,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "ScriptComponent": {
-                "ClassName": "Sandbox.Camera"
-            },
-            "CameraComponent": {
-                "ProjectionType": "Orthographic",
-                "Size": 15.0,
-                "Near": -1.0,
-                "Far": 1.0,
-                "Primary": true,
-                "FixedAspectRatio": false
             }
         }
     ]

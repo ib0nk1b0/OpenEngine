@@ -1,49 +1,8 @@
 {
     "Entities": [
         {
-            "ID": 17662598558537029551,
-            "Tag": "Player",
-            "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
-            },
-            "TransformComponent": {
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    0.5,
-                    0.5,
-                    0.5
-                ]
-            },
-            "ScriptComponent": {
-                "ClassName": "Sandbox.FpsController"
-            },
-            "SpriteRendererComponent": {
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "ID": 5747130823482501996,
-            "Tag": "Camera",
+            "ID": 11730768533709268156,
+            "Tag": "Orthographic Camera",
             "ParentComponent": {
                 "ParentName": "",
                 "ParentID": 0,
@@ -71,50 +30,12 @@
                 ]
             },
             "CameraComponent": {
-                "ProjectionType": "Perspective",
-                "VerticalFOV": 0.7853981852531433,
-                "Near": 0.009999999776482582,
-                "Far": 1000.0,
+                "ProjectionType": "Orthographic",
+                "Size": 10.0,
+                "Near": -1.0,
+                "Far": 1.0,
                 "Primary": true,
                 "FixedAspectRatio": false
-            }
-        },
-        {
-            "ID": 7920685116167997326,
-            "Tag": "Quad",
-            "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
-            },
-            "TransformComponent": {
-                "Translation": [
-                    0.17822399735450745,
-                    0.0,
-                    -3.860158920288086
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "SpriteRendererComponent": {
-                "Color": [
-                    0.05458499863743782,
-                    0.6160339713096619,
-                    0.580498993396759,
-                    1.0
-                ]
             }
         }
     ]

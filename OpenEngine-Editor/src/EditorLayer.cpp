@@ -334,7 +334,7 @@ namespace OpenEngine {
 				}
 
 				if (ImGui::MenuItem("Open", "Ctrl+O"))
-					OpenScene();
+					OpenProject();
 
 				ImGui::Separator();
 
@@ -601,7 +601,7 @@ namespace OpenEngine {
 			case Key::O:
 			{
 				if (control)
-					OpenScene();
+					OpenProject();
 
 				break;
 			}
@@ -621,13 +621,11 @@ namespace OpenEngine {
 					if (m_SceneState == SceneState::Edit)
 					{
 						ScenePlay();
-
 						break;
 					}
 					if (m_SceneState == SceneState::Play)
 					{
 						SceneStop();
-
 						break;
 					}
 				}
@@ -706,19 +704,45 @@ namespace OpenEngine {
 
 	void EditorLayer::OpenProject()
 	{
-		ContentBrowserPanel::Init();
-		AssetHandle startScene = Project::GetActive()->GetConfig().StartScene;
-		if (startScene)
-			OpenScene(startScene);
-		else
-			NewScene();
+		NFD::UniquePath outPath;
+		nfdfilteritem_t filters[] = { { "OpenEngine Project", "oeproj" } };
+		nfdresult_t result = NFD::OpenDialog(outPath, filters);
+
+		switch (result)
+		{
+			case NFD_OKAY:
+			{
+				std::filesystem::path filepath(outPath.get());
+				OpenProject(filepath);
+				break;
+			}
+			case NFD_CANCEL:
+			{
+				break;
+			}
+			case NFD_ERROR:
+			{
+				OE_CORE_ERROR("NFD threw an error: {}", NFD::GetError());
+				break;
+			}
+		}
 	}
 
 	void EditorLayer::OpenProject(const std::filesystem::path& filepath)
 	{
+		if (m_SceneState == SceneState::Play)
+			SceneStop();
+
 		if (Project::Load(filepath))
 		{
-			OpenProject();
+			ScriptEngine::ReloadAssembly();
+			ContentBrowserPanel::Init();
+
+			AssetHandle startScene = Project::GetActive()->GetConfig().StartScene;
+			if (startScene)
+				OpenScene(startScene);
+			else
+				NewScene();
 		}
 	}
 
@@ -747,6 +771,9 @@ namespace OpenEngine {
 
 	void EditorLayer::OpenScene(AssetHandle handle)
 	{
+		if (m_SceneState == SceneState::Play)
+			SceneStop();
+
 		Ref<Scene> readOnlyScene = AssetManager::GetAsset<Scene>(handle);
 		Ref<Scene> newScene = CreateRef<Scene>();
 		readOnlyScene->CopyTo(newScene);
@@ -766,8 +793,7 @@ namespace OpenEngine {
 		if (filepath != "UntitledScene.openengine")
 		{
 			SceneSerializer serializer(m_EditorScene);
-			std::filesystem::path fullpath = Project::GetActiveAssetFileSystemPath(filepath);
-			serializer.Serialize(fullpath.string());
+			serializer.Serialize(filepath);
 			ContentBrowserPanel::LoadAssets();
 			return;
 		}
@@ -776,14 +802,29 @@ namespace OpenEngine {
 
 	void EditorLayer::SaveSceneAs()
 	{
-		std::string path = FileDialogs::SaveFile("OpenEngine Scene (*.openengine)\0*.openengine\0");
-		if (!path.empty())
+		NFD::UniquePath outPath;
+		nfdfilteritem_t filters[] = { { "OpenEngine Scene", ".openengine" } };
+		nfdresult_t result = NFD::SaveDialog(outPath, filters);
+
+		switch (result)
 		{
-			std::filesystem::path filepath(path);
-			std::filesystem::path assetpath = Project::GetActiveAssetDirectory();
-			std::filesystem::path p = std::filesystem::relative(filepath, assetpath);
-			m_EditorScene->SetFilepath(p);
-			SaveScene();
+			case NFD_OKAY:
+			{
+				std::filesystem::path filepath(outPath.get());
+				std::filesystem::path relativePath = std::filesystem::relative(filepath, Project::GetActiveAssetDirectory());
+				m_EditorScene->SetFilepath(relativePath);
+				SaveScene();
+				break;
+			}
+			case NFD_CANCEL:
+			{
+				break;
+			}
+			case NFD_ERROR:
+			{
+				OE_CORE_ERROR("NFD threw an error: {}", NFD::GetError());
+				break;
+			}
 		}
 	}
 

@@ -3,6 +3,7 @@
 
 #include "OpenEngine/Core/Application.h"
 #include "OpenEngine/Scripting/ScriptGlue.h"
+#include "OpenEngine/Project/Project.h"
 
 #include "FileWatch.h"
 
@@ -136,8 +137,8 @@ namespace OpenEngine {
 		MonoAssembly* AppAssembly = nullptr;
 		MonoImage* AppAssemblyImage = nullptr;
 
-		std::string CoreAssemblyPath = "Resources/Scripts/OpenEngine-ScriptCore.dll";
-		std::string AppAssemblyPath = "SandboxProject/Assets/Scripts/Binaries/Sandbox.dll";
+		std::filesystem::path CoreAssemblyPath;
+		std::filesystem::path AppAssemblyPath;
 
 		ScriptClass EntityClass;
 
@@ -157,12 +158,22 @@ namespace OpenEngine {
 	void ScriptEngine::Init()
 	{
 		s_Data = new ScriptEngineData();
+
 		InitMono();
-		LoadAssembly(s_Data->CoreAssemblyPath);
-		LoadAppAssembly(s_Data->AppAssemblyPath);
+		if (!LoadAssembly("SandboxProject/Assets/Scripts/Binaries/OpenEngine-ScriptCore.dll"))
+		{
+			OE_CORE_ERROR("Script Engine could not load OpenEngine-ScriptCore assembly.");
+			return;
+		}
+
+		/*if (!LoadAppAssembly(""))
+		{
+			OE_CORE_ERROR("Script Engine could not load app assembly.");
+			return;
+		}
 		LoadAssemblyClasses();
 
-		ScriptGlue::RegisterComponents();
+		ScriptGlue::RegisterComponents();*/
 		ScriptGlue::RegisterFunctions();
 
 		// Retrive entity class
@@ -231,14 +242,19 @@ namespace OpenEngine {
 		return instance;
 	}
 
-	void ScriptEngine::LoadAssembly(const std::filesystem::path& filepath)
+	bool ScriptEngine::LoadAssembly(const std::filesystem::path& filepath)
 	{
 		// Create an App Domain
 		s_Data->AppDomain = mono_domain_create_appdomain("OpenEngineScriptRuntime", nullptr);
 		mono_domain_set(s_Data->AppDomain, true);
 
+		s_Data->CoreAssemblyPath = filepath;
 		s_Data->CoreAssembly = Utils::LoadMonoAssembly(filepath);
+		if (s_Data->CoreAssembly == nullptr)
+			return false;
+
 		s_Data->CoreAssemblyImage = mono_assembly_get_image(s_Data->CoreAssembly);
+		return true;
 	}
 
 	static void OnAppAssemblyFileSystemEvent(const std::string& path, const filewatch::Event change_type)
@@ -255,12 +271,17 @@ namespace OpenEngine {
 		}
 	}
 
-	void ScriptEngine::LoadAppAssembly(const std::filesystem::path& filepath)
+	bool ScriptEngine::LoadAppAssembly(const std::filesystem::path& filepath)
 	{
 		s_Data->AppAssembly = Utils::LoadMonoAssembly(filepath);
+		if (s_Data->AppAssembly == nullptr)
+			return false;
+
+		s_Data->AppAssemblyPath = filepath;
 		s_Data->AppAssemblyImage = mono_assembly_get_image(s_Data->AppAssembly);
 
 		s_Data->AppAssemblyFileWatcher = CreateScope<filewatch::FileWatch<std::string>>(filepath.string(), OnAppAssemblyFileSystemEvent);
+		return true;
 	}
 
 	void ScriptEngine::ReloadAssembly()
@@ -269,8 +290,21 @@ namespace OpenEngine {
 
 		mono_domain_unload(s_Data->AppDomain);
 
-		LoadAssembly(s_Data->CoreAssemblyPath);
-		LoadAppAssembly(s_Data->AppAssemblyPath);
+		std::filesystem::path appAssemblyPath(Project::GetAssetDirectory() / Project::GetActive()->GetConfig().ScriptModulePath);
+		if (s_Data->AppAssemblyPath != appAssemblyPath)
+			s_Data->AppAssemblyPath = appAssemblyPath;
+
+		if (!LoadAssembly(s_Data->CoreAssemblyPath))
+		{
+			OE_CORE_ERROR("Script Engine could not re-load Core Assembly.\n Path: ({})", s_Data->CoreAssemblyPath);
+			return;
+		}
+
+		if (!LoadAppAssembly(s_Data->AppAssemblyPath))
+		{
+			OE_CORE_ERROR("Script Engine could not re-load App Assembly.\n Path: ({}).", s_Data->AppAssemblyPath);
+			return;
+		}
 
 		LoadAssemblyClasses();
 
