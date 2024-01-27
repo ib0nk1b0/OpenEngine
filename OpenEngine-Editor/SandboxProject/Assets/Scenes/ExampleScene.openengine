@@ -564,8 +564,8 @@
             "ScriptComponent": {
                 "ClassName": "Sandbox.Player",
                 "Fields": {
-                    "Speed": 10.0,
-                    "JumpSpeed": 45.0
+                    "Speed": 6.0,
+                    "JumpSpeed": 14.0
                 }
             },
             "SpriteRendererComponent": {

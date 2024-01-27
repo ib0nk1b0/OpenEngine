@@ -1,8 +1,236 @@
 {
     "Entities": [
         {
-            "ID": 11730768533709268156,
-            "Tag": "Orthographic Camera",
+            "ID": 14190523948916738793,
+            "Tag": "Sky",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    0.0,
+                    -500.0,
+                    0.0
+                ],
+                "Rotation": [
+                    1.5707963705062866,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1000.0,
+                    1000.0,
+                    1000.0
+                ]
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    0.47456783056259155,
+                    0.8557971119880676,
+                    0.945147693157196,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ID": 8676720664145149345,
+            "Tag": "Sky",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    0.0,
+                    500.0,
+                    0.0
+                ],
+                "Rotation": [
+                    1.5707963705062866,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1000.0,
+                    1000.0,
+                    1000.0
+                ]
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    0.47456783056259155,
+                    0.8557971119880676,
+                    0.945147693157196,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ID": 13126387591534793980,
+            "Tag": "Sky",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    500.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    1.5707963705062866,
+                    0.0
+                ],
+                "Scale": [
+                    1000.0,
+                    1000.0,
+                    1000.0
+                ]
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    0.47456783056259155,
+                    0.8557971119880676,
+                    0.945147693157196,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ID": 15451196674285559707,
+            "Tag": "Sky",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    0.0,
+                    0.0,
+                    -500.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1000.0,
+                    1000.0,
+                    1000.0
+                ]
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    0.47456783056259155,
+                    0.8557971119880676,
+                    0.945147693157196,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ID": 6299299258671107139,
+            "Tag": "Sky",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    0.0,
+                    0.0,
+                    500.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1000.0,
+                    1000.0,
+                    1000.0
+                ]
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    0.47456783056259155,
+                    0.8557971119880676,
+                    0.945147693157196,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ID": 11698363918584701832,
+            "Tag": "Sky",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    -500.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    1.5707963705062866,
+                    0.0
+                ],
+                "Scale": [
+                    1000.0,
+                    1000.0,
+                    1000.0
+                ]
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    0.47456783056259155,
+                    0.8557971119880676,
+                    0.945147693157196,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ID": 7016226551454738409,
+            "Tag": "Player",
             "ParentComponent": {
                 "ParentName": "",
                 "ParentID": 0,
@@ -29,11 +257,56 @@
                     1.0
                 ]
             },
+            "SpriteRendererComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ID": 11730768533709268156,
+            "Tag": "Camera",
+            "ParentComponent": {
+                "ParentName": "",
+                "ParentID": 0,
+                "Offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "TransformComponent": {
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "ScriptComponent": {
+                "ClassName": "Sandbox.FpsController",
+                "Fields": {
+                    "MouseSensitivity": 0.0,
+                    "MovementSpeed": 0.0
+                }
+            },
             "CameraComponent": {
-                "ProjectionType": "Orthographic",
-                "Size": 10.0,
-                "Near": -1.0,
-                "Far": 1.0,
+                "ProjectionType": "Perspective",
+                "VerticalFOV": 0.7853981852531433,
+                "Near": 0.009999999776482582,
+                "Far": 1000.0,
                 "Primary": true,
                 "FixedAspectRatio": false
             }

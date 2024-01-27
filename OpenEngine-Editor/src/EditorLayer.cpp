@@ -20,7 +20,7 @@
 
 #include <EnTT/include/entt.hpp>
 
-#include <nfd.hpp>
+#include <NFD-Extended/nfd.hpp>
 
 namespace OpenEngine {
 

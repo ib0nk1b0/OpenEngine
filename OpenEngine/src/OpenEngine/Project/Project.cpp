@@ -3,7 +3,7 @@
 
 #include "OpenEngine/Project/ProjectSerializer.h"
 
-#include <nfd.hpp>
+#include <NFD-Extended/nfd.hpp>
 
 namespace OpenEngine {
 
