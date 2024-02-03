@@ -60,15 +60,11 @@ namespace OpenEngine {
 
 	struct ParentComponent
 	{
-		std::string ParentName;
 		uint64_t ParentID{ 0 };
-
-		glm::vec3 Offset = { 0.0f, 0.0f, 0.0f };
+		std::vector<uint64_t> Children;
 
 		ParentComponent() = default;
 		ParentComponent(const ParentComponent&) = default;
-		ParentComponent(std::string name, UUID parentID)
-			: ParentName(name), ParentID(parentID) {}
 	};
 
 	struct SpriteRendererComponent

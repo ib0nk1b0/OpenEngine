@@ -43,7 +43,9 @@ namespace OpenEngine {
 				m_PreviousDirectory.clear();
 			}
 
-			if (ImGui::ImageButton((ImTextureID)m_RefreshIcon->GetRendererID(), { 32, 32 }, { 0, 1 }, { 1, 0 }))
+			ImGui::SameLine();
+
+			if (ImGui::ImageButton((ImTextureID)m_RefreshIcon->GetRendererID(), { 16, 16 }, { 0, 1 }, { 1, 0 }))
 			{
 				LoadAssets();
 			}

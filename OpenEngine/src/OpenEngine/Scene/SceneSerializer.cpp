@@ -79,9 +79,7 @@ namespace OpenEngine {
 			{
 				auto& pc = entity.GetComponent<ParentComponent>();
 				e["ParentComponent"] = {
-					{ "ParentName", pc.ParentName },
 					{ "ParentID", pc.ParentID },
-					{ "Offset", { pc.Offset.x, pc.Offset.y, pc.Offset.z } }
 				};
 			}
 
@@ -316,9 +314,7 @@ namespace OpenEngine {
 				{
 					auto& jsonParentComponent = value["ParentComponent"];
 					auto& parentComponent = entity.GetComponent<ParentComponent>();
-					parentComponent.ParentName = jsonParentComponent["ParentName"].get<std::string>();
 					parentComponent.ParentID = jsonParentComponent["ParentID"].get<uint64_t>();
-					Decode(ConvertFloat3(jsonParentComponent["Offset"]), parentComponent.Offset);
 				}
 
 				if (value.contains("TransformComponent"))

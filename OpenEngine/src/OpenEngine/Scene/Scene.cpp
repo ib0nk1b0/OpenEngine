@@ -309,7 +309,7 @@ namespace OpenEngine {
 
 		OE_PROFILE_FUNCTION();
 
-		auto children = GetEntitiesWithParents();
+		/*auto children = GetEntitiesWithParents();
 		for (auto childID : children)
 		{
 			Entity child = { childID, this };
@@ -323,7 +323,7 @@ namespace OpenEngine {
 				child.GetComponent<TransformComponent>().Translation = position;
 				OE_CORE_INFO("{0}, {1}, {2}", forwardDirection.x, forwardDirection.y, forwardDirection.z);
 			}
-		}
+		}*/
 	}
 
 	void Scene::OnUpdateEditor(Timestep ts, EditorCamera& camera)
@@ -694,9 +694,7 @@ namespace OpenEngine {
 			Entity entity{ entityID, this };
 			Entity newEntity = other->CreateEntityWithUUID(entity.GetUUID(), entity.GetComponent<TagComponent>().Tag);
 
-			newEntity.GetComponent<ParentComponent>().ParentName = entity.GetComponent<ParentComponent>().ParentName;
 			newEntity.GetComponent<ParentComponent>().ParentID = entity.GetComponent<ParentComponent>().ParentID;
-			newEntity.GetComponent<ParentComponent>().Offset = entity.GetComponent<ParentComponent>().Offset;
 
 			newEntity.GetComponent<TransformComponent>().Translation = entity.GetComponent<TransformComponent>().Translation;
 			newEntity.GetComponent<TransformComponent>().Rotation = entity.GetComponent<TransformComponent>().Rotation;

@@ -36,6 +36,7 @@ namespace OpenEngine {
 		if (m_DisplaySceneHierarchy)
 		{
 			ImGui::Begin("Scene Hierarchy");
+			
 			if (ImGui::IsMouseReleased(0) && ImGui::IsWindowHovered() && m_SelectionContext)
 				m_SelectionContext = {};
 
@@ -111,6 +112,21 @@ namespace OpenEngine {
 				ImGui::EndPopup();
 			}
 
+			ImGuiWindow* window = ImGui::GetCurrentWindow();
+
+			if (ImGui::BeginDragDropTargetCustom(window->ContentRegionRect, window->ID))
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("SCENE_HIERARCHY_ITEM"))
+				{
+					AssetHandle handle = *(AssetHandle*)payload->Data;
+					Entity child = m_Context->GetEntityByUUID(handle);
+					if (child.HasParent())
+						child.RemoveParent();
+				}
+
+				ImGui::EndDragDropTarget();
+			}
+
 			ImGui::End();
 		}
 
@@ -136,6 +152,27 @@ namespace OpenEngine {
 			if (ImGui::IsItemClicked())
 				m_SelectionContext = entity;
 
+			if (ImGui::BeginDragDropSource())
+			{
+				AssetHandle handle = entity.GetUUID();
+				ImGui::SetDragDropPayload("SCENE_HIERARCHY_ITEM", &handle, sizeof(handle));
+
+				ImGui::EndDragDropSource();
+			}
+
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("SCENE_HIERARCHY_ITEM"))
+				{
+					AssetHandle handle = *(AssetHandle*)payload->Data;
+					Entity child = m_Context->GetEntityByUUID(handle);
+					if (!child.HasChildren())
+						child.SetParent(entity);
+				}
+
+				ImGui::EndDragDropTarget();
+			}
+
 			bool entityDeleted = false;
 			if (ImGui::BeginPopupContextItem())
 			{
@@ -149,6 +186,7 @@ namespace OpenEngine {
 
 				ImGui::EndPopup();
 			}
+
 			if (opened)
 			{
 				auto entites = m_Context->GetEntitiesWithParents();
@@ -157,11 +195,16 @@ namespace OpenEngine {
 					Entity child = { entityID, m_Context.get() };
 					if (child.GetComponent<ParentComponent>().ParentID == entity.GetUUID())
 					{
-						if (entity.GetName() != child.GetComponent<ParentComponent>().ParentName)
-							child.GetComponent<ParentComponent>().ParentName = entity.GetName();
+						bool childOpened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)child, flags | ImGuiTreeNodeFlags_Leaf, child.GetComponent<TagComponent>().Tag.c_str());
 
-						bool childOpened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)child, flags, child.GetComponent<TagComponent>().Tag.c_str());
-					
+						if (ImGui::BeginDragDropSource())
+						{
+							AssetHandle handle = child.GetUUID();
+							ImGui::SetDragDropPayload("SCENE_HIERARCHY_ITEM", &handle, sizeof(handle));
+
+							ImGui::EndDragDropSource();
+						}
+
 						if (ImGui::IsItemClicked())
 							m_SelectionContext = child;
 
@@ -172,6 +215,7 @@ namespace OpenEngine {
 			
 				ImGui::TreePop();
 			}
+
 			ImGui::PopStyleVar();
 
 			if (entityDeleted)
@@ -282,32 +326,6 @@ namespace OpenEngine {
 
 			ImGui::EndPopup();
 		}
-
-		DrawComponent<ParentComponent>("Parent", entity, [](auto& component)
-		{
-
-			std::vector<Entity> entites;
-			//Add change parent
-			if (ImGui::BeginCombo("Parent", "None"))
-			{
-				for (int i = 0; i < entites.size(); i++)
-				{
-					bool isSelected = false;
-					if (ImGui::Selectable(entites[i].GetName().c_str(), isSelected))
-					{
-						
-					}
-
-					if (isSelected)
-					{
-						ImGui::SetItemDefaultFocus();
-					}
-				}
-
-				ImGui::EndCombo();
-			}
-			UI::Vec3Controls("Offset", component.Offset);
-		});
 
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
 		{

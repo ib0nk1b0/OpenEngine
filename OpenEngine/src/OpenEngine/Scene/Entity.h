@@ -52,20 +52,45 @@ namespace OpenEngine {
 		glm::vec3& GetScale() { return GetComponent<TransformComponent>().Scale; }
 		glm::vec3& GetRotation() { return GetComponent<TransformComponent>().Rotation; }
 		std::string GetName() { return GetComponent<TagComponent>().Tag; }
-		bool HasParent()
-		{
-			return !GetComponent<ParentComponent>().ParentName.empty();
-		}
 
 		Entity FindEntityByName(const std::string& name) { return m_Scene->GetEntityByName(name); }
+		
+		bool HasParent()
+		{
+			return GetComponent<ParentComponent>().ParentID != 0;
+		}
+
+		bool HasChildren()
+		{
+			return GetComponent<ParentComponent>().Children.size() > 0;
+		}
+
+		Entity GetParent()
+		{
+			return m_Scene->GetEntityByUUID(GetComponent<ParentComponent>().ParentID);
+		}
 
 		void SetParent(Entity parent)
 		{
 			if (!HasComponent<ParentComponent>())
 				AddComponent<ParentComponent>();
 			auto& parentComponent = GetComponent<ParentComponent>();
-			parentComponent.ParentName = parent.GetName();
 			parentComponent.ParentID = parent.GetUUID();
+			parent.GetComponent<ParentComponent>().Children.push_back(GetUUID());
+		}
+
+		void RemoveParent()
+		{
+			Entity parent = GetParent();
+			
+			auto& children = parent.GetComponent<ParentComponent>().Children;
+			for (size_t i = 0; i < children.size(); i++)
+			{
+				if (children[i] == GetUUID())
+					children.erase(children.begin() + i);
+			}
+
+			GetComponent<ParentComponent>().ParentID = 0;
 		}
 
 		bool operator==(const Entity& other) const { return m_EntityHandle == other.m_EntityHandle && m_Scene == other.m_Scene; }
