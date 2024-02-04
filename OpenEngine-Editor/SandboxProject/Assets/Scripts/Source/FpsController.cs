@@ -52,7 +52,6 @@ namespace Sandbox
             }
 
             Translation = translation;
-            m_Camera.Translation = translation;
         }
 
         private void CameraRotation(float ts)

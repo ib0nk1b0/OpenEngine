@@ -309,21 +309,20 @@ namespace OpenEngine {
 
 		OE_PROFILE_FUNCTION();
 
-		/*auto children = GetEntitiesWithParents();
+		auto children = GetEntitiesWithParents();
 		for (auto childID : children)
 		{
 			Entity child = { childID, this };
 			Entity parent = GetEntityByUUID(child.GetComponent<ParentComponent>().ParentID);
-			glm::vec3 forwardDirection = glm::rotate(glm::quat(glm::vec3(parent.GetComponent<TransformComponent>().Rotation.x, parent.GetComponent<TransformComponent>().Rotation.y, 0.0f)), glm::vec3(0.0f, 0.0f, -1.0f));
-			if (child.GetTranslation() != parent.GetTranslation() + child.GetComponent<ParentComponent>().Offset)
+			glm::vec3 parentPosition = parent.GetTranslation();
+			glm::vec3 offset = child.GetComponent<ParentComponent>().Offset;
+			//glm::vec3 forwardDirection = glm::rotate(glm::quat(glm::vec3(parent.GetComponent<TransformComponent>().Rotation.x, parent.GetComponent<TransformComponent>().Rotation.y, 0.0f)), glm::vec3(0.0f, 0.0f, -1.0f));
+			if (child.GetTranslation() != parentPosition + offset)
 			{
-				glm::vec3 parentPosition = parent.GetTranslation();
-				glm::vec3 offset = child.GetComponent<ParentComponent>().Offset; 
-				glm::vec3 position = parentPosition + forwardDirection;
-				child.GetComponent<TransformComponent>().Translation = position;
-				OE_CORE_INFO("{0}, {1}, {2}", forwardDirection.x, forwardDirection.y, forwardDirection.z);
+				//glm::vec3 position = parentPosition + forwardDirection;
+				child.GetComponent<TransformComponent>().Translation = parentPosition + offset;
 			}
-		}*/
+		}
 	}
 
 	void Scene::OnUpdateEditor(Timestep ts, EditorCamera& camera)
@@ -694,7 +693,8 @@ namespace OpenEngine {
 			Entity entity{ entityID, this };
 			Entity newEntity = other->CreateEntityWithUUID(entity.GetUUID(), entity.GetComponent<TagComponent>().Tag);
 
-			newEntity.GetComponent<ParentComponent>().ParentID = entity.GetComponent<ParentComponent>().ParentID;
+			auto& parentComponent = newEntity.GetComponent<ParentComponent>();
+			parentComponent = entity.GetComponent<ParentComponent>();
 
 			newEntity.GetComponent<TransformComponent>().Translation = entity.GetComponent<TransformComponent>().Translation;
 			newEntity.GetComponent<TransformComponent>().Rotation = entity.GetComponent<TransformComponent>().Rotation;

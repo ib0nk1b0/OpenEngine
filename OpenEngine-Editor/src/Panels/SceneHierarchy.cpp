@@ -327,9 +327,15 @@ namespace OpenEngine {
 			ImGui::EndPopup();
 		}
 
-		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
+		DrawComponent<TransformComponent>("Transform", entity, [&entity](auto& component)
 		{
-			UI::Vec3Controls("Translation", component.Translation);
+			if (entity.HasParent())
+			{
+				auto& parentComponent = entity.GetComponent<ParentComponent>();
+				UI::Vec3Controls("Translation", parentComponent.Offset);
+			}
+			else
+				UI::Vec3Controls("Translation", component.Translation);
 			glm::vec3 rotation = glm::degrees(component.Rotation);
 			UI::Vec3Controls("Rotation", rotation);
 			component.Rotation = glm::radians(rotation);

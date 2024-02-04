@@ -15,7 +15,7 @@ IncludeDir["mono"] = "%{wks.location}/OpenEngine/vendor/mono/include"
 IncludeDir["Box2D"] = "%{wks.location}/OpenEngine/vendor/Box2D/include"
 IncludeDir["msdfgen"] = "%{wks.location}/OpenEngine/vendor/msdf-atlas-gen/msdfgen"
 IncludeDir["msdf_atlas_gen"] = "%{wks.location}/OpenEngine/vendor/msdf-atlas-gen/msdf-atlas-gen"
-IncludeDir["NFD_Extended"] = "%{wks.location}/OpenEngine/vendor/NFD_Extended/include"
+IncludeDir["NFD_Extended"] = "%{wks.location}/OpenEngine/vendor/NFD-Extended/include"
 --IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
 
 LibraryDir = {}

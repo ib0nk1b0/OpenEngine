@@ -63,6 +63,8 @@ namespace OpenEngine {
 		uint64_t ParentID{ 0 };
 		std::vector<uint64_t> Children;
 
+		glm::vec3 Offset = { 0.0f, 0.0f, 0.0f };
+
 		ParentComponent() = default;
 		ParentComponent(const ParentComponent&) = default;
 	};

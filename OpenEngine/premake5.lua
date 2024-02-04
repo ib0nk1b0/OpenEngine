@@ -20,9 +20,9 @@ project "OpenEngine"
     "vendor/glm/glm/**.inl",
     "vendor/ImGuizmo/ImGuizmo.h",
     "vendor/ImGuizmo/ImGuizmo.cpp",
-    "vendor/NFD_Extended/src/nfd_win.cpp",
-    "vendor/NFD_Extended/src/include/**.h",
-    "vendor/NFD_Extended/src/include/**.hpp"
+    "vendor/NFD-Extended/src/nfd_win.cpp",
+    "vendor/NFD-Extended/include/NFD-Extended/**.h",
+    "vendor/NFD-Extended/include/NFD-Extended/**.hpp"
   }
 
   defines
@@ -58,7 +58,6 @@ project "OpenEngine"
     "GLFW",
     "Glad",
     "ImGui",
-    "NFD_Extended",
     "msdf-atlas-gen",
     "opengl32.lib",
     

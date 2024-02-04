@@ -1,16 +1,106 @@
 {
     "Entities": [
         {
-            "ID": 14190523948916738793,
-            "Tag": "Sky",
+            "ID": 4980246439569906816,
+            "Tag": "Quad",
             "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
+                "ParentID": 0
+            },
+            "TransformComponent": {
+                "Translation": [
+                    -2.2264745235443115,
+                    0.0,
+                    -2.5724987983703613
+                ],
+                "Rotation": [
+                    0.0,
+                    0.7087038159370422,
+                    0.0
+                ],
+                "Scale": [
+                    1.0000001192092896,
+                    1.0,
+                    1.0000001192092896
+                ]
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    0.6540084481239319,
+                    0.08554540574550629,
+                    0.08554540574550629,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ID": 8405667434169243521,
+            "Tag": "Quad",
+            "ParentComponent": {
+                "ParentID": 0
+            },
+            "TransformComponent": {
+                "Translation": [
+                    2.187307596206665,
+                    0.0,
+                    -2.208413600921631
+                ],
+                "Rotation": [
+                    0.0,
+                    -0.5628982782363892,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    0.6540084481239319,
+                    0.08554540574550629,
+                    0.08554540574550629,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ID": 3031105195201957907,
+            "Tag": "Quad",
+            "ParentComponent": {
+                "ParentID": 0
+            },
+            "TransformComponent": {
+                "Translation": [
+                    0.0,
+                    0.0,
+                    -2.5724987983703613
+                ],
+                "Rotation": [
                     0.0,
                     0.0,
                     0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ]
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    0.6540084481239319,
+                    0.08554540574550629,
+                    0.08554540574550629,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ID": 14190523948916738793,
+            "Tag": "Sky",
+            "ParentComponent": {
+                "ParentID": 0
             },
             "TransformComponent": {
                 "Translation": [
@@ -19,7 +109,7 @@
                     0.0
                 ],
                 "Rotation": [
-                    1.5707963705062866,
+                    1.570796012878418,
                     0.0,
                     0.0
                 ],
@@ -31,9 +121,9 @@
             },
             "SpriteRendererComponent": {
                 "Color": [
-                    0.47456783056259155,
-                    0.8557971119880676,
-                    0.945147693157196,
+                    0.4745680093765259,
+                    0.8557969927787781,
+                    0.9451479911804199,
                     1.0
                 ]
             }
@@ -42,13 +132,7 @@
             "ID": 8676720664145149345,
             "Tag": "Sky",
             "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
+                "ParentID": 0
             },
             "TransformComponent": {
                 "Translation": [
@@ -57,7 +141,7 @@
                     0.0
                 ],
                 "Rotation": [
-                    1.5707963705062866,
+                    1.570796012878418,
                     0.0,
                     0.0
                 ],
@@ -69,9 +153,9 @@
             },
             "SpriteRendererComponent": {
                 "Color": [
-                    0.47456783056259155,
-                    0.8557971119880676,
-                    0.945147693157196,
+                    0.4745680093765259,
+                    0.8557969927787781,
+                    0.9451479911804199,
                     1.0
                 ]
             }
@@ -80,13 +164,7 @@
             "ID": 13126387591534793980,
             "Tag": "Sky",
             "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
+                "ParentID": 0
             },
             "TransformComponent": {
                 "Translation": [
@@ -96,7 +174,7 @@
                 ],
                 "Rotation": [
                     0.0,
-                    1.5707963705062866,
+                    1.570796012878418,
                     0.0
                 ],
                 "Scale": [
@@ -107,9 +185,9 @@
             },
             "SpriteRendererComponent": {
                 "Color": [
-                    0.47456783056259155,
-                    0.8557971119880676,
-                    0.945147693157196,
+                    0.4745680093765259,
+                    0.8557969927787781,
+                    0.9451479911804199,
                     1.0
                 ]
             }
@@ -118,13 +196,7 @@
             "ID": 15451196674285559707,
             "Tag": "Sky",
             "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
+                "ParentID": 0
             },
             "TransformComponent": {
                 "Translation": [
@@ -145,9 +217,9 @@
             },
             "SpriteRendererComponent": {
                 "Color": [
-                    0.47456783056259155,
-                    0.8557971119880676,
-                    0.945147693157196,
+                    0.4745680093765259,
+                    0.8557969927787781,
+                    0.9451479911804199,
                     1.0
                 ]
             }
@@ -156,13 +228,7 @@
             "ID": 6299299258671107139,
             "Tag": "Sky",
             "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
+                "ParentID": 0
             },
             "TransformComponent": {
                 "Translation": [
@@ -183,9 +249,9 @@
             },
             "SpriteRendererComponent": {
                 "Color": [
-                    0.47456783056259155,
-                    0.8557971119880676,
-                    0.945147693157196,
+                    0.4745680093765259,
+                    0.8557969927787781,
+                    0.9451479911804199,
                     1.0
                 ]
             }
@@ -194,13 +260,7 @@
             "ID": 11698363918584701832,
             "Tag": "Sky",
             "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
+                "ParentID": 0
             },
             "TransformComponent": {
                 "Translation": [
@@ -210,7 +270,7 @@
                 ],
                 "Rotation": [
                     0.0,
-                    1.5707963705062866,
+                    1.570796012878418,
                     0.0
                 ],
                 "Scale": [
@@ -221,9 +281,9 @@
             },
             "SpriteRendererComponent": {
                 "Color": [
-                    0.47456783056259155,
-                    0.8557971119880676,
-                    0.945147693157196,
+                    0.4745680093765259,
+                    0.8557969927787781,
+                    0.9451479911804199,
                     1.0
                 ]
             }
@@ -232,51 +292,7 @@
             "ID": 7016226551454738409,
             "Tag": "Player",
             "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
-            },
-            "TransformComponent": {
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "SpriteRendererComponent": {
-                "Color": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "ID": 11730768533709268156,
-            "Tag": "Camera",
-            "ParentComponent": {
-                "ParentName": "",
-                "ParentID": 0,
-                "Offset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
+                "ParentID": 0
             },
             "TransformComponent": {
                 "Translation": [
@@ -298,9 +314,41 @@
             "ScriptComponent": {
                 "ClassName": "Sandbox.FpsController",
                 "Fields": {
-                    "MouseSensitivity": 0.0,
-                    "MovementSpeed": 0.0
+                    "MouseSensitivity": 5.0,
+                    "MovementSpeed": 2.0
                 }
+            },
+            "SpriteRendererComponent": {
+                "Color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ID": 11730768533709268156,
+            "Tag": "Camera",
+            "ParentComponent": {
+                "ParentID": 7016226551454738409
+            },
+            "TransformComponent": {
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.800000011920929
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
             },
             "CameraComponent": {
                 "ProjectionType": "Perspective",
