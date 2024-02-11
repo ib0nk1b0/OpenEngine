@@ -72,7 +72,7 @@ project "OpenEngine"
   filter "files:vendor/Assimp/**.cpp"
   flags { "NoPCH" }
 
-  filter "files:vendor/NFD_Extended/**.cpp"
+  filter "files:vendor/NFD-Extended/src/**.cpp"
   flags { "NoPCH" }
 
   filter "system:windows"
