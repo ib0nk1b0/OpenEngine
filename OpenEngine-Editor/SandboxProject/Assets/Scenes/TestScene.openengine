@@ -6,28 +6,29 @@
             "ParentComponent": {
                 "ParentID": 0
             },
+            "Children": null,
             "TransformComponent": {
                 "Translation": [
-                    -2.2264745235443115,
+                    -2.2264750003814697,
                     0.0,
-                    -2.5724987983703613
+                    -2.5724990367889404
                 ],
                 "Rotation": [
                     0.0,
-                    0.7087038159370422,
+                    0.7087039947509766,
                     0.0
                 ],
                 "Scale": [
-                    1.0000001192092896,
                     1.0,
-                    1.0000001192092896
+                    1.0,
+                    1.0
                 ]
             },
             "SpriteRendererComponent": {
                 "Color": [
-                    0.6540084481239319,
-                    0.08554540574550629,
-                    0.08554540574550629,
+                    0.6540079712867737,
+                    0.08554500341415405,
+                    0.08554500341415405,
                     1.0
                 ]
             }
@@ -38,15 +39,16 @@
             "ParentComponent": {
                 "ParentID": 0
             },
+            "Children": null,
             "TransformComponent": {
                 "Translation": [
-                    2.187307596206665,
+                    2.1873080730438232,
                     0.0,
-                    -2.208413600921631
+                    -2.208414077758789
                 ],
                 "Rotation": [
                     0.0,
-                    -0.5628982782363892,
+                    -0.5628979802131653,
                     0.0
                 ],
                 "Scale": [
@@ -57,9 +59,9 @@
             },
             "SpriteRendererComponent": {
                 "Color": [
-                    0.6540084481239319,
-                    0.08554540574550629,
-                    0.08554540574550629,
+                    0.6540079712867737,
+                    0.08554500341415405,
+                    0.08554500341415405,
                     1.0
                 ]
             }
@@ -70,11 +72,12 @@
             "ParentComponent": {
                 "ParentID": 0
             },
+            "Children": null,
             "TransformComponent": {
                 "Translation": [
                     0.0,
                     0.0,
-                    -2.5724987983703613
+                    -2.5724990367889404
                 ],
                 "Rotation": [
                     0.0,
@@ -89,9 +92,9 @@
             },
             "SpriteRendererComponent": {
                 "Color": [
-                    0.6540084481239319,
-                    0.08554540574550629,
-                    0.08554540574550629,
+                    0.6540079712867737,
+                    0.08554500341415405,
+                    0.08554500341415405,
                     1.0
                 ]
             }
@@ -102,6 +105,7 @@
             "ParentComponent": {
                 "ParentID": 0
             },
+            "Children": null,
             "TransformComponent": {
                 "Translation": [
                     0.0,
@@ -134,6 +138,7 @@
             "ParentComponent": {
                 "ParentID": 0
             },
+            "Children": null,
             "TransformComponent": {
                 "Translation": [
                     0.0,
@@ -166,6 +171,7 @@
             "ParentComponent": {
                 "ParentID": 0
             },
+            "Children": null,
             "TransformComponent": {
                 "Translation": [
                     500.0,
@@ -198,6 +204,7 @@
             "ParentComponent": {
                 "ParentID": 0
             },
+            "Children": null,
             "TransformComponent": {
                 "Translation": [
                     0.0,
@@ -230,6 +237,7 @@
             "ParentComponent": {
                 "ParentID": 0
             },
+            "Children": null,
             "TransformComponent": {
                 "Translation": [
                     0.0,
@@ -262,6 +270,7 @@
             "ParentComponent": {
                 "ParentID": 0
             },
+            "Children": null,
             "TransformComponent": {
                 "Translation": [
                     -500.0,
@@ -294,6 +303,10 @@
             "ParentComponent": {
                 "ParentID": 0
             },
+            "Children": [
+                11730768533709268156,
+                11730768533709268156
+            ],
             "TransformComponent": {
                 "Translation": [
                     0.0,
@@ -333,11 +346,12 @@
             "ParentComponent": {
                 "ParentID": 7016226551454738409
             },
+            "Children": null,
             "TransformComponent": {
                 "Translation": [
                     0.0,
                     0.0,
-                    0.800000011920929
+                    0.0
                 ],
                 "Rotation": [
                     0.0,

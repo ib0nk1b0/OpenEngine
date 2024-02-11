@@ -81,6 +81,9 @@ namespace OpenEngine {
 				e["ParentComponent"] = {
 					{ "ParentID", pc.ParentID },
 				};
+				e["ParentComponent"]["Children"] = {};
+				for (uint64_t child : pc.Children)
+					e["ParentComponent"]["Children"] += child;
 			}
 
 			if (entity.HasComponent<TransformComponent>())
@@ -314,7 +317,9 @@ namespace OpenEngine {
 				{
 					auto& jsonParentComponent = value["ParentComponent"];
 					auto& parentComponent = entity.GetComponent<ParentComponent>();
-					parentComponent.ParentID = jsonParentComponent["ParentID"].get<uint64_t>();
+					UUID parentID = jsonParentComponent["ParentID"].get<uint64_t>();
+					if (parentID != 0)
+						entity.SetParent(m_Scene->GetEntityByUUID(parentID));
 				}
 
 				if (value.contains("TransformComponent"))
